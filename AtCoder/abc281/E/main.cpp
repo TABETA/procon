@@ -124,10 +124,38 @@ int main() {
     long long K;
     std::cin >> K;
     std::vector<long long> A(N);
+    multiset<ll> L;
+    multiset<ll> H;
+    ll sum  = 0;
+    auto push = [&](ll x){
+        sum += x;
+        L.insert(x);
+        if((ll)L.size() > K){
+            ll v = *L.rbegin();
+            sum -= v;
+            H.insert(v);
+            L.erase(L.find(v));
+        }
+    };
+    auto pop = [&](ll x){
+        if(auto it = L.find(x);it != L.end()){
+            sum -= x;
+            L.erase(it);
+            ll v = *H.begin();
+            sum += v;
+            L.insert(v);
+            H.erase(H.begin());
+        } else if(auto it = H.find(x);it != H.end()){
+            H.erase(it);
+        }
+    };
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        push(A[i]);
+        if(i >= M-1){
+            pop(A[i-M]);
+            cout << sum << " ";
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
