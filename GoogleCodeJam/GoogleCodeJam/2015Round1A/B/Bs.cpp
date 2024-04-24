@@ -14,11 +14,11 @@
 #include <utility>
 using namespace std;
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
+//#include <boost/algorithm/string.hpp>
+//#include <boost/lexical_cast.hpp>
 //#include <boost/format.hpp>
 //#include <boost/multiprecision/cpp_int.hpp>
-using namespace boost;
+//using namespace boost;
 //using namespace boost::multiprecision;
 
 #include <tuple>

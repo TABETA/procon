@@ -91,12 +91,6 @@ private:
 	system_clock::time_point start_;
 };
 
-//if (tim.elapsed() > 2)
-//{
-//	cout << -1 << endl;
-//	return 1;
-//}
-
 void bfs(const vvc& s, vector<vector<pll> >& o, int h1, int h2, int w1, int w2, pii start)
 {
 	const pii m[4] = {
@@ -145,35 +139,46 @@ void bfs(const vvc& s, vector<vector<pll> >& o, int h1, int h2, int w1, int w2, 
 int solve(istream& cin, ostream& cout)
 {
 	INPUT(int, N);
-	const int T = 1000002;
+	vll S = vll(N+1);
+	vll T = vll(N + 1);
+	S[0] = 0; REP(i, N) cin >> S[i + 1];
+	T[0] = 0; REP(i, N) cin >> T[i + 1];
 
-	vi imosu(T, 0);
-	vi r(N + 1, INITVAL);
-	imosu[1] = N;
-	REP(_,N)
+	vvll E = vvll(N+1, vll(N + 1));
+	vll V = vll(N + 1);
+	V[0] = 0;
+	REP(i, N + 1)REP(j, N + 1)E[i][j] = INT32_MAX;
+	for (size_t i = 1; i < N+1; i++)
 	{
-		INPUT(int, s);
-		imosu[s + 1]--;
+		auto s = S[i];
+		auto t = T[i];
+		auto j = i + 1 == N + 1 ? 1 : i + 1;
+		E[i][j] = s;
+		T.push_back(t);
+		E[0][i] = t;
 	}
-	imosu[0] = imosu[1];
-	for (int i = 0; i < T; i++)
-	{
-		if(1 < i)imosu[i] += imosu[i - 1];
-		if (r[imosu[i]] == INITVAL)
-			r[imosu[i]] = i;
-	}
-	for (int i = 1; i < N + 1; i++)
-	{
-		if (r[i] == INITVAL)
-			r[i] = r[i - 1];
-	}
+	auto c = [&](ll l, ll r) { return V[l] > V[r]; };
+	priority_queue<ll, vll, decltype(c)> Q(c);
 
-	INPUT(int, Q);
-	REP(_, Q)
+	Q.push(0);
+
+	while (!Q.empty())
 	{
-		INPUT(int, k);
-		cout << r[k] << endl;
+		auto q = Q.top(); Q.pop();
+		for (int i = 1; i < N + 1; i++)
+		{
+			if (i == q) continue;
+			if (E[q][i] == INT32_MAX) continue;
+			auto nc = V[q] + E[q][i];
+			if (V[i] > nc)
+			{
+				V[i] = nc;
+				Q.push(i);
+			}
+		}
 	}
+	for (size_t i = 1; i < N+1; i++)
+		cout << V[i] << endl;
 
 	return 0;
 }
@@ -196,57 +201,9 @@ vector<TestCase> inputs;
 void createTestCase()
 {
 	ADDTEST(
-		"15\n"
-		"0\n"
-		"0\n"
-		"0\n"
-		"1\n"
-		"1\n"
-		"2\n"
-		"3\n"
-		"4\n"
-		"5\n"
-		"6\n"
-		"6\n"
-		"6\n"
-		"8\n"
-		"9\n"
-		"10\n"
-		"3\n"
-		"0\n"
-		"4\n"
-		"12\n"
+		"3\n4 1 5\n3 10 100\n"
 		,
-		"11\n"
-		"7\n"
-		"0\n"
-		);
-	ADDTEST(
-		"9\n"
-		"3\n"
-		"3\n"
-		"3\n"
-		"2\n"
-		"2\n"
-		"2\n"
-		"1\n"
-		"1\n"
-		"1\n"
-		"1\n"
-		"4\n"
-		,
-		"3\n"
-		);
-	ADDTEST(
-		"4\n"
-		"0\n"
-		"0\n"
-		"0\n"
-		"0\n"
-		"1\n"
-		"0\n"
-		,
-		"0\n"
+		"3\n7\n8"
 		);
 }
 int main(int argv, char* argc[])

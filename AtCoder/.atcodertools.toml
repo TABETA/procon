@@ -1,0 +1,11 @@
+[codestyle]
+indent_type = 'space'
+indent_width = 4
+workspace_dir='/mnt/g/Git/procon/AtCoder'
+lang='cpp'
+template_file='/mnt/g/Git/procon/AtCoder/template.cpp'
+code_generator_toml='/mnt/g/Git/procon/AtCoder/cpp_code_generator.toml'
+[etc]
+download_without_login=false
+parallel_download=false
+save_no_session_cache=false

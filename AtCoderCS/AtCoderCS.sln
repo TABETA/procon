@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AtCoderCS", "AtCoderCS\AtCoderCS.csproj", "{B327FE6C-4617-4E08-BFEB-31FD0A9F32EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleCodeJam", "GoogleCodeJam\GoogleCodeJam.csproj", "{0243268E-1F20-4036-B043-010D5A8C8AD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "paiza", "paiza\paiza.csproj", "{C1296793-1287-4D53-BE58-D83C05A4BE6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B327FE6C-4617-4E08-BFEB-31FD0A9F32EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B327FE6C-4617-4E08-BFEB-31FD0A9F32EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B327FE6C-4617-4E08-BFEB-31FD0A9F32EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B327FE6C-4617-4E08-BFEB-31FD0A9F32EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0243268E-1F20-4036-B043-010D5A8C8AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0243268E-1F20-4036-B043-010D5A8C8AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0243268E-1F20-4036-B043-010D5A8C8AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0243268E-1F20-4036-B043-010D5A8C8AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1296793-1287-4D53-BE58-D83C05A4BE6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1296793-1287-4D53-BE58-D83C05A4BE6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1296793-1287-4D53-BE58-D83C05A4BE6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1296793-1287-4D53-BE58-D83C05A4BE6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EB2B3E5-2C49-404A-A371-046DC3D0B384}
+	EndGlobalSection
+EndGlobal
