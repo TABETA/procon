@@ -65,6 +65,7 @@ using pii = pair<int, int>;
 #define rrep(i, n) reps(i, 1, n + 1)
 #define repd(i,n) for(ll i=n-1;i>=0;i--)
 #define rrepd(i,n) for(ll i=n;i>=1;i--)
+#define repr(i, n) for(auto&& i: n)
 
 /* debug */
 #define debug(x) cerr << "\033[33m(line:" << __LINE__ << ") " << #x << ": " << x << "\033[m" << endl;
@@ -101,9 +102,47 @@ namespace std{
         }
     };
 }
-
+template <typename T>
+vector<pair<T, T> > prime_factorize(T N) {
+    vector<pair<T, T> > res;
+    for (T a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        T ex = 0;
+        while (N % a == 0) {
+            ++ex;
+            N /= a;
+        }
+        res.push_back({a, ex});
+    }
+    if (N != 1) res.push_back({N, 1});
+    return res;
+}
 
 auto func(long long N){
+    auto P = prime_factorize(2*N);
+    set<ll> p;
+    auto dfs = [&](auto&& dfs, ll i, ll accum){
+        if(i >= (ll)P.size())
+        {
+            p.emplace(accum);
+            return;
+        }
+        for(ll j = 0; j <= P[i].second; ++j)
+        {
+            dfs(dfs, i+1, accum * pow(P[i].first,j));
+        }
+    };
+    dfs(dfs, 0, 1);
+    ll ans = 0;
+    for (auto &&n : p)
+    {
+        auto q = 2*N/n;
+        if((q - (n-1)) % 2 == 0)
+        {
+            ans++;
+        }
+    }
+    cout << ans << endl;
 }
 // clang-format on
 
