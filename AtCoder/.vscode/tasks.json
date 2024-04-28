@@ -14,7 +14,8 @@
 				"-pedantic",
 				"${file}",
 				"-D_DEBUG",
-				"-I ${aclib}",
+				"-I",
+				"${aclib}",
 				"-o",
 				"${fileDirname}/${fileBasenameNoExtension}"
 			],
