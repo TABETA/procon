@@ -122,25 +122,28 @@ int main() {
         std::cin >> y;
         CY[c] = y;
     }
-    vvll DP(N+1, vll(N+1, -1));
-    DP[0][0] = 0;
-    reps(i,1,N+1)
-    {
-        rep(j,i+1)
-        {
-            DP[i][0] = max(DP[i][0], DP[i-1][j]);
+    vvll DP(N, vll(N+1, -1));
+    auto dp = [&](auto&& dp, ll i, ll counter) -> ll {
+        if (DP[i][counter] != -1) {
+            return DP[i][counter];
         }
-        reps(j,1,i+1)
-        {
-            DP[i][j] = DP[i-1][j-1] + X[i-1] + ((CY.count(j) != 0) ? CY[j]:0);
+        if (i == N - 1) {
+            ll ans = X[i] + ((CY.count(counter) != 0) ? CY[counter]:0);
+            return DP[i][counter] = ans;
         }
-    }
-
-    ll ans = 0;
-    rep(i,N+1)
-    {
-        ans = max(ans, DP[N][i]);
-    }
+        else
+        {
+            ll ans = max(dp(dp, i + 1, 0), dp(dp, i + 1, counter + 1));
+            if (CY.count(counter) != 0) {
+                ans += CY[counter];
+            }
+            if (counter > 0) {
+                ans += X[i];
+            }
+            return DP[i][counter] = ans;
+        }
+    };
+    ll ans = max(dp(dp, 0, 0),dp(dp, 0, 1));
     cout << ans << endl;
     return 0;
 }
