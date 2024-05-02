@@ -104,12 +104,47 @@ namespace std{
 }
 
 #include <atcoder/modint>
-using Modint = atcoder::modint2;
 const long long MOD = 2;
 
 // clang-format on
 
 int main() {
-    // Failed to predict input format
+    ll n,m;
+    cin >> n >> m;
+    vector<ull> S(m);
+    rep(i,m){
+        ll k;
+        cin >> k;
+        ull mask = 0;
+        rep(j,k){
+            ull s;
+            cin >> s;
+            --s;
+            mask |= (1<<s);
+        }
+        S[i] = mask;
+    }
+    vll P(m);
+    rep(i,m){
+        ll p;
+        cin >> p;
+        P[i] = p;
+    }
+    ll ans = 0;
+    ull th = 1<<n;
+    for(ull i = 0; i < th; ++i){
+        ans += [&](){
+            rep(j,m)
+            {
+                ull masked = i & S[j];
+                auto on = popcount(masked);
+                if(P[j] != (on%2)){
+                    return 0;
+                }
+            }
+            return 1;
+        }();
+    }
+    cout << ans << endl;
     return 0;
 }
