@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -105,9 +106,6 @@ namespace std{
 
 const string YES = "Yes";
 
-auto func(long long N, long long M, std::vector<long long> A, std::vector<long long> B){
-
-}
 // clang-format on
 
 int main() {
@@ -115,12 +113,35 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    vvll E(N + 1);
+    for (int i = 0; i < M; i++) {
+        ll a, b;
+        std::cin >> a;
+        std::cin >> b;
+        sb(E, a, b);
     }
-    func(N, M, std::move(A), std::move(B));
+    vll ans(N + 1, -1);
+    ans[1] = 0;
+    queue<ll> Q;
+    Q.push(1);
+    while (!Q.empty()) {
+        auto q = Q.front();
+        Q.pop();
+        for (auto&& e : E[q]) {
+            if(ans[e] == -1){
+                ans[e] = q;
+                Q.push(e);
+            }
+        }
+    }
+    reps(i, 2, N + 1) {
+        if (ans[i] == -1) {
+            cout << "No" << endl;
+            return 0;
+        }
+    }
+    cout << YES << endl;
+    reps(i, 2, N + 1) { cout << ans[i] << endl; }
+
     return 0;
 }
