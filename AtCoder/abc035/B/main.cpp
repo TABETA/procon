@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -105,7 +106,41 @@ namespace std{
 
 
 auto func(std::string S, long long T){
-
+    ll x = 0 ,y = 0;
+    ll q = 0;
+    for (auto &&s : S)
+    {
+        switch(s){
+            case 'L':
+            --x;
+            break;
+            case 'R':
+            ++x;
+            break;
+            case 'U':
+            ++y;
+            break;
+            case 'D':
+            --y;
+            break;
+            case '?':
+            ++q;
+            break;
+        }
+        
+    }
+    ll ans = abs(x) + abs(y);
+    if(T == 1){
+        ans += q;
+        cout << ans << endl;
+    }else{
+        ans -= q;
+        if(ans < 0){
+            ll rem = abs(ans) % 2;
+            ans = rem;
+        }
+        cout << ans << endl;
+    }
 }
 // clang-format on
 
