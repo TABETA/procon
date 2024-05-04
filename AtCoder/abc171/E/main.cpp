@@ -104,18 +104,26 @@ namespace std{
 }
 
 
-auto func(long long N, std::vector<long long> a){
-
-}
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> a(N);
+    ll b = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
+        b ^= a[i];
     }
-    func(N, std::move(a));
+    rep(i,N){
+        ll x = b^a[i];
+        cout << x;
+        if(i == N-1){
+            cout << endl;
+        }else{
+            cout << " ";
+        }
+
+    }
     return 0;
 }
