@@ -104,9 +104,7 @@ namespace std{
 }
 
 
-auto func(long long N, long long M, long long P, std::vector<long long> A, std::vector<long long> B){
 
-}
 // clang-format on
 
 int main() {
@@ -124,6 +122,37 @@ int main() {
     for(int i = 0 ; i < M ; i++){
         std::cin >> B[i];
     }
-    func(N, M, P, std::move(A), std::move(B));
+    sort(all(A));
+    sort(all(B));
+    auto func = [&](const vll& self, const vll& others, bool is_add)->ll{
+        ll ans = 0;
+        ll p = 0;
+        const ll T = others.size();
+        for (auto &&s : self)
+        {
+            auto th = P - s;
+            auto it = upper_bound(all(others), th);
+            auto index = distance(others.begin(), it);
+            if (index <= 0){
+                if(is_add){
+                    p += P*T;
+                }
+            } else if (index >= T){
+                ans += s*T;
+            } else {
+                auto i = index;
+                ans += s*i;
+                if(is_add){
+                    p += P*(T-i);
+                }
+            }
+        }
+        return ans + p;
+    };
+    ll ans = 0;
+    ans += func(A, B, true);
+    ans += func(B, A, false);
+    cout << ans << endl;
+
     return 0;
 }
