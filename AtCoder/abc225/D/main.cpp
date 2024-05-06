@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -103,10 +104,67 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
+struct Node{
+    Node* parent = nullptr;
+    Node* child = nullptr;
+    ll value;
+};
+
 int main() {
-    // Failed to predict input format
+    ll N, Q;
+    cin >> N >> Q;
+    vector<Node> nodes(N+1);
+    map<ll, list<ll>> m;
+    rep(i,N){
+        m[i+1] = list<ll>{i+1};
+        nodes[i+1].value = i+1;
+    }
+    rep(i, Q) {
+        ll q;
+        cin >> q;
+        switch (q) {
+            case 1:
+            {
+                ll x,y; cin >> x >> y;
+                nodes[y].parent = &nodes[x];
+                nodes[x].child = &nodes[y];
+            }
+                break;
+            case 2:
+            {
+                ll x,y; cin >> x >> y;
+                nodes[x].child = nullptr;
+                nodes[y].parent = nullptr;
+            }
+                break;
+            case 3:
+            {
+                ll x; cin >> x;
+                Node* head = nodes[x].parent;
+                if(head == nullptr){
+                    head = &nodes[x];
+                }else{
+                    while(head->parent != nullptr){
+                        head = head->parent;
+                    }
+                }
+                Node* itr = head;
+                vll ans;
+                while(itr != nullptr){
+                    ans.pb(itr->value);
+                    itr = itr->child;
+                }
+                cout << ans.size();
+                for (auto &&i : ans)
+                {
+                    cout << " " << i;
+                }
+                cout << endl;
+            }
+                break;
+        }
+    }
     return 0;
 }
