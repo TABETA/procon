@@ -104,9 +104,7 @@ namespace std{
 }
 
 
-auto func(long long X, long long Y, long long Z, std::string S){
 
-}
 // clang-format on
 
 int main() {
@@ -118,6 +116,20 @@ int main() {
     std::cin >> Z;
     std::string S;
     std::cin >> S;
-    func(X, Y, Z, S);
+    ll N = S.size();
+    vvll DP(N+1, vll(2, LONG_LONG_MAX));
+    DP[0][0] = 0;
+    DP[0][1] = Z;
+    rep(i,N){
+        if(S[i] == 'a'){
+            DP[i+1][0] = min(DP[i][0]+X, DP[i][1]+Z+X);
+            DP[i+1][1] = min(DP[i][1]+Y, DP[i][0]+Z+Y);
+        } else {
+            DP[i+1][0] = min(DP[i][0]+Y, DP[i][1]+Z+Y);
+            DP[i+1][1] = min(DP[i][1]+X, DP[i][0]+Z+X);
+        }
+    }
+    ll ans = min(DP[N][0], DP[N][1]);
+    cout << ans << endl;
     return 0;
 }
