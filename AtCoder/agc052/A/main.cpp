@@ -107,6 +107,16 @@ namespace std{
 // clang-format on
 
 int main() {
-    // Failed to predict input format
+    ll t;
+    cin >> t;
+    rep(_,t){
+        ll n;
+        cin >> n;
+        vs S(3);
+        for(auto& s: S){
+            cin >> s;
+        }
+        cout << "0" + string(n, '1') +  string(n, '0') << endl;
+    }
     return 0;
 }
