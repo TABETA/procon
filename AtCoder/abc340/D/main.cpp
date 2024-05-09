@@ -103,11 +103,36 @@ namespace std{
     };
 }
 
+struct Edge{
+    ll distance;
+    ll to;
+};
+using Edges = vector<Edge>;
+using Nodes = vector<Edges>;
+using P = pair<ll,ll>;
 
-auto func(long long N, std::vector<long long> A, std::vector<long long> B, std::vector<long long> X){
-
+auto dijkstra(Nodes G, ll start){
+    vll distance(G.size(), numeric_limits<ll>::max());
+    distance[start] = 0;
+    priority_queue<P, vector<P>, greater<P>> q;
+    q.emplace(0,start);
+    while(!q.empty()){
+        auto [t, from] = q.top(); q.pop();
+        if(distance[from] < t) continue;
+        for (auto &&e : G[from])
+        {
+            auto j = e.to;
+            auto newDistance = distance[from] + e.distance;
+            if(distance[j] > newDistance){
+                distance[j] = newDistance;
+                q.emplace(newDistance, j);
+            }
+        }
+    }
+    return distance;
 }
 // clang-format on
+
 
 int main() {
     long long N;
@@ -115,11 +140,15 @@ int main() {
     std::vector<long long> A(N-1);
     std::vector<long long> B(N-1);
     std::vector<long long> X(N-1);
+    Nodes G(N);
     for(int i = 0 ; i < N-1 ; i++){
         std::cin >> A[i];
         std::cin >> B[i];
-        std::cin >> X[i];
+        std::cin >> X[i];--X[i];
+        G[i].emplace_back(A[i], i+1);
+        G[i].emplace_back(B[i], X[i]);
     }
-    func(N, std::move(A), std::move(B), std::move(X));
+    auto distance = dijkstra(std::move(G), 0);
+    cout << distance[N-1] << endl;
     return 0;
 }
