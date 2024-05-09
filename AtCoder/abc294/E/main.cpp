@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -103,10 +104,46 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
+struct X
+{
+    ll value;
+    ll length;
+    ll next;
+    auto start() const { return next-length; }
+    auto end()const { return next; }
+    auto getOverlap(const X& their){
+        return min(end(),their.end()) - max(start(),their.start());
+    }
+};
+
 int main() {
-    // Failed to predict input format
+    ll L, N[2];
+    cin >> L >> N[0] >> N[1];
+    vector<vector<X>> accum(2);
+    rep(i, 2) {
+        ll distance = 0;
+        rep(j, N[i]) {
+            ll v,l;
+            cin >> v >> l;
+            distance += l;
+            accum[i].emplace_back(v, l, distance);
+        }
+    }
+    ll ans = 0;
+    for(ll i = 0, j = 0;i < N[0] && j < N[1];){
+        auto x1 = accum[0][i];
+        auto x2 = accum[1][j];
+        if(x1.value == x2.value){
+            ans += x1.getOverlap(x2);
+        }
+        if(x1.next < x2.next){
+            ++i;
+        }else{
+            ++j;
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
