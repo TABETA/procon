@@ -105,10 +105,29 @@ namespace std{
 
 #include <atcoder/modint>
 using Modint = atcoder::modint1000000007;
+using vm = vector<Modint>;
+using vvm = vector<vm>;
 const long long MOD = 1000000007;
-
 auto func(long long N, std::vector<long long> A){
-
+    if(N==1){
+        cout << A[0] << endl;
+        return;
+    }
+    vvm DP(N,vm(2));
+    DP[0][0] = 1;
+    DP[0][1] = 0;
+    rep(i,N-1){
+        DP[i+1][0] = DP[i][0] + DP[i][1];
+        DP[i+1][1] = DP[i][0];
+    }
+    vvm ans(N,vm(2));
+    ans[0][0] = A[0];
+    ans[0][1] = 0;
+    rep(i,N-1){
+        ans[i+1][0] = ans[i][0] + ans[i][1] + DP[i+1][0] * A[i+1];
+        ans[i+1][1] = ans[i][0] +           - DP[i+1][1] * A[i+1];
+    }
+    cout << (ans[N-1][0] + ans[N-1][1]).val() << endl;
 }
 // clang-format on
 

@@ -25,34 +25,11 @@
 			"problemMatcher": [
 				"$gcc"
 			],
-			"group": "build",
-			"detail": "コンパイラ: /usr/bin/g++"
-		},
-		{
-			"type": "javabuild",
-			"label": "java: アクティブなファイルのビルド",
-			"command": "/usr/bin/java",
-			"args": [
-				"${file}",
-			],
-			"options": {
-				"cwd": "${fileDirname}"
+			"group": {
+				"kind": "build",
+				"isDefault": true
 			},
-			"problemMatcher": [{
-					"pattern": [{
-							"regexp": "\\b\\B",
-							"file": 1,
-							"location": 2,
-							"message": 3
-					}],
-					"background": {
-							"activeOnStart": true,
-							"beginsPattern": "^.*Listening for",
-							"endsPattern": "^.*transport dt_socket at address.*"
-					}
-			}],
-			"group": "build",
-			"detail": "コンパイラ: /usr/bin/java"
+			"detail": "コンパイラ: /usr/bin/g++"
 		}
 	]
 }
