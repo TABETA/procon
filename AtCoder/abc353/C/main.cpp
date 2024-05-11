@@ -112,21 +112,17 @@ auto func(long long N, std::vector<long long> A){
         ans += A[i]*(N-1);
     }
     ll m = 0;
+    ll r = N;
     for(ll i = 0; i < N-1; ++i){
-        for(ll l = i + 1, r = N-1 ; ;){
-            ll t = (l+r)/2;
-            ll a = A[i] + A[t];
-            if(l == r)
-            {
-                m += N - l;
+        r = max(r, i+1);
+        for(; r-1 > i ;){
+            if(A[i] + A[r-1] >= MOD){
+                --r;
+            }else{
                 break;
             }
-            if(a >= MOD){
-                l = t;
-            } else {
-                r = t;
-            }
         }
+        m += N - r;
     }
     ll mm = m*MOD;
     ans -= mm;
