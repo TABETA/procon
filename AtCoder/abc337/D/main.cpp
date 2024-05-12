@@ -105,7 +105,38 @@ namespace std{
 
 
 auto func(long long H, long long W, long long K, std::vector<std::string> S){
-
+    ll ans = LONG_LONG_MAX;
+    {
+        vll X(W+1);
+        vll D(W+1);
+        rep(i,H){
+            rep(j,W){
+                X[j+1] = X[j] + (S[i][j] == 'x'?1:0);
+                D[j+1] = D[j] + (S[i][j] == '.'?1:0);
+            }
+            rep(j,W+1-K){
+                if(X[j+K] - X[j] == 0){
+                    ans = min(ans, D[j+K]-D[j]);
+                }
+            }
+        }
+    }
+    {
+        vll X(H+1);
+        vll D(H+1);
+        rep(i,W){
+            rep(j,H){
+                X[j+1] = X[j] + (S[j][i] == 'x'?1:0);
+                D[j+1] = D[j] + (S[j][i] == '.'?1:0);
+            }
+            rep(j,H+1-K){
+                if(X[j+K] - X[j] == 0){
+                    ans = min(ans, D[j+K]-D[j]);
+                }
+            }
+        }
+    }
+    cout << (ans == LONG_LONG_MAX ? -1 : ans) << endl;
 }
 // clang-format on
 
