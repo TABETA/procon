@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -102,20 +103,59 @@ namespace std{
         }
     };
 }
+using P = pair<ll, ll>;
 
+auto isNaname(P l, P r)->ll{
+    auto [a,b] = l;
+    auto [c,d] = r;
+    return a + b == c + d || a - b == c - d;
+}
 
-auto func(std::vector<long long> r, std::vector<long long> c){
+auto isSamelane(P l, P r)->ll{
+    auto [a,b] = l;
+    auto [c,d] = r;
+    return ((a+b)%2) == ((c+d)%2);
+}
 
+auto distance(P l, P r)->ll{
+    auto [a,b] = l;
+    auto [c,d] = r;
+    return abs(c - a) + abs(d-b);
+}
+
+auto approach(P l, P r)->ll{
+    auto [a,b] = l;
+    auto [c,d] = r;
+    auto distance = min(
+        abs((a+b)-(c+d)),
+        abs((a-b)-(c-d))
+    );
+    return distance;
+}
+
+auto func(P l, P r) -> ll{
+    if (l == r) {
+        return 0;
+    }
+    auto d = distance(l, r);
+    if(isNaname(l, r) || d <= 3){
+        return 1;
+    }
+    if(isSamelane(l,r)|| d <= 6 || approach(l,r) <= 3){
+        return 2;
+    }
+    return 3;
 }
 // clang-format on
 
 int main() {
-    std::vector<long long> r(2);
-    std::vector<long long> c(2);
-    for(int i = 0 ; i < 2 ; i++){
-        std::cin >> r[i];
-        std::cin >> c[i];
+    std::vector<P> v(2);
+    for (int i = 0; i < 2; i++) {
+        ll r, c;
+        std::cin >> r >> c;
+        v[i] = {r, c};
     }
-    func(std::move(r), std::move(c));
+    cout << func(v[0], v[1]) << endl;
+
     return 0;
 }
