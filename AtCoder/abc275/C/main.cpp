@@ -103,17 +103,42 @@ namespace std{
     };
 }
 
-
-auto func(std::vector<std::string> S){
-
-}
 // clang-format on
-
+using P =pair<ll,ll>;
+using vp = vector<P>;
+bool isSquare(vp p){
+	vector<int> v;
+    if(p.size() != 4){return false;}
+	for (int i = 0; i < 3; i++)
+		for (int j = i + 1; j < 4; j++) {
+			int dx = p[i].first - p[j].first, dy = p[i].second - p[j].second;
+			v.push_back(dx * dx + dy * dy);
+		}
+	sort(v.begin(), v.end());
+	int l = v[0];
+	if (l == 0) return false; // 点が重なる
+	return v[0]==l && v[1]==l && v[2]==l && v[3]==l && v[4]==l*2 && v[5]==l*2;
+}
 int main() {
     std::vector<std::string> S(9);
     for(int i = 0 ; i < 9 ; i++){
         std::cin >> S[i];
     }
-    func(std::move(S));
+    const ll N = (ll)S.size();
+    vp pones;
+    rep(r,N){
+        rep(c,N){
+            if(S[r][c] == '#'){
+                pones.emplace_back(r,c);
+            }
+        }
+    }
+    ll ans = 0;
+    const ll Q = (ll)pones.size();
+    rep(i,Q)reps(j,i+1,Q)reps(k,j+1,Q)reps(l,k+1,Q){
+        auto p = vp{pones[i], pones[j],pones[k],pones[l]};
+        ans += isSquare(p) ? 1:0;
+    }
+    cout << ans << endl;
     return 0;
 }
