@@ -23,5 +23,8 @@ atg() {
     exit 1
   fi
 }
+at-solved(){
+  git add main.cpp && git commit -m "Solve $(pwd | sed "s|$at_home/||g")"
+}
 alias ats="atcoder-tools submit -u --config $at_config"
 alias att="atcoder-tools test --exec ./a.out --config $at_config"
