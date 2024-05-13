@@ -103,19 +103,50 @@ namespace std{
     };
 }
 
-
-auto func(long long n, std::vector<long long> v){
-
-}
 // clang-format on
 
 int main() {
     long long n;
     std::cin >> n;
-    std::vector<long long> v(n);
+    map<ll,ll> even;
+    map<ll,ll> odd;
     for(int i = 0 ; i < n ; i++){
-        std::cin >> v[i];
+        ll v;
+        std::cin >> v;
+        if(i%2 == 0){
+            even[v]++;
+        }else{
+            odd[v]++;
+        }
     }
-    func(n, std::move(v));
+    using P =pair<ll,ll>; 
+    vector<P> v1(even.size());
+    {
+        ll i = 0;
+        for (auto &&[k,v] : even)
+        {
+            v1[i++] = {k,v};
+        }
+    }
+    vector<P> v2(odd.size());
+    {
+        ll i = 0;
+        for (auto &&[k,v] : odd)
+        {
+            v2[i++] = {k,v};
+        }
+    }
+    auto cmp = [](const P& l, const P& r){ return l.second > r.second; };
+    sort(all(v1), cmp);
+    sort(all(v2), cmp);
+    if(v1[0].first != v2[0].first){
+        cout << n - (v1[0].second + v2[0].second) << endl;
+    } else if(n == 2){
+        cout << 1 << endl;
+    } else {
+        ll a = v1[0].second + (v2.size() >= 2 ? v2[1].second : 0);
+        ll b = v2[0].second + (v1.size() >= 2 ? v1[1].second : 0);
+        cout << n - max(a,b) << endl;
+    }
     return 0;
 }
