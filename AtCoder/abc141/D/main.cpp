@@ -104,9 +104,6 @@ namespace std{
 }
 
 
-auto func(long long N, long long M, std::vector<long long> A){
-
-}
 // clang-format on
 
 int main() {
@@ -114,10 +111,22 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(N);
+    priority_queue<ll> Q;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        ll a;
+        std::cin >> a;
+        Q.push(a);
     }
-    func(N, M, std::move(A));
+    rep(i,M){
+        auto q = Q.top();Q.pop();
+        Q.push(q/2);
+    }
+    ll ans = 0;
+    while(!Q.empty()){
+        auto q = Q.top();Q.pop();
+        ans += q;
+    }
+    cout << ans << endl;
+
     return 0;
 }
