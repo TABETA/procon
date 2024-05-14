@@ -103,10 +103,6 @@ namespace std{
     };
 }
 
-
-auto func(long long N, long long C, long long K, std::vector<long long> T){
-
-}
 // clang-format on
 
 int main() {
@@ -116,10 +112,27 @@ int main() {
     std::cin >> C;
     long long K;
     std::cin >> K;
-    std::vector<long long> T(N);
+    vll T(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> T[i];
     }
-    func(N, C, K, std::move(T));
+    sort(all(T));
+    ll ans = [&](){
+        ll head = T[0];
+        ll i = 1;
+        ll ans = 1;
+        reps(j,1,N){
+            auto t = T[j];
+            ++i;
+            if((t > head+K) || i > C){
+                ++ans;
+                i = 1;
+                head = t;
+            }
+            
+        }
+        return ans;
+    }();
+    cout << ans << endl;
     return 0;
 }
