@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -103,10 +104,6 @@ namespace std{
     };
 }
 
-
-auto func(long long N, long long M, long long K){
-
-}
 // clang-format on
 
 int main() {
@@ -116,6 +113,25 @@ int main() {
     std::cin >> M;
     long long K;
     std::cin >> K;
-    func(N, M, K);
+    ll L = lcm(N, M);
+    ll R = [&](){
+        ll l = 1;
+        ll r = 1e18;
+        auto check = [&](ll v){
+            return v/N + v/M - (v/L)*2 >= K;
+        };
+        while(l<r){
+            ll m = (r+l) / 2;
+            if(check(m)){
+                r = m;
+            } else {
+                l = m+1;
+            }
+        }
+        return l;
+    }();
+    
+    cout << R << endl;
+
     return 0;
 }
