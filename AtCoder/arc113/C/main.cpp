@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -103,15 +104,23 @@ namespace std{
     };
 }
 
-
-auto func(std::string S){
-
-}
 // clang-format on
 
 int main() {
     std::string S;
     std::cin >> S;
-    func(S);
+    map<char, ll> m;
+    ll ans = 0;
+    for (ll i = S.size() - 1; i >= 0; --i) {
+        m[S[i]]++;
+        if (i + 2 < S.size()) {
+            if (S[i] == S[i + 1] && S[i] != S[i + 2]) {
+                ans += (S.size() - i) - m[S[i]];
+                m.clear();
+                m[S[i]] = (S.size() - i);
+            }
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
