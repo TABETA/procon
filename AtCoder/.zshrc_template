@@ -17,7 +17,7 @@ atg() {
     #引数が2つの場合はさらに問題を指定してコミット
     contest_name=$1
     problem=$2
-    atcoder-tools_gen_and_cd $contest_name $at_config $at_home && git add $problem && git commit -m "Add ${contest_name}/${problem}" && code "${problem}/main.cpp"
+    atcoder-tools_gen_and_cd $contest_name $at_config $at_home && git add $problem && git commit -m "Add ${contest_name}/${problem}" && git clean -fd && code "${problem}/main.cpp"
   else
     echo "Illegal argment number. allower agruments <= 2"
     exit 1
