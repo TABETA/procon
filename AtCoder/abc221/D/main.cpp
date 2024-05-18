@@ -104,9 +104,6 @@ namespace std{
 }
 
 
-auto func(long long N, std::vector<long long> A, std::vector<long long> B){
-
-}
 // clang-format on
 
 int main() {
@@ -114,10 +111,25 @@ int main() {
     std::cin >> N;
     std::vector<long long> A(N);
     std::vector<long long> B(N);
+    map<ll, ll> m;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
         std::cin >> B[i];
+        m[A[i]]++;
+        m[A[i]+B[i]]--;
     }
-    func(N, std::move(A), std::move(B));
+    ll sum = 0;
+    ll pre = m.begin()->first;
+    vll ans(N+1);
+    for (auto &&[k,v] : m)
+    {
+        ans[sum] += k-pre;
+        sum += v;
+        pre = k;
+    }
+    rep (i,N)
+    {
+        cout << ans[i+1] << " ";
+    }
     return 0;
 }
