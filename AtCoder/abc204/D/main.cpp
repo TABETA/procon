@@ -1,4 +1,4 @@
-#ifdef _MSVC_LANG 
+#ifdef _MSVC_LANG
 #include <tuple>
 #include <sstream>
 #include <queue>
@@ -104,18 +104,29 @@ namespace std{
 }
 
 
-auto func(long long N, std::vector<long long> T){
-
-}
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> T(N);
+    ll sum = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> T[i];
+        sum += T[i];
     }
-    func(N, std::move(T));
+    sort(all(T));
+    ll opt = ceil(sum/2.0);
+    vector<set<ll>> DP(N+1);
+    DP[0].insert(0);
+    rep(i,N){
+        for (auto &&v : DP[i])
+        {
+            DP[i+1].insert(v);
+            DP[i+1].insert(v+T[i]);
+        }
+    }
+    auto ans = DP[N].lower_bound(opt);
+    cout << *ans << endl;
     return 0;
 }
