@@ -104,9 +104,6 @@ namespace std{
 }
 
 
-auto func(long long B, long long C){
-
-}
 // clang-format on
 
 int main() {
@@ -114,6 +111,29 @@ int main() {
     std::cin >> B;
     long long C;
     std::cin >> C;
-    func(B, C);
+    ll ans;
+    if(B > 0){
+        ll r_r = ( B + (C-2)/2);
+        ll r_l = ( B - (C  )/2);
+        ll l_r = (-B + (C-1)/2);
+        ll l_l = (-B - (C-1)/2);
+        if(r_l <= l_r){
+            ans = r_r - l_l + 1;
+        } else {
+            ans = (r_r - r_l + 1) + (l_r - l_l + 1);
+        }
+    } else {
+        ll r_r = (-B + (C-1)/2);
+        ll r_l = (-B - (C-1)/2);
+        ll l_r = ( B + (C-2)/2);
+        ll l_l = ( B - (C  )/2);
+        if(r_l <= l_r){
+            ans = r_r - l_l + 1;
+        } else {
+            ans = (r_r - r_l + 1) + (l_r - l_l + 1);
+        }
+    }
+
+    cout << ans << endl;
     return 0;
 }
