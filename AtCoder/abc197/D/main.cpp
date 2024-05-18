@@ -106,7 +106,20 @@ namespace std{
 
 // clang-format on
 
+using C = complex<double>;
+
 int main() {
-    // Failed to predict input format
+    ll n;
+    ll x, y;
+    cin >>n;
+    cin >> x >> y;
+    C p0(x,y);
+    cin >> x >> y;
+    C pN2(x,y);
+    C center = (p0+pN2)/2.0;
+    double rad = 2.0 * M_PI / n;
+    C r = C(cos(rad), sin(rad));
+    C ans = center + (p0-center)*r;
+    cout << setprecision(10) << ans.real() << " " << ans.imag() << endl;
     return 0;
 }
