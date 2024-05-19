@@ -104,14 +104,39 @@ namespace std{
 }
 
 
-auto func(std::string S){
-
-}
 // clang-format on
-
+using P = tuple<ll, ll, ll>;
 int main() {
-    std::string S;
-    std::cin >> S;
-    func(S);
+    long long N;
+    std::cin >> N;
+    std::vector<P> C(N);
+    for(int i = 0 ; i < N ; i++){
+        ll a, c;
+        std::cin >> a;
+        std::cin >> c;
+        C[i] = {a,c, i+1};
+    }
+    sort(all(C), [](P l, P r){ return get<1>(l) < get<1>(r); });
+    for(ll i = 0, j = 1; i < N-1; ++i, j = i+1){
+        if(get<0>(C[i]) == 0)continue;
+        while(get<0>(C[i]) > get<0>(C[j])){
+            get<0>(C[j]) = 0;
+            ++j;
+            if(j >= N){
+                break;
+            }
+        }
+    }
+    vll ans;
+    rep(i,N)
+    {
+        if(get<0>(C[i]) != 0)ans.emplace_back(get<2>(C[i]));
+    }
+    cout << ans.size() << endl;
+    sort(all(ans));
+    for (auto &&i : ans)
+    {
+        cout << i << " ";
+    }
     return 0;
 }

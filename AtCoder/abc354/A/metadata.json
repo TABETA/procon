@@ -7,9 +7,9 @@
  "problem": {
   "alphabet": "A",
   "contest": {
-   "contest_id": "abc197"
+   "contest_id": "abc354"
   },
-  "problem_id": "abc197_a"
+  "problem_id": "abc354_a"
  },
  "sample_in_pattern": "in_*.txt",
  "sample_out_pattern": "out_*.txt",

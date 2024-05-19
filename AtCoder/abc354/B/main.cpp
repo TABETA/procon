@@ -103,15 +103,23 @@ namespace std{
     };
 }
 
-
-auto func(std::string S){
-
-}
 // clang-format on
-
+using P = pair<string , ll>;
 int main() {
-    std::string S;
-    std::cin >> S;
-    func(S);
+    long long N;
+    std::cin >> N;
+    vector<P> S(N);
+    ll sum = 0;
+    for(int i = 0 ; i < N ; i++){
+        string s;
+        ll c;
+        std::cin >> s;
+        std::cin >> c;
+        S[i] = {s,c};
+        sum += c;
+    }
+    sort(all(S), [](P l, P r){ return l.first < r.first; });
+    string ans = S[sum % N].first;
+    cout << ans << endl;
     return 0;
 }

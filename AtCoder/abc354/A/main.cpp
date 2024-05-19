@@ -104,9 +104,20 @@ namespace std{
 }
 
 
+auto func(long long H){
+    ll h = 0;
+    ll i = 0;
+    while(H >= h){
+        h += pow(2,i++);
+    }
+    cout << i << endl;
+
+}
 // clang-format on
 
 int main() {
-    // Failed to predict input format
+    long long H;
+    std::cin >> H;
+    func(H);
     return 0;
 }
