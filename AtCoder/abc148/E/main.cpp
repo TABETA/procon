@@ -104,14 +104,28 @@ namespace std{
 }
 
 
-auto func(long long N){
-
+auto func(long long N)->ll{
+    if(N % 2 != 0){
+        return 0LL;
+    }
+    auto g = [](ll n, ll D){
+        ll res = 0;
+        ll d = D;
+        while(n >= d){
+            res += n / d;
+            d *= D;
+        }
+        return res;
+    };
+    ll q5 = g(N/2,5);
+    return q5;
 }
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
-    func(N);
+    ll ans = func(N);
+    cout << ans << endl;
     return 0;
 }
