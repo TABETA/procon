@@ -110,7 +110,14 @@ using vvm = vector<vm>;
 const long long MOD = 998244353;
 
 auto func(long long N, std::vector<long long> A){
-
+    sort(all(A));
+    Modint ans = A[N-1]*A[N-1];
+    Modint S = A[N-1];
+    for(ll i = N-2; i >= 0; --i){
+        ans += A[i]*(A[i] + S);
+        S = A[i] + 2*(S);
+    }
+    cout << ans.val() << endl;
 }
 // clang-format on
 
