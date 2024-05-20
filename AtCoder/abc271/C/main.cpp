@@ -104,18 +104,50 @@ namespace std{
 }
 
 
-auto func(long long N, std::vector<long long> a){
-
-}
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
+    map<ll,bool> M;
+    ll inf = LONG_LONG_MAX;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        ll a;
+        std::cin >> a;
+        if(M.count(a) == 0){
+            M[a] = true;
+        }else {
+            M[inf]=true;
+            inf--;
+        }
     }
-    func(N, std::move(a));
+    auto tail = M.rbegin();
+    auto sellNbuy = [&]()->bool{
+        rep(i,2){
+            if(tail == M.rend()){
+                return false;
+            }
+            if(!tail->second){
+                return false;
+            }
+            tail->second = false;
+            ++tail;
+        }
+        if(tail == M.rend()){
+            return false;
+        }
+        return true;
+    };
+    ll ans = 0;
+    for(ll i = 1; ; ++i){
+        if(M.count(i) == 0 || !M[i]){
+            if(!sellNbuy()){
+                break;
+            }
+        }
+        M[i] = false;
+        ans = i;
+    }
+    cout << ans << endl;
     return 0;
 }
