@@ -109,18 +109,26 @@ using vm = vector<Modint>;
 using vvm = vector<vm>;
 const long long MOD = 998244353;
 
-auto func(long long N, std::vector<long long> A){
-
-}
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
+    std::vector<Modint> B(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        B[i] = 1;
+        ll x = A[i];
+        while(x) B[i] *= 10, x /= 10;
     }
-    func(N, std::move(A));
+    Modint ans = 0;
+    Modint S = 0;
+    for(int i = 1; i < N; ++i){
+        S += A[i-1];
+        ans += A[i]*i;
+        ans += B[i] * S;
+    }
+    cout << ans.val()<< endl;
     return 0;
 }
