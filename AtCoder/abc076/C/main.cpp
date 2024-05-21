@@ -103,10 +103,35 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
-    // Failed to predict input format
+    string S;
+    cin >> S;
+    string T;
+    cin >> T;
+    ll N = S.size()-T.size()+1;
+    repd(i,N){
+        string ans = S;
+        if([&](ll i){
+            rep(j,T.size()){
+                ll k = i+j;
+                if(ans[k] == '?'){
+                    ans[k] = T[j];
+                } else if(ans[k] != T[j]){
+                    return false;
+                }
+            }
+            return true;
+        }(i)){
+            for (auto &c : ans)
+            {
+                if(c == '?')c = 'a';
+            }
+            cout << ans << endl;
+            return 0;
+        }
+    }
+    cout << "UNRESTORABLE" << endl;
     return 0;
 }
