@@ -104,9 +104,6 @@ namespace std{
 }
 
 
-auto func(long long N, std::string S, std::vector<long long> C){
-
-}
 // clang-format on
 
 int main() {
@@ -118,6 +115,20 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> C[i];
     }
-    func(N, S, std::move(C));
+    vvll DP(2,vll(N+1));
+    rep(b,2){
+        rep(i,N){
+            ll cost = C[i] * ((S[i]-'0') != (b^(i%2?0:1)));
+            DP[b][i+1] = cost + DP[b][i];
+        }
+    }
+    ll ans = LONG_LONG_MAX;
+    rep(b,2){
+        rep(i,N-1){
+            ll now = DP[b][i+1] + DP[b^1][N] - DP[b^1][i+1];
+            ans = min(now,ans);
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
