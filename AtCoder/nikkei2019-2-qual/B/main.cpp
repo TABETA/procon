@@ -109,18 +109,41 @@ using vm = vector<Modint>;
 using vvm = vector<vm>;
 const long long MOD = 998244353;
 
-auto func(long long N, std::vector<long long> D){
 
-}
 // clang-format on
+
+auto func(auto&& D, ll M)->unsigned int{
+    if(!D.contains(0) || D[0] != 1){
+        return 0;
+    }
+    Modint ans = 1;
+    for(ll i = 0; i < M;++i){
+        if(!D.contains(i)){
+            return 0;
+        }
+        auto d = D[i+1];
+        Modint now = 1;
+        while(d-- > 0) now *= D[i];
+        ans *= now;
+    }
+    return ans.val();
+}
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> D(N);
+    map<ll,ll> D;
+    ll M = 0;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> D[i];
+        ll d;
+        std::cin >> d;
+        if(i == 0 && d != 0){
+            cout << 0 << endl;
+            return 0;
+        }
+        M = max(d,M);
+        D[d]++;
     }
-    func(N, std::move(D));
+    cout << func(move(D), M) << endl;
     return 0;
 }
