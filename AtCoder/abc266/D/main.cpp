@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,22 +105,46 @@ namespace std{
 }
 
 
-auto func(long long N, std::vector<long long> T, std::vector<long long> X, std::vector<long long> A){
-
+auto func(long long N, std::map<ll, pair<ll,ll>> T){
+    const ll TMAX = 1e5;
+    vvll DP(TMAX+1, vll(5, LONG_LONG_MIN));
+    DP[0][0] = (T.contains(0) && T[0].first == 0)? T[0].second:0;
+    auto dp = [&](int t, int x1)->ll{
+        if(x1 < 0 || 5 <= x1){
+            return LONG_LONG_MIN;
+        }
+        return DP[t][x1];
+    };
+    rep(i,TMAX){
+        rep(j,5){
+            ll add = T.contains(i+1) ? (
+                T[i+1].first == j ?
+                T[i+1].second :
+                0):
+                0;
+            auto l = dp(i, j-1);
+            auto m = dp(i, j);
+            auto r = dp(i, j+1);
+            DP[i+1][j] = max(l, max(m,r)) + add;
+        }
+    }
+    ll ans = 0;
+    rep(i,5){
+        ans = max(ans, DP[TMAX][i]);
+    }
+    cout << ans << endl;
 }
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> T(N);
-    std::vector<long long> X(N);
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> T[i];
-        std::cin >> X[i];
-        std::cin >> A[i];
+    std::map<ll, pair<ll,ll>> T;
+    for (int i = 0; i < N; i++) {
+        ll t,x,a;
+        std::cin >> t>>x>>a;
+        T[t] = {x,a};
     }
-    func(N, std::move(T), std::move(X), std::move(A));
+    func(N, std::move(T));
     return 0;
 }
