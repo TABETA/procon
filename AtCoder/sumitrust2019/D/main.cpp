@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -103,11 +104,26 @@ namespace std{
     };
 }
 
-
-auto func(long long N, std::string S){
-
-}
 // clang-format on
+
+auto func(long long N, std::string S) {
+    vector<set<string>> DP(4);
+    DP[0].insert("");
+    DP[1].insert(string{S[0]});
+    rep(i,N) {
+        vector<set<string>> dp{DP};
+        rep(j, 4) {
+            if (j + 1 < min((int)i+2,4)) {
+                for (auto&& k : dp[j]) {
+                    auto s = k + S[i];
+                    DP[j+1].insert(s);
+                }
+            }
+        }
+    }
+    ll ans = DP[3].size();
+    cout << ans << endl;
+}
 
 int main() {
     long long N;
