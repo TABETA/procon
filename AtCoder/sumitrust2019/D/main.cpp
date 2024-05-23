@@ -107,21 +107,19 @@ namespace std{
 // clang-format on
 
 auto func(long long N, std::string S) {
-    vector<set<string>> DP(4);
-    DP[0].insert("");
-    DP[1].insert(string{S[0]});
-    rep(i,N) {
-        vector<set<string>> dp{DP};
-        rep(j, 4) {
-            if (j + 1 < min((int)i+2,4)) {
-                for (auto&& k : dp[j]) {
-                    auto s = k + S[i];
-                    DP[j+1].insert(s);
+    ll ans = 0;
+    rep(i,10)rep(j,10)rep(k,10){
+        string ijk = string(to_string(i)+to_string(j)+to_string(k));
+        int l = 0;
+        for(auto c : S){
+            if(ijk[l] == c){
+                ++l;
+                if(l == 3){
+                    ans++;
                 }
             }
         }
     }
-    ll ans = DP[3].size();
     cout << ans << endl;
 }
 
