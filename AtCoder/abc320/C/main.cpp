@@ -103,19 +103,40 @@ namespace std{
     };
 }
 
-
-auto func(long long M, std::vector<std::string> S){
-
-}
 // clang-format on
 
 int main() {
     long long M;
     std::cin >> M;
     std::vector<std::string> S(3);
+    vector<map<ll,vll>> T(3);
     for(int i = 0 ; i < 3 ; i++){
         std::cin >> S[i];
+        int j = 0;
+        for (auto &&s : S[i])
+        {
+           T[i][s-'0'].pb(j++);
+        }
     }
-    func(M, std::move(S));
+    cout << [&](){
+        ll ans = LONG_LONG_MAX;
+        rep(I,10)
+        for(auto&& i: T[0][I])
+        for(auto&& j: T[1][I])
+        for(auto&& k: T[2][I]){
+            vll now = {i,j,k};
+            while(true){
+                sort(all(now));
+                if(now[0] != now[1] && now[2] != now[1])break;
+                if(now[0] == now[1])now[1] += M;
+                if(now[2] == now[1])now[1] += M;
+                if(now[2] == now[0])now[0] += M;
+            }
+            if(now.size() > 0){
+                ans = min(ans, *max_element(all(now)));
+            }
+        }
+        return ans == LONG_LONG_MAX ? -1 : ans;
+    }() << endl;
     return 0;
 }
