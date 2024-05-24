@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -116,14 +117,72 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> A[i];
     }
-    func(H, W, N, std::move(A));
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+    cout << [&]() {
+        using P = pair<ll, ll>;
+        auto comp = [](P l, P r) {
+            auto al = min(l.first, l.second);
+            auto ar = min(r.first, r.second);
+            return al < ar;
+        };
+        priority_queue<P, vector<P>, decltype(comp)> Q;
+        if (H > W) swap(H, W);
+        Q.emplace(H, W);
+        const ll AMAX = 26;
+        vector<ll> C(AMAX);
+        auto [h, w] = Q.top();
+        Q.pop();
+        for (ll i = AMAX - 1; i >= 0;) {
+            ll p = pow(2, i);
+            auto dh = div(h,p);
+            auto dw = div(w,p);
+            if (dh.quot > 0 && dw.quot > 0) {
+                C[i] += dw.quot * dh.quot;
+                auto push = [&](ll h, ll w) {
+                    if (h > w) swap(h, w);
+                    if (h <= 0) return;
+                    Q.emplace(h, w);
+                };
+                ll a = max(min(dh.rem, p),min(h, dw.rem));
+                ll b = max(min(dh.rem, w),min(p, dw.rem));
+                if(a > b){
+                    push(dh.rem, p);
+                    push(h, dw.rem);
+                } else {
+                    push(dh.rem, w);
+                    push(p, dw.rem);
+                }
+                if (Q.empty()) {
+                    break;
+                }
+                tie(h, w) = Q.top();
+                Q.pop();
+            } else {
+                --i;
+            }
+        }
+        sort(all(A), greater());
+        ll i = 0;
+        for (ll j = AMAX - 1; j >= 0;) {
+            if (j < A[i]) {
+                return NO;
+            }
+            if (C[j] <= 0) {
+                --j;
+                continue;
+            }
+            C[j]--;
+            if (j > A[i]) {
+                C[A[i]] += pow(4, j - A[i]) - 1;
+            }
+            ++i;
+            if (i >= N) {
+                return YES;
+            }
+        }
+        return NO;
     }() << endl;
     return 0;
 }
