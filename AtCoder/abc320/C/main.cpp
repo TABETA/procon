@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -109,34 +110,68 @@ int main() {
     long long M;
     std::cin >> M;
     std::vector<std::string> S(3);
-    vector<map<ll,vll>> T(3);
-    for(int i = 0 ; i < 3 ; i++){
+    for (int i = 0; i < 3; i++) {
         std::cin >> S[i];
-        int j = 0;
-        for (auto &&s : S[i])
-        {
-           T[i][s-'0'].pb(j++);
-        }
     }
-    cout << [&](){
-        ll ans = LONG_LONG_MAX;
-        rep(I,10)
-        for(auto&& i: T[0][I])
-        for(auto&& j: T[1][I])
-        for(auto&& k: T[2][I]){
-            vll now = {i,j,k};
-            while(true){
-                sort(all(now));
-                if(now[0] != now[1] && now[2] != now[1])break;
-                if(now[0] == now[1])now[1] += M;
-                if(now[2] == now[1])now[1] += M;
-                if(now[2] == now[0])now[0] += M;
+    auto solve1 = [&]() {
+        vector<map<ll, vll>> T(3);
+        rep(i,3) {
+            int j = 0;
+            for (auto&& s : S[i]) {
+                T[i][s - '0'].pb(j++);
             }
-            if(now.size() > 0){
+        }
+        ll ans = LONG_LONG_MAX;
+        rep(I, 10) for (auto&& i : T[0][I]) for (auto&& j :
+                                                 T[1][I]) for (auto&& k :
+                                                               T[2][I]) {
+            vll now = {i, j, k};
+            while (true) {
+                sort(all(now));
+                if (now[0] != now[1] && now[2] != now[1]) break;
+                if (now[0] == now[1]) now[1] += M;
+                if (now[2] == now[1]) now[1] += M;
+                if (now[2] == now[0]) now[0] += M;
+            }
+            if (now.size() > 0) {
                 ans = min(ans, *max_element(all(now)));
             }
         }
         return ans == LONG_LONG_MAX ? -1 : ans;
-    }() << endl;
+    };
+    auto solve2 = [&]() {
+        ll ans = LONG_LONG_MAX;
+        rep(i, M * 3) rep(j, M * 3) rep(k, M * 3) {
+            if (i == j) continue;
+            if (i == k) continue;
+            if (k == j) continue;
+            if (S[0][i % M] != S[1][j % M]) continue;
+            if (S[0][i % M] != S[2][k % M]) continue;
+            ans = min(ans, max({i, j, k}));
+        }
+        return ans == LONG_LONG_MAX ? -1 : ans;
+    };
+    auto solve3 = [&]() {
+        ll ans = LONG_LONG_MAX;
+        rep(C, 10) {
+            char c = '0' + C;
+            vll p{0, 1, 2};
+            do {
+                ll i = 0;
+                ll t = 0;
+                ll T = 3 * M;
+                while (t < T) {
+                    if (S[p[i]][t % M] == c) ++i;
+                    if(i == 3){
+                        ans = min(ans, t);
+                        break;
+                    }
+                    ++t;
+                }
+            } while (next_permutation(all(p)));
+        }
+        return ans == LONG_LONG_MAX ? -1 : ans;
+    };
+    cout << solve3() << endl;
     return 0;
 }
