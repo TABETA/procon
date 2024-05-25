@@ -117,24 +117,12 @@ int main() {
     }
     cout << [&]() {
         ll ans = 0;
-        for (auto it = SC.begin(); it != SC.end(); ++it) {
-            auto k = it->first;
-            auto v = it->second;
-            while(true){
-                auto d = div(v,2ll);
-                if(d.quot == 0){
-                    break;
-                }
-                SC[k] = d.rem;
-                SC[k*2] += d.quot;
-                k = k*2;
-                v = SC[k];
-            }
+        for (auto&& [k, v] : SC) {
+            auto d = div(v,2ll);
+            ans += d.rem;
+            if(d.quot)SC[k*2] += d.quot;
         }
-        for (auto &&[k,v] : SC)
-        {
-            ans += v;
-        }
+
         return ans;
     }() << endl;
     return 0;
