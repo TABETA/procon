@@ -117,10 +117,24 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    int i = 0;
+    rep(h,H){
+        vll ans(W);
+        rep(w,W){
+            auto _w = (h % 2 == 0)
+             ? w
+             : W - w - 1;
+            ans[_w] = i + 1;
+            if(--a[i] == 0) ++i;
+        }
+        rep(w, W){
+            cout << ans[w];
+            if(w == W-1){
+                cout << endl;
+            } else {
+                cout << " ";
+            }
+        }
+    }
     return 0;
 }
