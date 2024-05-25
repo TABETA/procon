@@ -117,19 +117,18 @@ const string YES = "{{ yes_str }}";
 const string NO = "{{ no_str }}";
 {% endif %}
 
-{% if prediction_success %}
-auto func({{ formal_arguments }}){
-
-}
-{% endif %}
 // clang-format on
 
 int main() {
     {% if prediction_success %}
     {{input_part}}
-    func({{ actual_arguments }});
     {% else %}
     // Failed to predict input format
     {% endif %}
+    cout << [&](){
+        ll ans = 0;
+        
+        return ans;
+    }() << endl;
     return 0;
 }
