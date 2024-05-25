@@ -51,6 +51,7 @@ using vs = vector<string>;
 using pii = pair<int, int>;
 
 /* define short */
+#define CIN(type, name) type name; cin >> name;
 #define pb push_back
 #define mp make_pair
 #define all(obj) (obj).begin(), (obj).end()
