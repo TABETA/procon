@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -51,6 +52,7 @@ using vs = vector<string>;
 using pii = pair<int, int>;
 
 /* define short */
+#define CIN(type, name) type name; cin >> name;
 #define pb push_back
 #define mp make_pair
 #define all(obj) (obj).begin(), (obj).end()
@@ -103,15 +105,32 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
-    // Failed to predict input format
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    CIN(string, T);
+    ll TL = T.length();
+    CIN(ll, N);
+    ll ans = 0;
+    const ll inf = 1e9;
+    vvll DP(N+1, vll(TL+1, inf));
+    DP[0][0] = 0;
+    rep(i, N) {
+        rep(j, TL+1){DP[i+1][j] = DP[i][j];}
+        CIN(ll,a);
+        rep(_, a) {
+            CIN(string, s);
+            ll sl = s.size();
+            rep(j, TL-sl+1) {
+                if(DP[i][j] == inf) continue;
+                if(T.find(s, j) == j){
+                    DP[i+1][j + sl] = min(DP[i+1][j + sl], DP[i][j] + 1);
+                }
+            }
+        }
+    }
+    ans = DP[N][TL];
+    ans = ans >= inf ? -1 : ans;
+    cout << ans << endl;
     return 0;
 }
