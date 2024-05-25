@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -103,21 +104,37 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> S(N);
-    std::vector<long long> C(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> S[i];
-        std::cin >> C[i];
+    map<ll, ll> SC;
+    for (int i = 0; i < N; i++) {
+        ll s, c;
+        cin >> s >> c;
+        SC[s] = c;
     }
-    cout << [&](){
+    cout << [&]() {
         ll ans = 0;
-        
+        for (auto it = SC.begin(); it != SC.end(); ++it) {
+            auto k = it->first;
+            auto v = it->second;
+            while(true){
+                auto d = div(v,2ll);
+                if(d.quot == 0){
+                    break;
+                }
+                SC[k] = d.rem;
+                SC[k*2] += d.quot;
+                k = k*2;
+                v = SC[k];
+            }
+        }
+        for (auto &&[k,v] : SC)
+        {
+            ans += v;
+        }
         return ans;
     }() << endl;
     return 0;
