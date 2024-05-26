@@ -5,13 +5,22 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": ["<", "${fileDirname}/in_1.txt"],
+      "args": [
+        "<",
+        "${fileDirname}/in_1.txt"
+      ],
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "${fileDirname}",
       "program": "${fileDirname}/${fileBasenameNoExtension}",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
+      "sourceFileMap": {
+        "${workspaceFolder}": {
+          "editorPath": "${workspaceFolder}",
+          "useForBreakpoints": "true"
+        }
+      },
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",
