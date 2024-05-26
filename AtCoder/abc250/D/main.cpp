@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,15 +105,57 @@ namespace std{
     };
 }
 
-
 // clang-format on
+template <typename Container, typename Value>
+struct InsertHelper;
+template <typename Value>
+struct InsertHelper<std::set<Value>, Value> {
+    static void insert(std::set<Value>& container, const Value& value) {
+        container.emplace(value);
+    }
+};
 
+template <typename Value>
+struct InsertHelper<std::vector<Value>, Value> {
+    static void insert(std::vector<Value>& container, const Value& value) {
+        container.push_back(value);
+    }
+};
+
+template <typename Value>
+struct InsertHelper<std::map<Value, bool>, Value> {
+    static void insert(std::map<Value, bool>& container, const Value& value) {
+        container[value] = true;
+    }
+};
+template <typename T, template <typename...> class Container>
+Container<T> enumeratePrimeNumbers(const T N) {
+    std::vector<bool> is_prime(N + 1, true);
+    Container<T> P;
+    for (T i = 2; i <= N; i++) {
+        if (is_prime[i]) {
+            for (T j = 2 * i; j <= N; j += i) {
+                is_prime[j] = false;
+            }
+            InsertHelper<Container<T>, T>::insert(P, i);
+        }
+    }
+    return P;
+}
 int main() {
     long long N;
     std::cin >> N;
-    cout << [&](){
+    cout << [&]() -> ll {
         ll ans = 0;
-        
+        ll M = cbrt(N/2);
+        auto P = enumeratePrimeNumbers<ll, vector>(M);
+        vll s(M+1);
+        for(auto&&p: P) s[p] = 1;
+        rep(i,M)s[i+1] += s[i];
+        for(auto&&q: P){
+            ll p = min(N/q/q/q,q-1);
+            ans += s[p];
+        }
         return ans;
     }() << endl;
     return 0;
