@@ -117,13 +117,22 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> a(M);
+    std::set<long long> A;
     for(int i = 0 ; i < M ; i++){
-        std::cin >> a[i];
+        ll a;
+        std::cin >> a;
+        A.insert(a);
     }
     cout << [&](){
         ll ans = 0;
-        
+        vm DP(N+1);
+        DP[0] = 1;
+        rep(i,N+1){
+            if(A.count(i) != 0)continue;
+            if(i-1 >= 0) DP[i] += DP[i-1];
+            if(i-2 >= 0) DP[i] += DP[i-2];
+        }
+        ans = DP[N].val();
         return ans;
     }() << endl;
     return 0;
