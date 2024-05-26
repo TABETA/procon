@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,53 +105,27 @@ namespace std{
     };
 }
 
-
 // clang-format on
-
+// 尺取り法
+// 余事象
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> l(N);
-    std::vector<long long> r(N);
-    map<ll,ll> event;
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> l[i];
-        std::cin >> r[i];
-        event[l[i]]++;
-        event[r[i]+1]--;
+    vll L(N);
+    vll R(N);
+    rep(i,N){
+        cin >> L[i];
+        cin >> R[i];
     }
-    map<ll,ll> accum;
-    ll pre = -1;
-    accum[pre] = 0;
-    for(auto&& [k,v]: event){
-        accum[k] = accum[pre] + v;
-        pre = k;
-    }
+    sort(all(L));
+    sort(all(R));
+    int j = 0;
     ll ans = 0;
-    pre = accum.begin()->second;
-    ll bonus = 0;
-    bool cont = false;
-    for (auto &&[k,v] : accum)
-    {
-        if(v > 1){
-            if(pre < v){
-                if(cont){
-                    bonus++;
-                }
-                ans += 1+bonus;
-                cont = true;;
-            } else {
-                cont = false;
-            }
-        }else {
-            cont = false;
-        }
-        if(!cont){
-            bonus =0;
-        }
-        pre = v;
+    rep(i,N){
+        while(R[j] < L[i]){ ++j; }
+        ans += j;
     }
-    
+    ans = N*(N-1)/2 - ans;
     cout << ans << endl;
     return 0;
 }
