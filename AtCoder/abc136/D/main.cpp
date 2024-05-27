@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,16 +105,60 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
     std::string S;
     std::cin >> S;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    [&]() {
+        const ll N = S.size();
+        vll ans(N);
+        auto count_evens = [](ll n) ->ll {
+            if (n < 0) return 0;
+            return n / 2 + 1;
+        };
+        auto count_odds = [](ll n) ->ll {
+            if (n < 0) return 0;
+            return (n + 1) / 2;
+        };
+        ll i = 0;
+        while(i < N) {
+            {
+                auto l = i;
+                while(i < N && S[i]=='R')++i;
+                auto r = i-1;
+                auto evens = count_evens(r) - count_evens(l - 1);
+                auto odds = count_odds(r) - count_odds(l - 1);
+                if (r % 2 == 0) {
+                    ans[r] += evens;
+                    ans[r+1] += odds;
+                } else {
+                    ans[r] += odds;
+                    ans[r+1] += evens;
+                }
+            }
+            {
+                auto l = i;
+                while(i < N && S[i]=='L')++i;
+                auto r = i-1;
+                auto evens = count_evens(r) - count_evens(l - 1);
+                auto odds = count_odds(r) - count_odds(l - 1);
+                if (l % 2 == 0) {
+                    ans[l] += evens;
+                    ans[l-1] += odds;
+                } else {
+                    ans[l] += odds;
+                    ans[l-1] += evens;
+                }
+            }
+        }
+        rep(i, N) {
+            cout << ans[i];
+            if (i != N - 1) {
+                cout << " ";
+            }
+        }
+        cout << endl;
+    }();
     return 0;
 }
