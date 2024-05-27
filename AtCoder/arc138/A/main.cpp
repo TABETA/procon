@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,8 +105,10 @@ namespace std{
     };
 }
 
-
 // clang-format on
+using P = pair<ll, ll>;
+using vp = vector<P>;
+const ll inf = LONG_LONG_MAX;
 
 int main() {
     long long N;
@@ -113,13 +116,34 @@ int main() {
     long long K;
     std::cin >> K;
     std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> A[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+    cout << [&]() {
+        ll ans = inf;
+        vp B;
+        rep(i, K) { B.emplace_back(A[i], i); }
+        sort(all(B),
+             [](const P& l, const P& r) { return l.second > r.second; });
+        map<ll, ll> Ci;
+        reps(i, K, N) {
+            if(!Ci.contains(A[i])){ //この判定を入れないと後から入れた要素のIndexが保存されるのでコストが悪化する
+                Ci[A[i]] = i;
+            }
+        }
+        vll C(A.begin() + K, A.end());
+        // Indexが小さいほどコストが低くなり、Valueが高いほど採用される可能性が高い。
+        // 累積最大値が更新されない限り、それ以降の値に価値は無い。
+        // = 累積最大値で判定して良い
+        rep(i, C.size() - 1) C[i + 1] = max(C[i + 1], C[i]);  // 累積最大値の算出
+        for (auto&& [b, i] : B) {
+            auto it = upper_bound(all(C), b);
+            if (it != C.end()) {
+                auto j = Ci[*it];
+                ans = min(ans, j - i);
+            }
+        }
+        return ans == inf ? -1ll : ans;
     }() << endl;
     return 0;
 }
