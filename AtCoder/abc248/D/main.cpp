@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,15 +105,39 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
+using P = pair<ll, ll>;
 int main() {
-    // Failed to predict input format
-    cout << [&](){
+    CIN(ll, N);
+    vector<P> A(N);
+    rep(i, N) {
+        CIN(ll, a);
+        A[i] = P{a, i+1};
+    }
+    auto comp = [](P l, P r){
+        if(l.first < r.first){
+            return true;
+        } else if(l.first == r.first) {
+            return l.second < r.second;
+        } else {
+            return false;
+        }
+    };
+    sort(all(A), comp);
+    CIN(ll, Q);
+    rep(_, Q) {
+        CIN(ll, L);
+        CIN(ll, R);
+        CIN(ll, X);
         ll ans = 0;
-        
-        return ans;
-    }() << endl;
+        auto l = lower_bound(all(A), P{X, L}, comp);
+        auto r = upper_bound(all(A), P{X, R}, comp);
+        if(l != A.end()){
+            ans = distance(l,r);
+        }
+        cout << ans << endl;
+    }
+
     return 0;
 }
