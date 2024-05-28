@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,7 +105,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
@@ -112,10 +112,46 @@ int main() {
     std::cin >> a;
     long long N;
     std::cin >> N;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+    cout << [&]() -> ll {
+        map<ll, ll> mp;
+        mp[N] = 0;
+        queue<ll> Q;
+        auto push = [&](ll key, ll cost) {
+            if (mp.contains(key)) {
+                if (mp.at(key) > cost) {
+                    Q.emplace(key);
+                    mp[key] = cost;
+                }
+            } else {
+                Q.emplace(key);
+                mp[key] = cost;
+            }
+        };
+        Q.emplace(N);
+        while (!Q.empty()) {
+            auto k = Q.front();
+            Q.pop();
+            auto cost = mp[k];
+            auto d = div(k, a);
+            if (d.rem == 0) {
+                auto k1 = d.quot;
+                push(k1, cost + 1);
+            }
+            if (k > 9) {
+                auto s = to_string(k);
+                s.push_back(s[0]);
+                s.erase(0, 1);
+                ll k1 = std::stoll(s);
+                // 102の先頭文字を末尾に持っていくと021→21となって桁が減るのでNG
+                if (to_string(k1).size() == s.size()) {
+                    push(k1, cost + 1);
+                }
+            }
+        }
+        if (mp.contains(1)) {
+            return mp[1];
+        }
+        return -1;
     }() << endl;
     return 0;
 }
