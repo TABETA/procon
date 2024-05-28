@@ -139,8 +139,7 @@ int main() {
             }
             if (k > 9) {
                 auto s = to_string(k);
-                s.push_back(s[0]);
-                s.erase(0, 1);
+                rotate(s.begin(), s.begin()+1, s.end());
                 ll k1 = std::stoll(s);
                 // 102の先頭文字を末尾に持っていくと021→21となって桁が減るのでNG
                 if (to_string(k1).size() == s.size()) {
