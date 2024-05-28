@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,7 +105,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
@@ -112,18 +112,36 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(N+1);
-    for(int i = 0 ; i < N+1 ; i++){
+    std::vector<long long> A(N + 1);
+    for (int i = 0; i < N + 1; i++) {
         std::cin >> A[i];
     }
-    std::vector<long long> C(N+M+1);
-    for(int i = 0 ; i < N+M+1 ; i++){
+    std::vector<long long> C(N + M + 1);
+    for (int i = 0; i < N + M + 1; i++) {
         std::cin >> C[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    vll B(M + 1);
+    auto a = [&](const vll& T, int i) -> ll {
+        if (i < T.size()) {
+            return T[i];
+        }
+        return 0;
+    };
+    // need div zero counter measure
+    for (ll i = 0; i <= M; ++i) {
+        ll denom = C[N+M - i];
+        for(ll j = i - 1, k = i - j; j >= 0; --j, ++k) {
+            denom -= a(A, N-k) * a(B, M-j);
+        }
+        B[M-i] = denom / A[N];
+    }
+    rep(i, M+1) {
+        cout << B[i];
+        if (i < M) {
+            cout << " ";
+        } else {
+            cout << endl;
+        }
+    }
     return 0;
 }
