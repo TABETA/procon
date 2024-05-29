@@ -117,9 +117,18 @@ int main() {
         std::cin >> A[i];
     }
     cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+        const ll inf = LONG_LONG_MIN;
+        vvll DP(N+1, vll(M+1, inf));
+        DP[0][0] = 0;
+        rep(i,N){
+            rep(j,M+1){
+                DP[i+1][j] = max(DP[i+1][j],DP[i][j]);
+                if(j <= i && j < M){
+                    DP[i+1][j+1] = max(DP[i+1][j+1],DP[i][j] + A[i]*(j+1));
+                }
+            }
+        }
+        return DP[N][M];
     }() << endl;
     return 0;
 }
