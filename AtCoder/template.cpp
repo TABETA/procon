@@ -106,8 +106,9 @@ namespace std{
 
 {% if mod %}
 #include <atcoder/modint>
-using Modint = atcoder::modint{{ mod }};
-using vm = vector<Modint>;
+using namespace atcoder;
+using mint = modint{{ mod }};
+using vm = vector<mint>;
 using vvm = vector<vm>;
 const long long MOD = {{ mod }};
 {% endif %}
