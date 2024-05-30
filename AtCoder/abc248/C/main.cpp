@@ -121,9 +121,22 @@ int main() {
     long long K;
     std::cin >> K;
     cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+        vvm DP(N+1,vm(K+1));
+        DP[0][0] = 1;
+        rep(n,N){
+            rep(k,K+1){
+                rep(m,M+1){
+                    if(1 <= m && m+k <= K){
+                        DP[n+1][k+m] += DP[n][k];
+                    }
+                }
+            }
+        }
+        mint ans = 0;
+        rep(k,K+1){
+            ans += DP[N][k];
+        }
+        return ans.val();
     }() << endl;
     return 0;
 }
