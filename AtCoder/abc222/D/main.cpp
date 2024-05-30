@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -116,17 +117,30 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> a(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> a[i];
     }
     std::vector<long long> b(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> b[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+    cout << [&]() {
+        vector<vector<Modint>> DP(N + 1, vector<Modint>(3002));
+        DP[0][a[0]] = 1;
+        rep(i, N) {
+            rep(j,3001){
+                DP[i + 1][max(a[i], j)] += DP[i][j];
+                DP[i + 1][b[i] + 1] -= DP[i][j];
+            }
+            rep(j, 3001) {
+                DP[i + 1][j + 1] += DP[i + 1][j];
+            }
+        }
+        Modint ans = 0;
+        rep(j, 3001) {
+            ans += DP[N][j];
+        }
+        return ans.val();
     }() << endl;
     return 0;
 }
