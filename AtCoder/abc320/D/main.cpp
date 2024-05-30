@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,28 +105,55 @@ namespace std{
     };
 }
 
-
 // clang-format on
+const string NA = "undecidable";
 
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    std::vector<long long> X(M);
-    std::vector<long long> Y(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
-        std::cin >> X[i];
-        std::cin >> Y[i];
+    using P = pair<ll, ll>;
+    map<ll, map<ll, P>> G;
+    rep(i,M) {
+        ll a, b, c, d;
+        cin >> a >> b >> c >> d;
+        --a,--b;
+        G[a][b] = P{c, d};
+        swap(a, b);
+        c = -c;
+        d = -d;
+        G[a][b] = P{c, d};
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    [&]() {
+        map<ll, P> ans;
+        ans[0] = {0, 0};
+        queue<ll> Q;
+        Q.push(0);
+        auto add = [&](P l, P r) {
+            return P{
+                l.first + r.first,
+                l.second + r.second,
+            };
+        };
+        while (!Q.empty()) {
+            auto i = Q.front();
+            Q.pop();
+            if (!G.contains(i)) continue;
+            for (auto&& [j, xy] : G[i]) {
+                if(!ans.contains(j)){
+                    ans[j] = add(ans[i], xy);
+                    Q.push(j);
+                }
+            }
+        }
+        rep(i, N) {
+            if (ans.contains(i)) {
+                cout << ans[i].first << " " << ans[i].second << endl;
+            } else {
+                cout << NA << endl;
+            }
+        };
+    }();
     return 0;
 }
