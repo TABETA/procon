@@ -111,11 +111,15 @@ const string NO = "Impossible";
 // clang-format on
 
 int main() {
-    // Failed to predict input format
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    CIN(ll, H);
+    CIN(ll, W);
+    ll manhattan = H + W - 1;
+    vs A(H);
+    ll passed = 0;
+    rep(i, H) {
+        cin >> A[i];
+        passed += count(all(A[i]), '#');
+    }
+    cout << [&]() { return manhattan == passed ? YES : NO; }() << endl;
     return 0;
 }
