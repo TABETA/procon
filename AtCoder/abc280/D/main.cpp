@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -104,16 +105,53 @@ namespace std{
     };
 }
 
-
 // clang-format on
-
+template <typename T>
+map<ll, ll> prime_factorize(T N) {
+    map<ll, ll> res;
+    for (T a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        T ex = 0;
+        while (N % a == 0) {
+            ++ex;
+            N /= a;
+        }
+        res[a] = ex;
+    }
+    if (N != 1) res[N] = 1;
+    return res;
+}
+auto f(ll N, ll p)->ll{
+    if(N < p){
+        return 0;
+    }
+    ll res = N/p;
+    return res + f(res, p);
+}
 int main() {
     long long K;
     std::cin >> K;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+    cout << [&]() -> ll {
+        auto Q = prime_factorize(K);
+        auto isok = [&](ll p) {
+            for (auto [q, c] : Q) {
+                auto pc = f(p,q);
+                if (pc < c) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        ll wa = 0, ac = 1000000000000;
+        for (; wa + 1 < ac;) {
+            auto m = (wa+ac)/2;
+            if (isok(m)) {
+                ac = m;
+            } else {
+                wa = m;
+            }
+        }
+        return ac;
     }() << endl;
     return 0;
 }
