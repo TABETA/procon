@@ -121,6 +121,7 @@ map<ll, ll> prime_factorize(T N) {
     if (N != 1) res[N] = 1;
     return res;
 }
+// ルジャンドルの定理
 auto f(ll N, ll p)->ll{
     if(N < p){
         return 0;
