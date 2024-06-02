@@ -105,24 +105,34 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
-    for(int i = 0 ; i < N ; i++){
+    std::vector<ll> a(N);
+    for (ll i = 0; i < N; i++) {
         std::cin >> a[i];
     }
-    std::vector<long long> b(N);
-    for(int i = 0 ; i < N ; i++){
+    std::vector<ll> b(N);
+    for (ll i = 0; i < N; i++) {
         std::cin >> b[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    sort(all(b));
+    vll ans;
+    set<ll> X;
+    rep(i, N) { X.insert(a[0] ^ b[i]); }
+    vector<ll> c(N);
+    for (auto&& x : X) {
+        rep(i, N) { c[i] = a[i] ^ x; }
+        sort(all(c));
+        if (equal(all(b), c.begin())) {
+            ans.pb(x);
+        }
+    }
+    cout << ans.size() << endl;
+    for (auto&& a : ans) {
+        cout << a << endl;
+    }
     return 0;
 }
