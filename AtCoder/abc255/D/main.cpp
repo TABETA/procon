@@ -117,14 +117,35 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
+    sort(all(A));
+    std::vector<long long> B(A);
+    rep(i,N-1){
+        B[i+1] += B[i];
+    }
     std::vector<long long> X(Q);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> X[i];
+        ll x;
+        std::cin >> x;
+        cout << [&](){
+            ll ans = 0;
+            auto it = lower_bound(all(A), x);
+            if(it == A.end()){
+                ll to_add = N*x - B[N-1];
+                ans = to_add;
+                return ans;
+            }
+            if(it == A.begin()){
+                ll to_sub = B[N-1] - N*x;
+                ans = to_sub;
+                return ans;
+            }
+            ll d = distance(A.begin(), it);
+            ll to_add = d*x - B[d-1];
+            ll to_sub = (B[N-1] - B[d-1]) - (N-d)*x;
+            ans = to_add + to_sub;
+            return ans;
+
+        }() << endl;
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
     return 0;
 }
