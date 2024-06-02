@@ -105,19 +105,33 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> A[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
+    cout << [&]() {
+        int ans = INT_MAX;
+        ull m = 1 << (N - 1);
+        for (ull n = 0; n < m; ++n) {
+            vi vec;
+            int a = 0;
+            rep(i, N) {
+                a |= A[i];
+                if (n & (1 << (i))) {
+                    vec.pb(a);
+                    a = 0;
+                }
+            }
+            vec.pb(a);
+            int now = 0;
+            rep(i, vec.size()) { now ^= vec[i]; }
+            ans = min(now, ans);
+        }
         return ans;
     }() << endl;
     return 0;
