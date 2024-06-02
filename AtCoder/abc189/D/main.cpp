@@ -105,20 +105,35 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
     long long N;
     std::cin >> N;
     std::vector<std::string> S(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> S[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+    cout << [&]() {
+        vvll DP(N+1, vll(2));
+        DP[0][0] = 1;
+        DP[0][1] = 1;
+        rep(i, N) {
+            if(S[i] == "AND"){
+                // 自分がtrueの場合
+                DP[i+1][0] += DP[i][0];
+                DP[i+1][1] += DP[i][1];
+                // 自分がfalseの場合
+                DP[i+1][0] += DP[i][0] + DP[i][1];
+            } else {
+                // 自分がtrueの場合
+                DP[i+1][1] += DP[i][1] + DP[i][0];
+                // 自分がfalseの場合
+                DP[i+1][0] += DP[i][0];
+                DP[i+1][1] += DP[i][1];
+            }
+        }
+        return DP[N][1];
     }() << endl;
     return 0;
 }
