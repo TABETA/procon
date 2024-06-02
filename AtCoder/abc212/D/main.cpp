@@ -105,15 +105,34 @@ namespace std{
     };
 }
 
-
 // clang-format on
-
 int main() {
-    // Failed to predict input format
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    CIN(ll, Q);
+    priority_queue<ll, vector<ll>, greater<ll> > X;
+    vector<ll> A;
+    auto append = [&](ll a) {
+        ll pre = A.size() > 0 ? A[A.size()-1] :0;
+        A.pb(a+pre);
+    };
+    rep(i, Q) {
+        CIN(int, P);
+        switch (P) {
+            case 1: {
+                CIN(ll, x);
+                append(0);
+                X.push(x - A[A.size()-1]);
+            } break;
+            case 2: {
+                CIN(ll, x);
+                append(x);
+            } break;
+            default: {
+                auto x = X.top(); X.pop();
+                x += A[A.size()-1];
+                cout << x << endl;
+            } break;
+        }
+    }
+
     return 0;
 }
