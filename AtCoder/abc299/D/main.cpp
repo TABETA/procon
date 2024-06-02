@@ -111,12 +111,18 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::string S;
-    std::cin >> S;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    ll wa = 1, ac = N;
+    while(ac - wa > 1){
+        auto wj = (wa+ac)/2;
+        cout << "? " << wj << endl << flush;
+        char c;
+        cin >> c;
+        if(c == '1'){
+            ac = wj;
+        } else {
+            wa = wj;
+        }
+    }
+    cout << "! " << wa << endl << flush;
     return 0;
 }
