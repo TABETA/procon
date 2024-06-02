@@ -115,10 +115,12 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
+    cout << [&]()->ll{
+        auto f = [&](ll x){
+            return (x/A)*min(A,B)+min(x % A, B -1);// mod == 0の場合はx/Aの方で計上済みなので1マイナスする
+        };
+        ll ans = f(N) - f(A-1);
+        return max(ans,0ll);
     }() << endl;
     return 0;
 }
