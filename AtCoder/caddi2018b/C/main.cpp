@@ -107,15 +107,35 @@ namespace std{
 
 
 // clang-format on
-
+template <typename T>
+vector<pair<T, T> > prime_factorize(T N) {
+    vector<pair<T, T> > res;
+    for (T a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        T ex = 0;
+        while (N % a == 0) {
+            ++ex;
+            N /= a;
+        }
+        res.push_back({a, ex});
+    }
+    if (N != 1) res.push_back({N, 1});
+    return res;
+}
 int main() {
     long long N;
     std::cin >> N;
     long long P;
     std::cin >> P;
     cout << [&](){
-        ll ans = 0;
-        
+        ll ans = 1;
+        auto p = prime_factorize(P);
+        rep(i,p.size()){
+            auto q = p[i].second / N;
+            while(q--){
+                ans *= p[i].first;
+            }
+        }
         return ans;
     }() << endl;
     return 0;
