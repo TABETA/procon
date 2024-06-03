@@ -109,13 +109,18 @@ namespace std{
 // clang-format on
 
 int main() {
-    long long A;
+    long double A;
     std::cin >> A;
-    long long B;
+    long double B;
     std::cin >> B;
-    cout << [&](){
-        ll ans = 0;
-        
+    cout << setprecision(11)<< [&](){
+        auto f = [&](ll x)->long double{
+            return A/sqrt(x+1) + B*x;
+        };
+        long double x = pow(A/(2.l*B), 2.l/3.l) - 1.l;
+        auto x1 = (ll)x;
+        auto x2 = ceil(x);
+        auto ans = min(f(x1),f(x2));
         return ans;
     }() << endl;
     return 0;
