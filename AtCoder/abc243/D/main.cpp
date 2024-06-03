@@ -105,7 +105,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 
 int main() {
@@ -115,9 +114,36 @@ int main() {
     std::cin >> X;
     std::string S;
     std::cin >> S;
-    cout << [&](){
-        ll ans = 0;
-        
+    cout << [&]() {
+        string T;
+        rep(i, N) {
+            switch (S[i]) {
+                case 'U':
+                    if (T.size() == 0 || *T.rbegin() == 'U') {
+                        T.push_back(S[i]);
+                    } else {
+                        T.pop_back();
+                    }
+                    break;
+                default:
+                    T.push_back(S[i]);
+                    break;
+            }
+        }
+        ll ans = X;
+        for (auto&& c : T) {
+            switch (c) {
+                case 'L':
+                    ans *= 2;
+                    break;
+                case 'R':
+                    ans = ans * 2 + 1;
+                    break;
+                case 'U':
+                    ans /= 2;
+                    break;
+            }
+        }
         return ans;
     }() << endl;
     return 0;
