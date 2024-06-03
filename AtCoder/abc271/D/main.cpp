@@ -117,14 +117,43 @@ int main() {
     std::cin >> S;
     std::vector<long long> a(N);
     std::vector<long long> b(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> a[i];
         std::cin >> b[i];
     }
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    vector<set<ll>> DP(N + 1);
+    DP[0].insert(0);
+    rep(i, N) {
+        for (auto&& dp : DP[i]) {
+            DP[i + 1].insert(dp + a[i]);
+            DP[i + 1].insert(dp + b[i]);
+        }
+    }
+    if (DP[N].count(S) == 0) {
+        cout << NO << endl;
+        return 0;
+    }
+    cout << YES << endl;
+    auto bt = [&](auto&& bt, ll i, string r_ans, ll pre)->string{
+        if(i < 0){
+            return r_ans;
+        }
+        if (DP[i].count(pre - a[i])) {
+            auto ans = bt(bt, i-1, r_ans+'H', pre - a[i]);
+            if(ans != ""){
+                return ans;
+            }
+        }
+        if (DP[i].count(pre - b[i])) {
+            auto ans = bt(bt, i-1, r_ans+'T', pre - b[i]);
+            if(ans != ""){
+                return ans;
+            }
+        }
+        return "";
+    };
+    auto r_ans = bt(bt, N-1, "", S);
+    repd(i, N) { cout << r_ans[i]; }
+    cout << endl;
     return 0;
 }
