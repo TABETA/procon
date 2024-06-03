@@ -104,24 +104,41 @@ namespace std{
         }
     };
 }
-
-
 // clang-format on
+long double A;
+long double B;
+auto f = [](ll x)->long double{
+    return A/sqrt(x+1) + B*x;
+};
+
+auto bibun = [](long double A, long double B){
+    long double x = pow(A/(2.l*B), 2.l/3.l) - 1.l;
+    auto x1 = (ll)x;
+    auto x2 = ceil(x);
+    auto ans = min(f(x1),f(x2));
+    return ans;
+};
+auto sanbun = [](long double A, long double B){
+    ll l = 0, r = 1e18;
+    while(r-l > 2){
+        auto m1 = (l*2+r)/3; 
+        auto m2 = (l+r*2)/3;
+        if(f(m1) > f(m2)){
+            l = m1;
+        } else {
+            r = m2;
+        }
+    }
+    long double ans = 2e18;
+    reps(i,l,r+1){
+        ans = min(ans,f(i));
+    }
+    return ans;
+};
 
 int main() {
-    long double A;
     std::cin >> A;
-    long double B;
     std::cin >> B;
-    cout << setprecision(11)<< [&](){
-        auto f = [&](ll x)->long double{
-            return A/sqrt(x+1) + B*x;
-        };
-        long double x = pow(A/(2.l*B), 2.l/3.l) - 1.l;
-        auto x1 = (ll)x;
-        auto x2 = ceil(x);
-        auto ans = min(f(x1),f(x2));
-        return ans;
-    }() << endl;
+    cout << setprecision(11)<< sanbun(A,B) << endl;
     return 0;
 }
