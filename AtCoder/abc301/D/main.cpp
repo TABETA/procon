@@ -105,18 +105,44 @@ namespace std{
     };
 }
 
-
 // clang-format on
-
+auto solve(string S, ll N) -> ll {
+    vll indicies;
+    repd(i, S.size()) {
+        if (S[i] == '?') {
+            indicies.push_back(i);
+        }
+    }
+    auto to_ll = [&](ll m) {
+        string s(S);
+        rep(i, indicies.size()) { s[indicies[i]] = (m >> i) & 1 ? '1' : '0'; }
+        ll n = 0;
+        ll v = 1;
+        repd(i, s.size()) {
+            n += v * (s[i] - '0');
+            v *= 2;
+        }
+        return n;
+    };
+    if (N < to_ll(0)) {
+        return -1;
+    }
+    ll ac = 0;
+    ll wa = 1LL << indicies.size();
+    while (wa - ac > 1) {
+        ll wj = (wa + ac) / 2;
+        if (N >= to_ll(wj))
+            ac = wj;
+        else
+            wa = wj;
+    }
+    return to_ll(ac);
+}
 int main() {
     std::string S;
     std::cin >> S;
     long long N;
     std::cin >> N;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    cout << solve(S, N) << endl;
     return 0;
 }
