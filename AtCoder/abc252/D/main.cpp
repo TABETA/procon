@@ -116,17 +116,33 @@ int main() {
         std::cin >> A[i];
         mp[A[i]]++;
     }
-    ll ans = N * (N - 1) * (N - 2) / 2 / 3;
-    for (auto&& [k, v] : mp) {
-        if(v > 1){
-            auto now = v* (v-1) / 2 * (N-v);
-            ans -= now;
-        }
-        if(v > 2){
-            auto now = v * (v-1) * (v-2) / 2 / 3;
-            ans -= now;
+    vll c;
+    for (auto &&[k,v] : mp)
+    {
+        c.pb(v);
+    }
+    ll M = mp.size();
+    vector DP(M+1, vll(4));
+    rep(i,M+1)
+        DP[i][0] = 1;
+    reps(i,1,M+1){
+        reps(j,1,4){
+            DP[i][j] = DP[i-1][j-1] * c[i-1] + DP[i-1][j];
         }
     }
+    ll ans = DP[M][3];
+
+    // ll ans = N * (N - 1) * (N - 2) / 2 / 3;
+    // for (auto&& [k, v] : mp) {
+    //     if(v > 1){
+    //         auto now = v* (v-1) / 2 * (N-v);
+    //         ans -= now;
+    //     }
+    //     if(v > 2){
+    //         auto now = v * (v-1) * (v-2) / 2 / 3;
+    //         ans -= now;
+    //     }
+    // }
     cout << ans << endl;
     return 0;
 }
