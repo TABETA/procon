@@ -105,16 +105,42 @@ namespace std{
     };
 }
 
-
 // clang-format on
-
+long long X;
+auto solve() {
+    const ll inf = LLONG_MAX;
+    ll ans = inf;
+    auto S = to_string(X);
+    while (true) {
+        reps(i, -9, 10) {
+            ll pre = S[0]-'0';
+            ll x = [&]()->ll{
+                ll x = pre;
+                reps(j, 1, S.size()) {
+                    auto cur = (pre+i);
+                    if(cur < 0 || 9 < cur) return 0;
+                    x = x*10 + cur;
+                    pre = cur;
+                }
+                return x;
+            }();
+            if (x >= X) {
+                ans = min(x, ans);
+            }
+        }
+        if (ans != inf) {
+            return ans;
+        }
+        if (S[0] == '9') {
+            S = "1" + S;
+        } else {
+            S[0] += 1;
+        }
+    }
+    return ans;
+}
 int main() {
-    long long X;
     std::cin >> X;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    cout << solve() << endl;
     return 0;
 }
