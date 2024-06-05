@@ -105,18 +105,29 @@ namespace std{
     };
 }
 
-
 // clang-format on
+long long N;
+std::string S;
+
+auto solve() -> ll {
+    ranges::sort(S);
+    ll M = pow(10,N);
+    ll ans = 0;
+    for (ll i = 0; i * i < M; ++i) {
+        auto sq = i * i;
+        string s = to_string(sq);
+        s.resize(N, '0');
+        ranges::sort(s);
+        if (S == s) {
+            ++ans;
+        }
+    }
+    return ans;
+}
 
 int main() {
-    long long N;
     std::cin >> N;
-    std::string S;
     std::cin >> S;
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    cout << solve() << endl;
     return 0;
 }
