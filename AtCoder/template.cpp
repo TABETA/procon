@@ -121,6 +121,13 @@ const string NO = "{{ no_str }}";
 {% endif %}
 
 // clang-format on
+const ll inf = LLONG_MAX;
+
+auto solve({{ formal_arguments }}) {
+    ll ans = inf;
+
+    return ans;
+}
 
 int main() {
     {% if prediction_success %}
@@ -128,10 +135,6 @@ int main() {
     {% else %}
     // Failed to predict input format
     {% endif %}
-    cout << [&](){
-        ll ans = 0;
-        
-        return ans;
-    }() << endl;
+    cout << solve({{ actual_arguments }}) << endl;
     return 0;
 }
