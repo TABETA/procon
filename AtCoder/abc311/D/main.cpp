@@ -110,8 +110,35 @@ namespace std{
 const ll inf = LLONG_MAX;
 
 auto solve(long long N, long long M, std::vector<std::string> S) {
-    ll ans = inf;
-
+    using P = pair<ll,ll>;
+    using vp = vector<P>;
+    queue<P> Q;
+    Q.emplace(1,1);
+    set<P> visited;
+    const char o = 'o';
+    while(!Q.empty()){
+        auto q = Q.front();Q.pop();
+        S[q.first][q.second] = o;
+        ll y = q.first;
+        ll x = q.second;
+        auto qs = [&](){
+            auto q1 = [&](P q){ auto y = q.first; while(S[y+1][x] != '#'){  ++y; S[y][x] = o; } return P{y, q.second}; }(q);
+            auto q2 = [&](P q){ auto y = q.first; while(S[y-1][x] != '#'){  --y; S[y][x] = o; } return P{y, q.second}; }(q);
+            auto q3 = [&](P q){ auto x = q.second; while(S[y][x+1] != '#'){  ++x; S[y][x] = o; } return P{q.first, x}; }(q);
+            auto q4 = [&](P q){ auto x = q.second; while(S[y][x-1] != '#'){  --x; S[y][x] = o; } return P{q.first, x}; }(q);
+            return vp{q1,q2,q3,q4};
+        }();
+        rep(i,qs.size()){
+            if(visited.count(qs[i]) == 0){
+                visited.insert(qs[i]);
+                Q.push(qs[i]);
+            }
+        }
+    }
+    ll ans = 0;
+    rep(i,N){
+        ans += ranges::count(S[i], o);
+    }
     return ans;
 }
 
