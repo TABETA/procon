@@ -105,19 +105,70 @@ namespace std{
     };
 }
 
-#include <atcoder/modint>
-using namespace atcoder;
-using mint = modint1;
-using vm = vector<mint>;
-using vvm = vector<vm>;
-const long long MOD = 1;
-
 // clang-format on
-const ll inf = LLONG_MAX;
+using P = pair<ll, ll>;
 
 auto solve(long long N, long long M, std::vector<long long> A) {
-    ll ans = inf;
+    ranges::sort(A);
+    auto wa = [](ll val, ll upper){
+        return (upper + val) % upper;
 
+    };
+    auto a = [&](ll i) {
+        ll aa = A.size();
+        if (i < 0) {
+            static_assert(7 + (-20 % 3) == 5);
+            i = wa(i, aa);
+        }
+        if (aa <= i) {
+            i = wa(i, aa);
+        }
+        return A[i];
+    };
+    ll rem = N;
+    ll l = 0;
+    while (true) {
+        ll prev = a(l - 1);
+        if((prev + 1) % M != a(l) && prev != a(l)){
+            break;
+        }
+        l = wa(l-1, A.size());
+        if (--rem <= 0) {
+            return 0ll;
+        }
+    }
+    ll s = l;
+    vector<P> B;
+    while (true) {
+        ll r = l;
+        while (true) {
+            ll next = a(r + 1);
+            if((a(r) + 1) % M != next && a(r) != next){
+                break;
+            } 
+            r = wa(r + 1, A.size());
+        }
+        r = wa(r+1,A.size());
+        B.emplace_back(l, r);  //[l, r). r is sentinel
+        l = r;
+        if (l == s) {
+            break;
+        }
+    }
+    ll total = 0;
+    vll sum(B.size());
+    rep(j, B.size()) {
+        auto [l, r] = B[j];
+        for (ll i = l;; i = wa(i + 1, A.size())) {
+            if (i == r) {
+                break;
+            }
+            auto v = a(i);
+            sum[j] += v;
+            total += v;
+        }
+    }
+    ll ans = total - *ranges::max_element(sum);
     return ans;
 }
 
@@ -127,7 +178,7 @@ int main() {
     long long M;
     std::cin >> M;
     std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> A[i];
     }
     cout << solve(N, M, std::move(A)) << endl;
