@@ -105,13 +105,62 @@ namespace std{
     };
 }
 
-
 // clang-format on
 const ll inf = LLONG_MAX;
 
-auto solve(long long N) {
-    ll ans = inf;
+template <typename Container, typename Value>
+struct InsertHelper;
+template <typename Value>
+struct InsertHelper<std::set<Value>, Value> {
+    static void insert(std::set<Value>& container, const Value& value) {
+        container.emplace(value);
+    }
+};
 
+template <typename Value>
+struct InsertHelper<std::vector<Value>, Value> {
+    static void insert(std::vector<Value>& container, const Value& value) {
+        container.push_back(value);
+    }
+};
+
+template <typename Value>
+struct InsertHelper<std::map<Value, bool>, Value> {
+    static void insert(std::map<Value, bool>& container, const Value& value) {
+        container[value] = true;
+    }
+};
+template <typename T, template <typename...> class Container>
+Container<T> enumeratePrimeNumbers(const T N) {
+    std::vector<bool> is_prime(N + 1, true);
+    Container<T> P;
+    for (T i = 2; i <= N; i++) {
+        if (is_prime[i]) {
+            for (T j = 2 * i; j <= N; j += i) {
+                is_prime[j] = false;
+            }
+            InsertHelper<Container<T>, T>::insert(P, i);
+        }
+    }
+    return P;
+}
+auto solve(long long N) {
+    ll ans = 0;
+    auto P = enumeratePrimeNumbers<ll, vector>(sqrt(N / 4 / 3));
+    ll m = P.size();
+    rep(i,m){
+      ll a = P[i];
+      if(a*a*a*a*a > N)break;
+      reps(j,i+1,m){
+        ll b = P[j];
+        if(a*a*b*b*b > N)break;
+        reps(k,j+1,m){
+          ll c = P[k];
+          if(a*a*b*c*c > N)break;
+          ++ans;
+        }
+      }
+    }
     return ans;
 }
 
