@@ -107,11 +107,13 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
 auto solve(long long N, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
+    ll ans = 0;
+    repd(i,N){
+        ll rem = (A[i]+ans) % B[i];
+        if(rem)
+            ans += B[i] - rem;
+    }
     return ans;
 }
 
