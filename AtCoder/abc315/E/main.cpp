@@ -107,16 +107,32 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
+ll N;
+vvll P;
+auto solve(){
+    unordered_set<ll> visited;
+    auto dfs = [&](auto&&dfs, ll q)->void{
+        visited.insert(q);
+        for(auto&& p:P[q]){
+            if(visited.count(p) == 0)
+                dfs(dfs, p);
+        }
+        if(q != 1){
+            cout << q << " ";
+        }
+    };
+    dfs(dfs, 1);
 }
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    cin >> N;
+    P.resize(N+1);
+    reps(i,1,N+1){
+        CIN(ll,C);
+        rep(_,C){
+            CIN(ll,p);
+            P[i].emplace_back(p);
+        }
+    }
+    solve();
     return 0;
 }
