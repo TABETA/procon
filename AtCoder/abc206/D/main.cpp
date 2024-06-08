@@ -107,11 +107,21 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
+#include <atcoder/dsu>
+using namespace atcoder;
 
 auto solve(long long N, std::vector<long long> A) {
-    ll ans = inf;
-
+    ll ans = 0;
+    dsu uf(2e5+1);
+    map<ll, unordered_set<ll>> same;
+    for(ll i = 0, j = A.size() - 1; i < j; ++i, --j){
+        if(A[i] != A[j]){
+            if(!uf.same(A[i],A[j])){
+                uf.merge(A[i],A[j]);
+                ans++;
+            }
+        }
+    }
     return ans;
 }
 
