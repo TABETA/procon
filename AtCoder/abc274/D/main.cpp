@@ -89,6 +89,14 @@ template <typename T, typename S> inline void print(const pair<T, S>& p)
 template <typename T> inline void print(const T& x) {cout << x << "\n";}
 template <typename T, typename S> inline void print(const vector<pair<T, S>>& v)
     {for (auto&& p : v) print(p);}
+template <typename T>
+ostream &operator<<(ostream &os, const vector<T> &v) {
+    for (int i = 0; i < (int)v.size(); i++) {
+        os << v[i] << (i + 1 != (int)v.size() ? " " : "");
+    }
+    return os;
+}
+
 // 第一引数と第二引数を比較し、第一引数(a)をより大きい/小さい値に上書き
 template <typename T> inline bool chmin(T& a, const T& b) {bool compare = a > b; if (a > b) a = b; return compare;}
 template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b; if (a < b) a = b; return compare;}
@@ -108,13 +116,28 @@ namespace std{
 const string YES = "Yes";
 const string NO = "No";
 
-// clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long x, long long y, std::vector<long long> A) {
-    ll ans = inf;
-
-    return ans;
+// clang-format on;
+auto solve(long long N, long long X, long long Y, std::vector<long long> A) {
+    using B = bitset<20001>;
+    const ll zero = 10000;
+    B DPX;
+    B DPY;
+    DPX.set(zero + A[0]);
+    DPY.set(zero);
+    reps(i,1,N){
+        if(i%2){
+            // vertival
+            B u = DPY<<A[i];
+            B l = DPY>>A[i];
+            DPY = u | l;
+        } else {
+            // horizontal
+            B u = DPX<<A[i];
+            B l = DPX>>A[i];
+            DPX = u | l;
+        }
+    }
+    return DPX.test(X+zero) && DPY.test(Y+zero) ? YES: NO;
 }
 
 int main() {
