@@ -121,10 +121,14 @@ const long long MOD = 1000000007;
 // clang-format on
 const ll inf = LLONG_MAX;
 
-auto solve(long long W, long long H) {
-    ll ans = inf;
-
-    return ans;
+auto solve(ll W, ll H) {
+    mint a = W+H-2;
+    mint ans = 1;
+    reps(i, 1, H){
+        ans *= a/i;
+        --a;
+    }
+    return ans.val();
 }
 
 int main() {
