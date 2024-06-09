@@ -114,12 +114,31 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
+const ll na = LLONG_MIN;
 
 auto solve(long long N, long long L, long long K, std::vector<long long> A) {
-    ll ans = inf;
-
-    return ans;
+    auto f = [&](ll s){
+        ll pre = 0;
+        ll k = 0;
+        rep(i,N){
+            if(A[i] - pre >= s){
+                pre = A[i];
+                ++k;
+            }
+        }
+        if(L - pre >= s){
+            ++k;
+        }
+        return k > K;
+    };
+    ll ac = 0;
+    ll wa = L;
+    while(abs(ac - wa) > 1){
+        ll wj = (wa+ac)/2;
+        if(f(wj)) ac = wj;
+        else wa = wj;
+    }
+    return ac;
 }
 
 int main() {
