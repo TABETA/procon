@@ -109,16 +109,45 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
-auto solve() {
-    ll ans = inf;
+auto solve2(ll a, ll s){
+    auto b = s-2*a;
+    if(b < 0){
+        cout << NO << endl;
+        return;
+    }
+    cout << ((a&b) == 0 ? YES : NO ) << endl;
+}
+auto solve(ll a, ll s){
+    ll S = s;
+    ll x = 0;
+    ll y = 0;
+    rep(i,60){
+        ll ma = (a>>i)&1;
+        if(ma){
+            x |= 1ll<<i;
+            y |= 1ll<<i;
+            s -= 1ll<<(i+1);
+        } else {
+            ll ms = (s>>i)&1;
+            if(ms){
+                x |= 1ll<<i;
+            } else {
 
-    return ans;
+            }
+        }
+    }
+    cout << ( (x+y == S) && ((x & y) == a)   ? YES : NO);
+    cout << endl;
 }
 
+
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,T);
+    rep(_,T){
+        CIN(ll,a);
+        CIN(ll,s);
+        solve2(a,s);
+    }
     return 0;
 }
