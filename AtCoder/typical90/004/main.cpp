@@ -114,12 +114,22 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
 auto solve(long long H, long long W, std::vector<std::vector<long long>> A) {
-    ll ans = inf;
+    vll sumv(W);
+    vll sumh(H);
+    rep(x,W){
+        rep(y,H){
+            sumv[x] += A[y][x];
+            sumh[y] += A[y][x];
+        }
+    }
 
-    return ans;
+    rep(y,H){
+        rep(x,W){
+            cout << sumv[x] + sumh[y] -A[y][x] << " ";
+        }
+        cout << endl;
+    }
 }
 
 int main() {
@@ -133,6 +143,6 @@ int main() {
             std::cin >> A[i][j];
         }
     }
-    cout << solve(H, W, std::move(A)) << endl;
+    solve(H, W, std::move(A));
     return 0;
 }
