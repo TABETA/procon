@@ -117,14 +117,44 @@ namespace std{
 const ll inf = LLONG_MAX;
 
 auto solve(long long N) {
-    ll ans = inf;
-
-    return ans;
+    if(N % 2){
+        return;
+    }
+    vs ans;
+    rep(i,1<<N){
+        ll c = popcount((ull)i);
+        if(c == N/2){
+            string s = "";
+            ll j = i;
+            ll nest = 0;
+            rep(k,N){
+                if(j&1){
+                    s +="(";
+                    ++nest;
+                } else {
+                    s +=")";
+                    --nest;
+                }
+                if(nest < 0){
+                    s = "";
+                    break;
+                }
+                j >>= 1;
+            }
+            if(s != "")
+                ans.pb(s);
+        }
+    }
+    ranges::sort(ans);
+    for (auto &&i : ans)
+    {
+        cout << i << endl;
+    }
 }
 
 int main() {
     long long N;
     std::cin >> N;
-    cout << solve(N) << endl;
+    solve(N);
     return 0;
 }
