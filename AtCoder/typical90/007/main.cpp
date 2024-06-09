@@ -92,7 +92,7 @@ template <typename T, typename S> inline void print(const vector<pair<T, S>>& v)
 template <typename T>
 ostream &operator<<(ostream &os, const vector<T> &v) {
     for (int i = 0; i < (int)v.size(); i++) {
-        os << v[i] << (i + 1 != (int)v.size() ? " " : "");
+        os << v[i] << (i + 1 != (int)v.size() ? "\n" : "");
     }
     return os;
 }
@@ -117,7 +117,18 @@ namespace std{
 const ll inf = LLONG_MAX;
 
 auto solve(long long N, std::vector<long long> A, long long Q, std::vector<long long> B) {
-    ll ans = inf;
+    vll ans(Q);
+    ranges::sort(A);
+    rep(i,Q){
+        auto it = ranges::lower_bound(A, B[i]);
+        if(it == A.begin()){
+            ans[i] = abs(B[i] - A[0]);
+        } else if(it == A.end()){
+            ans[i] = abs(B[i] - A.back());
+        } else {
+            ans[i] = min(abs(B[i] - *it), abs(B[i] - *prev(it,1)));
+        }
+    }
 
     return ans;
 }
