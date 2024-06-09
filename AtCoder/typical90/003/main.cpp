@@ -54,7 +54,6 @@ using pii = pair<int, int>;
 /* define short */
 #define CIN(type, name) type name; cin >> name;
 #define pb push_back
-#define mp make_pair
 #define all(obj) (obj).begin(), (obj).end()
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
@@ -115,11 +114,35 @@ namespace std{
 
 // clang-format on
 const ll inf = LLONG_MAX;
+vvll AB;
+using P = pair<ll,ll>;
+auto bfs(ll start) -> P{
+    map<ll, ll> mp;
+    queue<P> Q;
+    Q.emplace(start,0);
+    ll ans = 0;
+    ll farthest = -1;
+    while(!Q.empty()){
+        auto [p, dist] = Q.front();Q.pop();
+        mp[p] = dist;
+        if(ans < dist){
+            ans = dist;
+            farthest = p;
+        }
+        for (auto &&v : AB[p])
+        {
+            if (mp.count(v) == 0){
+                Q.emplace(v, dist+1);
+            }
+        }
+    }
+    return {farthest, ans};
+}
 
 auto solve(long long N, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
+    auto [p, dist] = bfs(1);
+    tie(p, dist) = bfs(p);
+    return dist+1;
 }
 
 int main() {
@@ -127,9 +150,12 @@ int main() {
     std::cin >> N;
     std::vector<long long> A(N-1);
     std::vector<long long> B(N-1);
+    AB.resize(N+1);
     for(int i = 0 ; i < N-1 ; i++){
         std::cin >> A[i];
         std::cin >> B[i];
+        AB[A[i]].pb(B[i]);
+        AB[B[i]].pb(A[i]);
     }
     cout << solve(N, std::move(A), std::move(B)) << endl;
     return 0;
