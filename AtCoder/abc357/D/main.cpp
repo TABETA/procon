@@ -123,9 +123,12 @@ const long long MOD = 998244353;
 const ll inf = LLONG_MAX;
 
 auto solve(long long N) {
-    ll ans = inf;
-
-    return ans;
+    mint a = N;
+    ll len = to_string(N).size();
+    mint r = 10;
+    r = r.pow(len);
+    mint ans = a*(r.pow(N) -1)/(r-1);
+    return ans.val();
 }
 
 int main() {
