@@ -120,12 +120,24 @@ using vvm = vector<vm>;
 const long long MOD = 1000000007;
 
 // clang-format on
-const ll inf = LLONG_MAX;
+const ll na = LLONG_MIN;
 
 auto solve(long long N, std::string S) {
-    ll ans = inf;
-
-    return ans;
+    string s = "atcoder";
+    vector DP(N+1, vector(s.size()+1, mint(0)));
+    rep(i,N+1){
+        DP[i][0] = 1;
+    }
+    rep(j,s.size()){
+        rep(i,N){
+            if(S[i] == s[j]){
+                DP[i+1][j+1] = DP[i][j+1] + DP[i][j];
+            } else {
+                DP[i+1][j+1] = DP[i][j+1];
+            }
+        }
+    }
+    return DP[N][s.size()].val();
 }
 
 int main() {
