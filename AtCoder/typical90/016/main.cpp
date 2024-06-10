@@ -114,23 +114,32 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long A, long long B, long long C) {
-    ll ans = inf;
-
+auto solve(long long N, vll&& C) ->ll{
+    ranges::sort(C);
+    ll I = N / C[2];
+    ll ans = LLONG_MAX;
+    repd(i, I+1){
+        ll rem1 = N - (C[2]*i);
+        ll J = rem1/C[1];
+        repd(j,J+1){
+            ll rem2 = rem1 - (C[1] * j);
+            if(rem2 % C[0] == 0){
+                ll now = i+j+rem2/C[0];
+                ans = min(ans, now);
+            }
+        }
+    }
     return ans;
 }
 
 int main() {
     long long N;
     std::cin >> N;
-    long long A;
-    std::cin >> A;
-    long long B;
-    std::cin >> B;
-    long long C;
-    std::cin >> C;
-    cout << solve(N, A, B, C) << endl;
+    vll C(3);
+    rep(i,3){
+        cin >> C[i];
+    }
+    
+    cout << solve(N, move(C)) << endl;
     return 0;
 }
