@@ -118,10 +118,13 @@ const string NO = "No";
 // clang-format on
 const ll inf = LLONG_MAX;
 
-auto solve(long long a, long long b, long long c) {
-    ll ans = inf;
-
-    return ans;
+auto solve(ll a, ll b, ll c) {
+    ll c_b = 1;
+    rep(i,b){
+        c_b *= c;
+    }
+    return (a < c_b ? YES : NO);
+    // return 0 < log2(pow(c,b)/a) ? YES: NO;
 }
 
 int main() {
