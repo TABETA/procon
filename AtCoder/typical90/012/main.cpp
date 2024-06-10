@@ -116,16 +116,43 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
+#include <atcoder/dsu>
+using namespace atcoder;
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,H);
+    CIN(ll,W);
+    vvll G(H+2, vll(W+2));
+    CIN(ll,Q);
+    dsu uf((H+1)*(W+1)+1);
+    pair<ll,ll> adjs[] = {
+        {0, 1},
+        {0,-1},
+        { 1, 0},
+        {-1, 0},
+    };
+    auto getN = [&](ll r, ll c){
+        return r * W + c;
+    };
+    rep(_,Q){
+        CIN(ll,q);
+        if(q == 1){
+            CIN(ll,r);
+            CIN(ll,c);
+            G[r][c] = 1;
+            for (auto &&[y,x] : adjs)
+            {
+                if(G[r+y][c+x] == 1){
+                    uf.merge(getN(r+y, c+x), getN(r,c));
+                }
+            }
+        } else {
+            CIN(ll,ra);
+            CIN(ll,ca);
+            CIN(ll,rb);
+            CIN(ll,cb);
+            cout << (G[ra][ca] == 1 && uf.same(getN(ra,ca),getN(rb,cb)) ? YES : NO) << endl;
+        }
+    }
     return 0;
 }
