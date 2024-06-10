@@ -117,8 +117,12 @@ namespace std{
 const ll inf = LLONG_MAX;
 
 auto solve(long long N, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
+    ranges::sort(A);
+    ranges::sort(B);
+    ll ans = 0;
+    rep(i,N){
+        ans += abs(A[i]-B[i]);
+    }
     return ans;
 }
 
