@@ -114,29 +114,32 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long T, long long L, long long X, long long Y, long long Q, std::vector<long long> E) {
-    ll ans = inf;
-
-    return ans;
-}
 
 int main() {
     long long T;
     std::cin >> T;
-    long long L;
+    double L;
     std::cin >> L;
-    long long X;
+    double X;
     std::cin >> X;
-    long long Y;
+    double Y;
     std::cin >> Y;
     long long Q;
     std::cin >> Q;
-    std::vector<long long> E(Q);
+
+    double x1 = 0;
+    double z2 = 0;
+    double xx = pow(X-x1, 2.);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> E[i];
+        CIN(double,e);
+        double t1 = e /T;
+        double y1 = -sin(2*M_PI * t1) * L/2.;
+        double z1 = L/2. - cos(2*M_PI * t1)*L/2.;
+        double yy = pow(Y-y1, 2.);
+        double zz = pow(z2-z1, 2.);
+        double c = sqrt(xx + yy + zz);
+        double ans = asin(z1/c) * 180 / M_PI;
+        cout << setprecision(9) << ans << endl;
     }
-    cout << solve(T, L, X, Y, Q, std::move(E)) << endl;
     return 0;
 }
