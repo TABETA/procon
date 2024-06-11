@@ -114,21 +114,16 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<std::string> S) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<std::string> S(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> S[i];
+    set<string> S;
+    for(int i = 1 ; i <= N ; i++){
+        CIN(string, s);
+        if(S.count(s) == 0){
+            cout << i << endl;
+            S.insert(s);
+        }
     }
-    cout << solve(N, std::move(S)) << endl;
     return 0;
 }
