@@ -119,9 +119,12 @@ const string NO = "No";
 const ll inf = LLONG_MAX;
 
 auto solve(long long N, long long K, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
+    ll ans = 0;
+    rep(i,N){
+        ans += abs(A[i]-B[i]);
+    }
+    if(K < ans) return NO;
+    return ((K - ans) % 2 == 0 ?  YES : NO);
 }
 
 int main() {
