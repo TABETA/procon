@@ -112,23 +112,20 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long A, long long B, long long C) {
-    ll ans = inf;
-
-    return ans;
-}
 
 int main() {
-    long long A;
-    std::cin >> A;
-    long long B;
-    std::cin >> B;
-    long long C;
-    std::cin >> C;
-    cout << solve(A, B, C) << endl;
+    vll A(3);
+    for (auto& a : A) {
+        cin >> a;
+    }
+    ranges::sort(A);
+    ll s = gcd(gcd(A[0], A[1]), A[2]);
+    ll ans = 0;
+    for (auto &&a : A)
+    {
+        ans += (a - s) / s;
+    }
+    cout << ans << endl;
     return 0;
 }
