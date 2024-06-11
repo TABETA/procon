@@ -114,27 +114,46 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> lx, std::vector<long long> ly, std::vector<long long> rx, std::vector<long long> ry) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> lx(N);
-    std::vector<long long> ly(N);
-    std::vector<long long> rx(N);
-    std::vector<long long> ry(N);
+    ll M = 1003;
+    vvll G(M, vll(M));
     for(int i = 0 ; i < N ; i++){
-        std::cin >> lx[i];
-        std::cin >> ly[i];
-        std::cin >> rx[i];
-        std::cin >> ry[i];
+        CIN(ll,x1);
+        CIN(ll,y1);
+        CIN(ll,x2);
+        CIN(ll,y2);
+        ++x1;
+        ++x2;
+        ++y1;
+        ++y2;
+        if(x1 > x2)swap(x1,x2);
+        if(y1 > y2)swap(y1,y2);
+        G[y1][x1]++;
+        G[y2][x1]--;
+        G[y1][x2]--;
+        G[y2][x2]++;
     }
-    cout << solve(N, std::move(lx), std::move(ly), std::move(rx), std::move(ry)) << endl;
+    reps(y,1,M){
+        reps(x,1,M){
+            G[y][x] += G[y][x-1];
+        }
+    } 
+    reps(x,1,M){
+        reps(y,1,M){
+            G[y][x] += G[y-1][x];
+        }
+    }
+    vll K(N+1);
+    reps(y,1,M){
+        reps(x,1,M){
+            K[G[y][x]]++;
+        }
+    }
+    reps(i,1,N+1)
+    {
+        cout << K[i] << endl;
+    }
     return 0;
 }
