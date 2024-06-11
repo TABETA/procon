@@ -112,25 +112,47 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N-1);
-    std::vector<long long> B(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    vector<set<ll>> AB(N + 1);
+    for (int i = 0; i < N - 1; i++) {
+        CIN(ll, a);
+        CIN(ll, b);
+        AB[a].insert(b);
+        AB[b].insert(a);
     }
-    cout << solve(N, std::move(A), std::move(B)) << endl;
+    const ll blank = -1;
+    vll color(N + 1, blank);
+    using P = pair<ll, ll>;
+    queue<P> Q;
+    Q.emplace(1, 1);
+    while (!Q.empty()) {
+        auto [p, c] = Q.front();
+        Q.pop();
+        ll nextColor = c ^ 1;
+        for (auto&& i : AB[p]) {
+            if (color[i] == blank) {
+                color[i] = nextColor;
+                Q.emplace(i, nextColor);
+            }
+        }
+    }
+    ll n = N / 2;
+    ll a = ranges::count(color, 1);
+    ll tc = (a >= n) ? 1 : 0;
+
+    reps(i, 1, N + 1) {
+        if (color[i] == tc) {
+            cout << i << " ";
+            --n;
+        }
+        if (n <= 0) {
+            break;
+        }
+    }
+
+    cout << endl;
     return 0;
 }
