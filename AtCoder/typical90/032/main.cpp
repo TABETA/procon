@@ -114,31 +114,43 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<std::vector<long long>> A, long long M, std::vector<long long> X, std::vector<long long> Y) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    long long N;
-    std::cin >> N;
-    std::vector<std::vector<long long>> A(N, std::vector<long long>(N));
-    for(int i = 0 ; i < N ; i++){
-        for(int j = 0 ; j < N ; j++){
-            std::cin >> A[i][j];
+    ll N;
+    cin >> N;
+    vvll A(N+1, vll(N+1));
+    for(int i = 1 ; i <= N ; i++){
+        for(int j = 1 ; j <= N ; j++){
+            cin >> A[i][j];
         }
     }
-    long long M;
-    std::cin >> M;
-    std::vector<long long> X(M);
-    std::vector<long long> Y(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> X[i];
-        std::cin >> Y[i];
+    ll M;
+    cin >> M;
+    vector<unordered_set<ll>> XY(N+1);
+    rep(_,M){
+        CIN(ll,x);
+        CIN(ll,y);
+        XY[x].insert(y);
+        XY[y].insert(x);
     }
-    cout << solve(N, std::move(A), M, std::move(X), std::move(Y)) << endl;
+    const ll na = LLONG_MAX;
+    ll ans = na;
+    vll I(N);
+    iota(all(I), 1);
+    do{
+        ll now = 0;
+        ll pre = -1;
+        ll j = 1;
+        rep(ii,N){
+            auto i = I[ii];
+            if(XY[i].count(pre)){
+                now = na;
+                break;
+            }
+            now += A[i][j++];
+            pre = i;
+        }
+        ans = min(ans, now);
+    }while(ranges::next_permutation(I).found);
+    cout << (ans == na ? -1ll : ans) << endl;
     return 0;
 }
