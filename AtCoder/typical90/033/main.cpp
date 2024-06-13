@@ -117,8 +117,11 @@ namespace std{
 const ll inf = LLONG_MAX;
 
 auto solve(long long H, long long W) {
-    ll ans = inf;
-
+    if(H > W)swap(H,W);
+    if(H == 1) return W;
+    auto dh = div(H, 2ll);
+    auto dw = div(W, 2ll);
+    ll ans = (dh.quot + dh.rem) * (dw.quot + dw.rem);
     return ans;
 }
 
