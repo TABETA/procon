@@ -114,19 +114,25 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long A, long long B) {
-    ll ans = inf;
-
-    return ans;
-}
 
 int main() {
     long long A;
     std::cin >> A;
     long long B;
     std::cin >> B;
-    cout << solve(A, B) << endl;
+    const ll inf = 1000000000000000000;
+    auto g = gcd(A,B);
+    auto l = log10(A) + log10(B) - log10(g);
+    if(l > 18){
+        cout << "Large" << endl;
+        return 0;
+    }
+    auto ans = lcm(A,B);
+    if(ans > inf){
+        cout << "Large" << endl;
+
+    } else {
+        cout << ans << endl;
+    }
     return 0;
 }
