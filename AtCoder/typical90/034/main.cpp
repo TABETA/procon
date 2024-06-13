@@ -114,23 +114,31 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long K, std::vector<long long> a) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    long long N;
-    std::cin >> N;
-    long long K;
-    std::cin >> K;
-    std::vector<long long> a(N);
+    ll N;
+    cin >> N;
+    ll K;
+    cin >> K;
+    vll a(N+1);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        cin >> a[i];
     }
-    cout << solve(N, K, std::move(a)) << endl;
+    unordered_map<ll,ll> S;
+    ll ans = 0;
+    ll j = 0;
+    rep(i,N){
+        while(j < N){
+            if((ll)S.size() == K && S.count(a[j]) == 0)break;
+            S[a[j]]++;
+            ++j;
+        }
+        ans = max(ans, j-i);
+        if(S.count(a[i]) == 1){
+            if(--S[a[i]] == 0){
+                S.erase(a[i]);
+            }
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
