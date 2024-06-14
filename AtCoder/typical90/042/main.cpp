@@ -120,12 +120,19 @@ using vvm = vector<vm>;
 const long long MOD = 1000000007;
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
-auto solve(long long K) {
-    ll ans = inf;
-
-    return ans;
+auto solve(long long K) ->ll {
+    if(K % 9 != 0){
+        return 0;
+    }
+    vm DP(100000*2);
+    DP[0] = 1;
+    rep(i,K){
+        reps(k,1,10){
+            DP[i+k] += DP[i];
+        }
+    }
+    return DP[K].val();
 }
 
 int main() {
