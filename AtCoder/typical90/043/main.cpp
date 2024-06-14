@@ -111,19 +111,68 @@ namespace std{
         }
     };
 }
-
+template<typename T, typename U>
+static pair<T,U> operator+(const pair<T,U>& l, const pair<T,U> r){
+    return pair<T,U>{l.first+r.first, l.second+r.second};
+}
+template<typename T, typename U>
+static pair<T,U> operator-(const pair<T,U>& l, const pair<T,U> r){
+    pair<T,U> nr = {-r.first, - r.second};
+    return l + nr;
+}
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
+ll H;
+ll W;
+using P = pair<ll,ll>;
+using T = tuple<ll, P, P>;
+auto dijkstra(const vs& G, P start, P goal){
+    vector<P> dirs{
+        P{-1, 0}, //U
+        P{1, 0}, //D
+        P{0, -1}, //L
+        P{0, 1} //R
+    };
+    vector C(H + 2, vector(W + 2, LLONG_MAX));
+    auto cmp = [](T l, T r){
+        ll lc, rc;
+        tie(lc, ignore, ignore) = l;
+        tie(rc, ignore, ignore) = r;
+        return lc > rc;
+    };
+    priority_queue<T, vector<T>, decltype(cmp)> q;
+    q.emplace(0, start, start);
+    while(!q.empty()){
+        auto [cost, cur, pdir] = q.top(); q.pop();
+        if(C[cur.first][cur.second] < cost) continue;
+        C[cur.first][cur.second] = cost;
+        for (auto&& dir : dirs) {
+            auto next = cur + dir;
+            if (G[next.first][next.second] != '#') {
+                auto ncost = cost + (pdir == dir ? 0 : 1);
+                q.emplace(ncost, next, dir);
+            }
+        }
+    }
+    return C;
 }
 
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    cin >> H;
+    cin >> W;
+    CIN(ll, ys);
+    CIN(ll, xs);
+    CIN(ll, yt);
+    CIN(ll, xt);
+    vs S(H + 2);
+    rep(i, H) {
+        CIN(string, s);
+        S[i + 1] = "#" + s + "#";
+    }
+    S[0] = string(W + 2, '#');
+    S[H + 1] = string(W + 2, '#');
+    auto C = dijkstra(S, P{ys, xs}, P{yt,xt});
+    ll ans = C[yt][xt]-1;
+    cout << ans << endl;
     return 0;
 }
