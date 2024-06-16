@@ -111,27 +111,32 @@ namespace std{
     };
 }
 
-#include <atcoder/modint>
-using namespace atcoder;
-using mint = modint2;
-using vm = vector<mint>;
-using vvm = vector<vm>;
-const long long MOD = 2;
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
 auto solve(long long N, std::vector<long long> a) {
-    ll ans = inf;
-
+    vll b(N+1);
+    for(ll i = N; i >= 1; --i){
+        ll sum = 0;
+        for(ll j = i + i; j <= N; j += i){
+            sum = (sum + b[j])%2;
+        }
+        b[i] = a[i] ^ sum;
+    }
+    vll ans;
+    rep(i,N){
+        if(b[i+1]){
+            ans.pb(i+1);
+        }
+    }
+    ll n = ans.size();
+    cout << n << endl;
     return ans;
 }
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
-    for(int i = 0 ; i < N ; i++){
+    std::vector<long long> a(N+1);
+    for(int i = 1 ; i <= N ; i++){
         std::cin >> a[i];
     }
     cout << solve(N, std::move(a)) << endl;
