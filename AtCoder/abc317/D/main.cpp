@@ -114,24 +114,39 @@ namespace std{
 
 // clang-format on
 const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> X, std::vector<long long> Y, std::vector<long long> Z) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> X(N);
     std::vector<long long> Y(N);
     std::vector<long long> Z(N);
+    ll tot = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> X[i];
         std::cin >> Y[i];
         std::cin >> Z[i];
+        tot += Z[i];
     }
-    cout << solve(N, std::move(X), std::move(Y), std::move(Z)) << endl;
+    vvll DP(N+1, vll(1e5+1, inf));
+    DP[0][0] = 0;
+    rep(i,N){
+        rep(j,1e5){
+            if(DP[i][j] == inf)continue;
+            DP[i+1][j] = min(DP[i+1][j], DP[i][j]);
+            auto shortage = Y[i] - X[i];
+            if(shortage > 0){
+                auto sc = (ll)ceil((double)shortage/2.);
+                DP[i+1][j+Z[i]] = DP[i][j] + sc;
+            } else {
+                DP[i+1][j+Z[i]] = DP[i][j];
+            }
+        }
+    }
+    ll ans = LLONG_MAX;
+    ll start = (ll)ceil(tot/2.);
+    reps(j,start,1e5+1){
+        ans = min(ans,DP[N][j]);
+    }
+    cout << ans << endl;
     return 0;
 }
