@@ -113,11 +113,21 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
 auto solve(std::string S) {
-    ll ans = inf;
-
+    ll N = S.size();
+    vvll DP(N+1, vll(10));
+    rep(i,N){
+        ll j = S[i] - '0';
+        DP[i+1] = DP[i];
+        DP[i+1][j] ^= 1;
+    }
+    map<vll, ll> mp;
+    rep(i,N+1) mp[DP[i]]++;
+    ll ans = 0;
+    for (auto &&[k,v] : mp)
+    {
+        ans += v * (v-1)/2;
+    }
     return ans;
 }
 
