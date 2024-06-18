@@ -117,18 +117,46 @@ using mint = modint998244353;
 using vm = vector<mint>;
 using vvm = vector<vm>;
 const long long MOD = 998244353;
-
 // clang-format on
-const ll inf = LLONG_MAX;
 
-auto solve() {
-    ll ans = inf;
+map<ll, mint> dp;
 
-    return ans;
-}
-
+auto doubling(mint head, ll exp){
+    auto dfs = [&](auto&&dfs, ll exp)->mint{
+        if(dp.contains(exp)){
+            return dp[exp];
+        }
+        auto quot = dfs(dfs, exp/2);
+        return dp[exp] = quot * quot * dfs(dfs, exp%2); 
+    };
+    mint k = dfs(dfs, exp);
+    return head * k;
+};
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    dp[0] = 1;
+    dp[1] = 10;
+    mint s = 1;
+    deque<ll> digits;
+    digits.emplace_back(1);
+    CIN(ll, Q);
+    rep(i, Q) {
+        CIN(ll, q);
+        switch (q) {
+            case 1: {
+                CIN(ll, x);
+                s = s * 10 + x;
+                digits.emplace_back(x);
+            } break;
+            case 2: {
+                mint head = digits.front();
+                ll d = digits.size();
+                digits.pop_front();
+                s -= doubling(head, d-1);
+            } break;
+            case 3:
+                cout << s.val() << endl;
+                break;
+        }
+    }
     return 0;
 }
