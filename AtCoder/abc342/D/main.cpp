@@ -113,21 +113,40 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> A) {
-    ll ans = inf;
-
+ll prime_factorize(ll N) {
+    ll ans = 1;
+    for (ll a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        ll ex = 0;
+        while (N % a == 0) {
+            ex = (ex + 1)%2;
+            N /= a;
+        }
+        ans *= pow(a, ex);
+    }
+    if (N != 1) ans *= N;
     return ans;
 }
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
+    map<ll,ll> A;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        CIN(ll,a);
+        ll p = prime_factorize(a);
+        A[p]++;
     }
-    cout << solve(N, std::move(A)) << endl;
+    ll ans = 0;
+    for (auto &&[k,v] : A)
+    {
+        if(k != 0){
+            ans += v * (v-1) / 2;
+        }
+    }
+    if(A.contains(0)){
+        ans += N*(N-1)/2 - (N-A[0])*(N-A[0]-1)/2;
+    }
+    cout << ans << endl;
     return 0;
 }
