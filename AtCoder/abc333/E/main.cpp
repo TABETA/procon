@@ -113,16 +113,48 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,N);
+    vll T(N);
+    vll X(N);
+    map<ll,ll> now;
+    rep(i,N){
+        cin >> T[i];
+        cin >> X[i];
+        if(T[i] == 1){
+            now[X[i]]++;
+        } else {
+            now[X[i]]--;
+        }
+    }
+    for (auto &&[k,v] : now)
+    {
+        if(v < 0){
+            cout << -1 << endl;
+            return 0;
+        }
+    }
+    now.clear();
+    ll K = 0;
+    ll k = 0;
+    vll ans;
+    repd(i,N){
+        if(T[i] == 2){
+            ++now[X[i]];
+            ++k;
+        } else {
+            if(now[X[i]] > 0){
+                --now[X[i]];
+                --k;
+                ans.push_back(1);
+            }else {
+                ans.push_back(0);
+            }
+        }
+        chmax(K,k);
+    }
+    cout << K << endl;
+    ranges::reverse(ans);
+    cout << ans << endl;
     return 0;
 }
