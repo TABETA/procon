@@ -115,14 +115,16 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
+#include <atcoder/dsu>
+using namespace atcoder;
 
-auto solve(long long N, long long s_x, long long s_y, long long t_x, long long t_y, std::vector<long long> x, std::vector<long long> y, std::vector<long long> r) {
-    ll ans = inf;
-
-    return ans;
+ll dist2(ll x1, ll y1, ll x2, ll y2){
+    ll x = x2 - x1;
+    ll xx = x*x;
+    ll y = y2 - y1;
+    ll yy = y*y;
+    return xx+yy;
 }
-
 int main() {
     long long N;
     std::cin >> N;
@@ -142,6 +144,30 @@ int main() {
         std::cin >> y[i];
         std::cin >> r[i];
     }
-    cout << solve(N, s_x, s_y, t_x, t_y, std::move(x), std::move(y), std::move(r)) << endl;
+    dsu uf(1e8);
+    rep(i,N){
+        ll ds = dist2(x[i], y[i], s_x, s_y);
+        if(ds == r[i]*r[i]){
+            uf.merge(N+1, i);
+        }
+        ll dt = dist2(x[i], y[i], t_x, t_y);
+        if(dt == r[i]*r[i]){
+            uf.merge(N+2, i);
+        }
+        reps(j,i+1,N){
+            ll d = dist2(x[i], y[i], x[j], y[j]);
+            ll rp = r[i] + r[j];
+            ll rn = abs(r[i] - r[j]);
+            if(d > rp*rp){
+                // 離れている
+            } else if(d < rn*rn){
+                // 内部にある
+            } else {
+                // 外接、交わる、内接
+                uf.merge(i,j);
+            }
+        }
+    }
+    cout << (uf.same(N+1,N+2) ? YES: NO) << endl;
     return 0;
 }
