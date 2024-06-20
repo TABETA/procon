@@ -110,32 +110,35 @@ namespace std{
         }
     };
 }
-
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> p, std::vector<long long> x, std::vector<long long> y) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    long long N;
+    ll N;
     std::cin >> N;
-    long long M;
+    ll M;
     std::cin >> M;
-    std::vector<long long> p(N-2+1);
-    for(int i = 0 ; i < N-2+1 ; i++){
+    vvll C(N + 1);
+    std::vector<ll> p(N + 1);
+    for (int i = 2; i <= N; i++) {
         std::cin >> p[i];
+        C[p[i]].emplace_back(i);
     }
-    std::vector<long long> x(M);
-    std::vector<long long> y(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> x[i];
-        std::cin >> y[i];
+    map<ll, ll> mp;
+    for (int i = 0; i < M; i++) {
+        CIN(ll,x);
+        CIN(ll,y);
+        chmax(mp[x], y+1);
     }
-    cout << solve(N, M, std::move(p), std::move(x), std::move(y)) << endl;
+    set<ll> ans;
+    auto dfs = [&](auto dfs, ll v, ll s)->void{
+        if(s > 0){
+            ans.emplace(v);
+        }
+        for (auto &&c : C[v])
+        {
+            dfs(dfs, c, max(s-1, mp[c]));
+        }
+    };
+    dfs(dfs, 1, mp[1]);
+    cout << ans.size() << endl;
     return 0;
 }
