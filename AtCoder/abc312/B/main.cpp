@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -51,8 +52,8 @@ using vs = vector<string>;
 using pii = pair<int, int>;
 
 /* define short */
+#define CIN(type, name) type name; cin >> name;
 #define pb push_back
-#define mp make_pair
 #define all(obj) (obj).begin(), (obj).end()
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
@@ -65,6 +66,7 @@ using pii = pair<int, int>;
 #define rrep(i, n) reps(i, 1, n + 1)
 #define repd(i,n) for(ll i=n-1;i>=0;i--)
 #define rrepd(i,n) for(ll i=n;i>=1;i--)
+#define repr(i, n) for(auto&& i: n)
 
 /* debug */
 #define debug(x) cerr << "\033[33m(line:" << __LINE__ << ") " << #x << ": " << x << "\033[m" << endl;
@@ -86,16 +88,31 @@ template <typename T, typename S> inline void print(const pair<T, S>& p)
 template <typename T> inline void print(const T& x) {cout << x << "\n";}
 template <typename T, typename S> inline void print(const vector<pair<T, S>>& v)
     {for (auto&& p : v) print(p);}
+template <typename T>
+ostream &operator<<(ostream &os, const vector<T> &v) {
+    for (int i = 0; i < (int)v.size(); i++) {
+        os << v[i] << (i + 1 != (int)v.size() ? " " : "");
+    }
+    return os;
+}
 // 第一引数と第二引数を比較し、第一引数(a)をより大きい/小さい値に上書き
 template <typename T> inline bool chmin(T& a, const T& b) {bool compare = a > b; if (a > b) a = b; return compare;}
 template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b; if (a < b) a = b; return compare;}
 
-
-auto func(long long N, long long M, std::vector<std::string> S){
-
+namespace std{
+    template<>
+    class hash<pair<ll,ll>>{
+        public:
+        size_t operator () ( const pair<ll,ll> &p ) const{
+            auto hash1 = hash<ll>{}(p.first);
+            auto hash2 = hash<ll>{}(p.second);
+            return hash1 ^ hash2;
+        }
+    };
 }
-// clang-format on
 
+
+// clang-format on
 int main() {
     long long N;
     std::cin >> N;
@@ -105,6 +122,21 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
     }
-    func(N, M, std::move(S));
+    rep(i,N-8){
+        rep(j,M-8){
+            bool ok = 
+            S[i+0].substr(j+0,4) == "###." &&
+            S[i+1].substr(j+0,4) == "###." &&
+            S[i+2].substr(j+0,4) == "###." &&
+            S[i+3].substr(j+0,4) == "...." &&
+            S[i+5].substr(j+5,4) == "...." &&
+            S[i+6].substr(j+5,4) == ".###" &&
+            S[i+7].substr(j+5,4) == ".###" &&
+            S[i+8].substr(j+5,4) == ".###";
+            if(ok){
+                cout << i+1 << " " << j+1 << endl;
+            }
+        }
+    }
     return 0;
 }
