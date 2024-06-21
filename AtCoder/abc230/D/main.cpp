@@ -110,28 +110,22 @@ namespace std{
         }
     };
 }
-
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long D, std::vector<long long> L, std::vector<long long> R) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long D;
     std::cin >> D;
-    std::vector<long long> L(N);
-    std::vector<long long> R(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> L[i];
-        std::cin >> R[i];
+    using P = pair<ll, ll>;
+    vector<P> RL(N);
+    rep(i, N) { cin >> RL[i].second >> RL[i].first; }
+    ranges::sort(RL);
+    ll ans = 0, pre = -1;
+    for (auto&& [r, l] : RL) {
+        if (l <= pre) continue;
+        pre = r + D - 1;
+        ++ans;
     }
-    cout << solve(N, D, std::move(L), std::move(R)) << endl;
+    cout << ans << endl;
     return 0;
 }
