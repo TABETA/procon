@@ -115,14 +115,8 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> u, std::vector<long long> v, long long K, std::vector<long long> x, std::vector<long long> y, long long Q, std::vector<long long> p, std::vector<long long> q) {
-    ll ans = inf;
-
-    return ans;
-}
-
+#include<atcoder/dsu>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
@@ -130,17 +124,22 @@ int main() {
     std::cin >> M;
     std::vector<long long> u(M);
     std::vector<long long> v(M);
+    dsu uf(N+1);
     for(int i = 0 ; i < M ; i++){
         std::cin >> u[i];
         std::cin >> v[i];
+        uf.merge(u[i],v[i]);
     }
     long long K;
     std::cin >> K;
     std::vector<long long> x(K);
     std::vector<long long> y(K);
+    map<ll, set<ll>> forbidden;
     for(int i = 0 ; i < K ; i++){
         std::cin >> x[i];
         std::cin >> y[i];
+        forbidden[uf.leader(x[i])].emplace(uf.leader(y[i]));
+        forbidden[uf.leader(y[i])].emplace(uf.leader(x[i]));
     }
     long long Q;
     std::cin >> Q;
@@ -149,7 +148,15 @@ int main() {
     for(int i = 0 ; i < Q ; i++){
         std::cin >> p[i];
         std::cin >> q[i];
+        auto lx = uf.leader(p[i]);
+        auto ly = uf.leader(q[i]);
+        if(forbidden.count(lx) > 0 &&
+            forbidden[lx].count(ly) > 0
+        ){
+            cout << NO << endl;
+        } else {
+            cout << YES << endl;
+        }
     }
-    cout << solve(N, M, std::move(u), std::move(v), K, std::move(x), std::move(y), Q, std::move(p), std::move(q)) << endl;
     return 0;
 }
