@@ -113,17 +113,28 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(std::string X) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     std::string X;
     std::cin >> X;
-    cout << solve(X) << endl;
+    ll N =X.size();
+    ll accum = 0;
+    rep(i,N){
+        accum += X[i] - '0';
+    }
+    vll ans;
+    ll carry = 0;
+    repd(i,N){
+        ans.emplace_back((accum+carry)%10);
+        carry = (carry + accum)/10;
+        accum -= (X[i]-'0');
+    }
+    while(carry){
+        ans.emplace_back((carry)%10);
+        carry = (carry)/10;
+    }
+    repd(i,ans.size()){
+        cout << ans[i];
+    }
+    cout << endl;
     return 0;
 }
