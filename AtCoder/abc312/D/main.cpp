@@ -119,17 +119,20 @@ using vvm = vector<vm>;
 const long long MOD = 998244353;
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(std::string S) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     std::string S;
     std::cin >> S;
-    cout << solve(S) << endl;
+    ll N = S.size();
+    vector DP(N+1, vm(N+1));
+    DP[0][0] = 1;
+    rep(i,N){
+        rep(j,N){
+            mint now = 0;
+            if(j-1 >= 0 && S[i] != ')')now += DP[i][j-1];
+            if(j+1 <= N && S[i] != '(')now += DP[i][j+1];
+            DP[i+1][j] = now;
+        }
+    }
+    cout << DP[N][0].val() << endl;
     return 0;
 }
