@@ -111,16 +111,19 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long A, long long B, long long K) {
-    ll ans = inf;
-
-    return ans;
+auto nCr(ll n, ll r) -> ll {
+    ll denominator = 1;
+    ll numerator = 1;
+    while (r) {
+        denominator *= n--;
+        numerator *= r--;
+        ll g = gcd(denominator, numerator);
+        denominator /= g;
+        numerator /= g;
+    }
+    return denominator / numerator;
 }
-
 int main() {
     long long A;
     std::cin >> A;
@@ -128,6 +131,22 @@ int main() {
     std::cin >> B;
     long long K;
     std::cin >> K;
-    cout << solve(A, B, K) << endl;
+    string ans = "";
+    ll n = A + B;
+    ll C = 0;
+    while (A && n) {
+        ll c = nCr(n-1, A-1);
+        if (C+c >= K) {
+            ans += "a";
+            --A;
+        } else {
+            C += c;
+            ans += "b";
+        }
+        --n;
+    }
+    ans += string(n, 'b');
+    cout << ans << endl;
+
     return 0;
 }
