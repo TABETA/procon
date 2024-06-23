@@ -122,7 +122,63 @@ auto solve() {
 }
 
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,N);
+    map<ll,ll> C;
+    map<ll,ll> P;
+    vll A(N);
+    rep(i,N){
+        cin >> A[i];
+    }
+    rep(i,N-1){
+        C[A[i]] = A[i+1];
+        P[A[i+1]] = A[i];
+    }
+    ll head = A[0];
+    CIN(ll,Q);
+    rep(i,Q){
+        CIN(ll,q);
+        if(q == 1){
+            CIN(ll,x);
+            CIN(ll,y);
+            if(C.count(x)){
+                auto c = C[x];
+                C[x] = y;
+                C[y] = c;
+                P[y] = x;
+                P[c] = y;
+            } else {
+                C[x] = y;
+                P[y] = x;
+            }
+        } else {
+            CIN(ll,x);
+            if(P.count(x)){
+                auto p = P[x];
+                if(C.count(x)){
+                    auto c = C[x];
+                    C[p] = c;
+                    P[c] = p;
+                    C.erase(x);
+                    P.erase(x);
+                } else {
+                    //matsudai
+                    P.erase(x);
+                    C.erase(p);
+                }
+            } else {
+                //syodai
+                head = C[x];
+                C.erase(x);
+                P.erase(head);
+            }
+        }
+    }
+    ll i = head;
+    for(; C.count(i) != 0;){
+        cout << i << " ";
+        i = C[i];
+    }
+    cout << i;
+    cout << endl;
     return 0;
 }
