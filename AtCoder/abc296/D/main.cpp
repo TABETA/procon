@@ -110,22 +110,23 @@ namespace std{
         }
     };
 }
-
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    cout << solve(N, M) << endl;
+    const ll inf = LLONG_MAX;
+    ll ans = inf;
+    for(ll i = 1; i <= N; ++i){
+        ll j = M / i + (M % i? 1 : 0);
+        if(j < i)break;
+        ll x = j * i;
+        if(x >= M && j <= N){
+            chmin(ans, x);
+        }
+    }
+    if(ans == inf) cout << -1 << endl;
+    else cout << ans << endl;
     return 0;
 }
