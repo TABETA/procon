@@ -113,16 +113,33 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
 
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,N);
+    CIN(ll,Q);
+    vector b(N, unordered_set<ll>{});
+    ll ans = N;
+    rep(_,Q){
+        CIN(ll,t);
+        if(t == 1){
+            CIN(ll,u);--u;
+            CIN(ll,v);--v;
+            if(b[u].size() == 0)--ans;
+            if(b[v].size() == 0)--ans;
+            b[u].emplace(v);
+            b[v].emplace(u);
+        } else {
+            CIN(ll,v);--v;
+            
+            for (auto &&u : b[v])
+            {
+                b[u].erase(v);
+                if(b[u].size() == 0)++ans;
+            }
+            if(b[v].size() != 0)++ans;
+            b[v].clear();
+        }
+        cout << ans << endl;
+    }
     return 0;
 }
