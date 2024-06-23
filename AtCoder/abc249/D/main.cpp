@@ -109,25 +109,46 @@ namespace std{
             return hash1 ^ hash2;
         }
     };
+    template<>
+    class hash<tuple<ll,ll,ll>>{
+        public:
+        size_t operator () ( const tuple<ll,ll,ll> &p ) const{
+            auto [a,b,c] = p;
+            auto hash1 = hash<ll>{}(a);
+            auto hash2 = hash<ll>{}(b);
+            auto hash3 = hash<ll>{}(c);
+            return hash1 ^ hash2 ^ hash3;
+        }
+    };
 }
-
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> A) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+    if (N < 3) {
+        cout << 0 << endl;
+        return 0;
     }
-    cout << solve(N, std::move(A)) << endl;
+    std::vector<long long> A(N);
+    map<ll, ll> mp;
+    for (int i = 0; i < N; i++) {
+        std::cin >> A[i];
+        mp[A[i]]++;
+    }
+    ll M = mp.rbegin()->first;
+    ll ans = 0;
+    for (auto a = mp.begin(); a != mp.end(); ++a) {
+        for (auto b = mp.begin(); b != mp.end(); ++b) {
+            auto [j, jc] = *a;
+            auto [k, kc] = *b;
+            auto i = j * k;
+            if (i > M) break;
+            if (mp.count(i)) {
+                ans += jc * kc * mp[i];
+            }
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
