@@ -113,29 +113,39 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long Q, std::vector<long long> A, std::vector<long long> i, std::vector<long long> x) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long Q;
     std::cin >> Q;
     std::vector<long long> A(N);
+    map<ll,ll> mp;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        mp[A[i]]++;
     }
-    std::vector<long long> i(Q);
+    set<ll> mexes;
+    rep(i,2e5+1){
+        if(mp[i] == 0){
+            mexes.emplace(i);
+        }
+    }
+    std::vector<long long> q(Q);
     std::vector<long long> x(Q);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> i[i];
+        std::cin >> q[i];
         std::cin >> x[i];
+        ll& a = A[--q[i]];
+        mp[a]--;
+        if(mp[a] == 0){
+            mexes.emplace(a);
+        }
+        a = x[i];
+        if(mp[a] == 0){
+            mexes.erase(a);
+        }
+        mp[a]++;
+        cout << *mexes.begin() << endl;
     }
-    cout << solve(N, Q, std::move(A), std::move(i), std::move(x)) << endl;
     return 0;
 }
