@@ -115,14 +115,6 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<std::string> S, std::vector<std::string> T) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -134,6 +126,135 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> T[i];
     }
-    cout << solve(N, std::move(S), std::move(T)) << endl;
+    auto trim =[&](vvll& g){
+        rep(i,g.size()){
+            if(g[i].size() != 0)break;
+            g.erase(g.begin() + i);
+            --i;
+        }
+        repd(i,g.size()){
+            if(g[i].size() != 0)break;
+            g.erase(g.begin() + i);
+        }
+
+    };
+    vvll SH(N);
+    rep(r,N)for(ll c = 0; c < N;){
+        ll now = 0;
+        if(S[r][c] == '#'){
+            while(c < N && S[r][c] == '#'){
+                ++now;
+                ++c;
+            }
+            SH[r].emplace_back(now);
+        } else {
+            while(c < N && S[r][c] != '#'){
+                ++c;
+            }
+        }
+    }
+    trim(SH);
+    vvll SV(N);
+    rep(c,N)for(ll r = 0; r < N;){
+        ll now = 0;
+        if(S[r][c] == '#'){
+            while(r < N && S[r][c] == '#'){
+                ++now;
+                ++r;
+            }
+            SV[c].emplace_back(now);
+        } else {
+            while(r < N && S[r][c] != '#'){
+                ++r;
+            }
+        }
+    }
+    trim(SV);
+    vvll TH(N);
+    rep(r,N)for(ll c = 0; c < N;){
+        ll now = 0;
+        if(T[r][c] == '#'){
+            while(c < N && T[r][c] == '#'){
+                ++now;
+                ++c;
+            }
+            TH[r].emplace_back(now);
+        } else {
+            while(c < N && T[r][c] != '#'){
+                ++c;
+            }
+        }
+    }
+    trim(TH);
+    vvll TV(N);
+    rep(c,N)for(ll r = 0; r < N;){
+        ll now = 0;
+        if(T[r][c] == '#'){
+            while(r < N && T[r][c] == '#'){
+                ++now;
+                ++r;
+            }
+            TV[c].emplace_back(now);
+        } else {
+            while(r < N && T[r][c] != '#'){
+                ++r;
+            }
+        }
+    }
+    trim(TV);
+    auto fwd =[&](const vvll& s1, const vvll& t1, const vvll& s2, const vvll& t2){
+        if(s1.size() != t1.size() || s2.size() != t2.size()) return false;
+        rep(i,s1.size()){
+            if(s1[i].size() != t1[i].size()) return false;
+            rep(j,s1[i].size()){
+                if(s1[i][j] != t1[i][j]){
+                    return false;
+                }
+            }
+        }
+        rep(i,s2.size()){
+            if(s2[i].size() != t2[i].size()) return false;
+            rep(j,s2[i].size()){
+                if(s2[i][j] != t2[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+    if(fwd(SH,TH,SV,TV)){
+        cout << YES << endl;
+        return 0;
+    }
+    auto orev = [&](vvll c){
+        ranges::reverse(c);
+        return c;
+    };
+    auto drev = [&](vvll c){
+        rep(i,c.size()){
+            ranges::reverse(c[i]);
+        }
+        ranges::reverse(c);
+        return c;
+    };
+    auto irev = [&](vvll c){
+        rep(i,c.size()){
+            ranges::reverse(c[i]);
+        }
+        return c;
+    };
+    if(fwd(SH,orev(TV),SV,irev(TH))){//90 deg
+        cout << YES << endl;
+        return 0;
+    }
+    if(fwd(SH,drev(TH),SV,drev(TV))){//180 deg
+        cout << YES << endl;
+        return 0;
+    }
+    if(fwd(SH,irev(TV),SV,orev(TH))){// 270 deg
+        cout << YES << endl;
+        return 0;
+    }
+    cout << NO << endl;
     return 0;
 }
