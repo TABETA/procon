@@ -1,26 +1,27 @@
-#ifdef _MSVC_LANG 
-#include <tuple>
-#include <sstream>
-#include <queue>
-#include <map>
-#include <numeric>
-#include <list>
-#include <limits.h>
-#include <vector>
-#include <utility>
-#include <string>
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <stdio.h>
-#include <stack>
+#ifdef _MSVC_LANG
 #include <float.h>
+#include <limits.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
+#include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
 #include <set>
+#include <sstream>
+#include <stack>
+#include <string>
+#include <tuple>
 #include <unordered_set>
-#include <chrono>
+#include <utility>
+#include <vector>
 
 #else
 #include <bits/stdc++.h>
@@ -31,10 +32,12 @@ using namespace std;
 // clang-format off
 /* accelration */
 // 高速バイナリ生成
+#ifndef _DEBUG
 #pragma GCC target("avx")
 #pragma GCC optimize("O3")
 #pragma GCC optimize("unroll-loops")
 struct Fast {Fast() {std::cin.tie(0); ios::sync_with_stdio(false);}} fast;
+#endif
 
 /* alias */
 using ull = unsigned long long;
@@ -49,12 +52,13 @@ using vs = vector<string>;
 using pii = pair<int, int>;
 
 /* define short */
+#define CIN(type, name) type name; cin >> name;
 #define pb push_back
-#define mp make_pair
 #define all(obj) (obj).begin(), (obj).end()
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
 #define YesNo(bool) if(bool){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
+#define sb(var,l,r) {var[l].pb(r); var[r].pb(l);}
 
 /* REP macro */
 #define reps(i, a, n) for (ll i = (a); i < (ll)(n); ++i)
@@ -62,6 +66,7 @@ using pii = pair<int, int>;
 #define rrep(i, n) reps(i, 1, n + 1)
 #define repd(i,n) for(ll i=n-1;i>=0;i--)
 #define rrepd(i,n) for(ll i=n;i>=1;i--)
+#define repr(i, n) for(auto&& i: n)
 
 /* debug */
 #define debug(x) cerr << "\033[33m(line:" << __LINE__ << ") " << #x << ": " << x << "\033[m" << endl;
@@ -83,29 +88,60 @@ template <typename T, typename S> inline void print(const pair<T, S>& p)
 template <typename T> inline void print(const T& x) {cout << x << "\n";}
 template <typename T, typename S> inline void print(const vector<pair<T, S>>& v)
     {for (auto&& p : v) print(p);}
+template <typename T>
+ostream &operator<<(ostream &os, const vector<T> &v) {
+    for (int i = 0; i < (int)v.size(); i++) {
+        os << v[i] << (i + 1 != (int)v.size() ? " " : "");
+    }
+    return os;
+}
 // 第一引数と第二引数を比較し、第一引数(a)をより大きい/小さい値に上書き
 template <typename T> inline bool chmin(T& a, const T& b) {bool compare = a > b; if (a > b) a = b; return compare;}
 template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b; if (a < b) a = b; return compare;}
 
-
-void func(long long N, long long M, std::vector<long long> A, std::vector<long long> B, std::vector<long long> C){
-
+namespace std{
+    template<>
+    class hash<pair<ll,ll>>{
+        public:
+        size_t operator () ( const pair<ll,ll> &p ) const{
+            auto hash1 = hash<ll>{}(p.first);
+            auto hash2 = hash<ll>{}(p.second);
+            return hash1 ^ hash2;
+        }
+    };
 }
 // clang-format on
-
+#include<atcoder/dsu>
+using namespace atcoder;
 int main() {
     long long N;
-    std::scanf("%lld", &N);
+    std::cin >> N;
     long long M;
-    std::scanf("%lld", &M);
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    std::vector<long long> C(M);
+    std::cin >> M;
+    using P = pair<ll,ll>;
+    using PP = pair<ll,P>;
+    vector<PP> C(M);
+    ll ans = 0;
     for(int i = 0 ; i < M ; i++){
-        std::scanf("%lld", &A[i]);
-        std::scanf("%lld", &B[i]);
-        std::scanf("%lld", &C[i]);
+        ll a, b, c;
+        cin >> a >> b >> c;
+        --a;
+        --b;
+        if(a>b)swap(a, b);
+        auto p = PP{c, P{a,b}};
+        C[i] = p;
     }
-    func(N, M, std::move(A), std::move(B), std::move(C));
+    ranges::sort(C);
+    dsu uf(N);
+    rep(i,C.size()){
+        auto [c, p] = C[i];
+        auto [a,b] = p;
+        if(c <= 0 || !uf.same(a,b)){
+            uf.merge(a,b);
+        } else {
+            ans += c;
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
