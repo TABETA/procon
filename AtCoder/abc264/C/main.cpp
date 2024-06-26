@@ -115,16 +115,57 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
-auto solve() {
-    ll ans = inf;
-
-    return ans;
+string solve(vvll&& A, vvll&& B) {
+    const ll H2 = B.size();
+    const ll W2 = B[0].size();
+    vll h(A.size());
+    ranges::fill_n(h.begin(), H2, 1ll);
+    ranges::sort(h);
+    vll w(A[0].size());
+    ranges::fill_n(w.begin(), W2, 1ll);
+    do{
+        vll H;
+        rep(i,h.size()){
+            if(h[i])H.emplace_back(i);
+        }
+        ranges::sort(w);        
+        do{
+            vll W;
+            rep(i,w.size()){
+                if(w[i])W.emplace_back(i);
+            }
+            auto same = [&](){
+                rep(i,H2){
+                    rep(j,W2){
+                        if(A[H[i]][W[j]] != B[i][j]){
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            };
+            if(same()){
+                return YES;
+            }
+        }while(ranges::next_permutation(w).found);
+    }while(ranges::next_permutation(h).found);
+    return NO;
 }
 
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, H1);
+    CIN(ll, W1);
+    vvll A(H1, vll(W1));
+    rep(i, H1) {
+        rep(j, W1) { cin >> A[i][j]; }
+    }
+    CIN(ll, H2);
+    CIN(ll, W2);
+    vvll B(H2, vll(W2));
+    rep(i, H2) {
+        rep(j, W2) { cin >> B[i][j]; }
+    }
+    cout << solve(move(A), move(B)) << endl;
     return 0;
 }
