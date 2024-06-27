@@ -124,6 +124,15 @@ auto solve(std::string S) {
 int main() {
     std::string S;
     std::cin >> S;
-    cout << solve(S) << endl;
+    ll N = S.size();
+    char pre = S[0]; 
+    ll ans = 0;
+    rep(i,N){
+        if(S[i] != pre){
+            ans++;
+        }
+        pre = S[i];
+    }
+    cout << ans << endl;
     return 0;
 }
