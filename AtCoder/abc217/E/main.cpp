@@ -113,16 +113,35 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,Q);
+    deque<ll> tails;
+    map<ll,ll> s;
+    rep(_,Q){
+        CIN(ll,q);
+        if(q == 1){
+            CIN(ll,x);
+            tails.emplace_back(x);
+        } else if(q == 2){
+            if(s.size()){
+                auto [k,v] = *s.begin();
+                cout << k << '\n';
+                s[k]--;
+                if(s[k] == 0){
+                    s.erase(k);
+                }
+            } else {
+                auto k = tails.front();
+                tails.pop_front();
+                cout << k << '\n';
+            }
+        } else {
+            for (auto &&k : tails)
+            {
+                s[k]++;
+            }
+            tails.clear();
+        }
+    }
     return 0;
 }
