@@ -113,19 +113,33 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::string S) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    cout << solve(N, S) << endl;
+    ll ans = 0;
+    map<char,ll> l;
+    map<char,ll> r;
+    l[S[0]]++;
+    reps(k,2,N){
+        r[S[k]]++;
+    }
+    reps(j,1,N-1){
+        ans += l['R'] * r['G'] * (S[j] == 'B');
+        ans += l['R'] * r['B'] * (S[j] == 'G');
+        ans += l['B'] * r['G'] * (S[j] == 'R');
+        ans += l['B'] * r['R'] * (S[j] == 'G');
+        ans += l['G'] * r['B'] * (S[j] == 'R');
+        ans += l['G'] * r['R'] * (S[j] == 'B');
+        for(int m = 1; j - m >= 0 && j + m < N; ++m){
+            if(S[j-m] != S[j+m] && S[j] != S[j-m]  && S[j] != S[j+m] ){
+                ans--;
+            }
+        }
+        l[S[j]]++;
+        r[S[j+1]]--;
+    }
+    cout << ans << endl;
     return 0;
 }
