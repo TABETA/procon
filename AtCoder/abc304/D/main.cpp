@@ -113,39 +113,77 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long W, long long H, long long N, std::vector<long long> p, std::vector<long long> q, long long A, std::vector<long long> a, long long B, std::vector<long long> b) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    long long W;
-    std::cin >> W;
-    long long H;
-    std::cin >> H;
-    long long N;
-    std::cin >> N;
-    std::vector<long long> p(N);
-    std::vector<long long> q(N);
+    ll W;
+    cin >> W;
+    ll H;
+    cin >> H;
+    ll N;
+    cin >> N;
+    map<ll, ll> X;
+    map<ll, ll> Y;
+    using P = pair<ll,ll>;
+    vector<P> pq(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> p[i];
-        std::cin >> q[i];
+        ll p, q;
+        cin >> p;
+        cin >> q;
+        pq[i] = {p,q};
     }
-    long long A;
-    std::cin >> A;
-    std::vector<long long> a(A);
-    for(int i = 0 ; i < A ; i++){
-        std::cin >> a[i];
+    ranges::sort(pq);
+    ll A;
+    cin >> A;
+    vector<ll> a(A);
+    {
+        ll i = 0;
+        ll j = 0;
+        for( ; i < A ; i++){
+            cin >> a[i];
+            while(j < N && pq[j].first < a[i]){
+                X[pq[j].first] = i;
+                ++j;
+            }
+        }
+        while(j < N){
+            X[pq[j].first] = i;
+            ++j;
+        }
     }
-    long long B;
-    std::cin >> B;
-    std::vector<long long> b(B);
-    for(int i = 0 ; i < B ; i++){
-        std::cin >> b[i];
+    ll B;
+    cin >> B;
+    vector<ll> b(B);
+    {
+        ll i = 0;
+        ll j = 0;
+        ranges::sort(pq, [](P l, P r){ return l.second < r.second;});
+        for(; i < B ; i++){
+            cin >> b[i];
+            while(j < N && pq[j].second < b[i]){
+                Y[pq[j].second] = i;
+                ++j;
+            }
+        }
+        while(j < N){
+            Y[pq[j].second] = i;
+            ++j;
+        }
     }
-    cout << solve(W, H, N, std::move(p), std::move(q), A, std::move(a), B, std::move(b)) << endl;
+    map<P,ll> pieces;
+    for (auto &&[p,q] : pq)
+    {
+        auto key =P{X[p], Y[q]};
+        pieces[key]++;
+    }
+    ll ans_n = LLONG_MAX;
+    ll ans_p = 0;
+    for (auto &&[ignore, ichigo] : pieces)
+    {
+        chmax(ans_p, ichigo);
+        chmin(ans_n, ichigo);
+    }    
+    if((A+1)*(B+1) > (ll)pieces.size()) {
+        ans_n = 0;
+    }
+    cout << ans_n  << " " << ans_p << endl;
     return 0;
 }
