@@ -113,12 +113,34 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(std::string S) {
-    ll ans = inf;
-
-    return ans;
+auto solve(std::string S) ->string {
+    set<char> rem;
+    ll N = S.size();
+    rep(i,26){
+        rem.insert('a' + i);
+    }
+    for (auto &&c : S)
+    {
+        rem.erase(c);
+    }
+    if(N < 26){
+        return S + string{*rem.begin()};
+    }
+    ll i = 25;
+    while(i>=0){
+        auto c = S[i];
+        for (auto &&v : rem)
+        {
+            if(c < v){
+                S[i] = v;
+                return S;
+            }
+        }
+        S.erase(i);
+        rem.emplace(c);
+        --i;
+    }
+    return "-1";
 }
 
 int main() {
