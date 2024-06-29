@@ -113,16 +113,44 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,H);
+    CIN(ll,W);
+    CIN(ll,N);
+    CIN(ll,h);
+    CIN(ll,w);
+    vvll A(H,vll(W));
+    map<ll,ll> mp;
+    rep(i,H){
+        rep(j,W){
+            cin >> A[i][j];
+            mp[A[i][j]]++;
+        }
+    }
+    rep(i,H-h+1){
+        map<ll,ll> now;
+        rep(j,W-w+1){
+            if(j == 0){
+                rep(r,h){
+                    rep(c,w){
+                        now[A[i+r][j+c]]++;
+                    }
+                }
+            } else {
+                rep(r,h){
+                    now[A[i+r][j+w-1]]++;
+                    now[A[i+r][j-1]]--;
+                }
+            }
+            ll ans = 0;
+            for (auto &&[k,v] : mp)
+            {
+                if(v - now[k]) ++ans;
+            }
+            if(j != 0) cout << " ";
+            cout << ans;
+        }
+        cout << "\n";
+    }
     return 0;
 }
