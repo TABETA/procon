@@ -111,21 +111,44 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long x, long long y) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long x;
     std::cin >> x;
     long long y;
     std::cin >> y;
-    cout << solve(x, y) << endl;
+    auto ay = abs(y);
+    ll ans = 0;
+    while (y != x) {
+        auto ax = abs(x);
+        if (ay == ax) {
+            x *= -1;
+            ans++;
+        } else if( ax > ay ) {
+            if(x > 0){
+                x *= -1;
+                ans++;
+            } else {
+                ll a = -y - x;
+                ll b = y-x;
+                if(a < b){
+                    ans += a;
+                    x = -y;
+                } else {
+                    ans += b;
+                    x = y;
+                }
+            }
+        } else {
+            if (x < 0) {
+                x *= -1;
+                ans++;
+            } else {
+                ans += ay - x;
+                x = ay;
+            }
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
