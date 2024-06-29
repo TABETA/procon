@@ -26,6 +26,10 @@ atg() {
 at-solved(){
   git add main.cpp && git commit -m "Solve $(pwd | sed "s|$at_home/||g")"
 }
+cpio(){
+  cp in_1.txt in_$1.txt && code in_$1.txt
+  cp out_1.txt out_$1.txt && code out_$1.txt
+}
 alias ats="atcoder-tools submit -u --config $at_config"
 alias atsf="atcoder-tools submit -u -f --config $at_config"
 alias att="atcoder-tools test --exec ./a.out --config $at_config"
