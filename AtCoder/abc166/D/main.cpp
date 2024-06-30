@@ -113,17 +113,20 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long X) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long X;
     std::cin >> X;
-    cout << solve(X) << endl;
+    for(ll A = 1; ; ++A){
+        for(ll B = A-1; ; --B){
+            auto a5 = A*A*A*A*A;
+            auto b5 = B*B*B*B*B;
+            auto l = a5 - b5;
+            if(l > X)break;
+            if(l == X){
+                cout << A << " " << B << endl;
+                return 0;
+            }
+        }
+    }
     return 0;
 }
