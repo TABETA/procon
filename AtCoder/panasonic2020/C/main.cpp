@@ -115,20 +115,18 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long a, long long b, long long c) {
-    ll ans = inf;
-
-    return ans;
+auto solve(ll a, ll b, ll c) {
+    ll d = (c-a-b);
+    if(d < 0) return NO;
+    return (4*a*b < d*d ? YES : NO);
 }
 
 int main() {
-    long long a;
+    ll a;
     std::cin >> a;
-    long long b;
+    ll b;
     std::cin >> b;
-    long long c;
+    ll c;
     std::cin >> c;
     cout << solve(a, b, c) << endl;
     return 0;
