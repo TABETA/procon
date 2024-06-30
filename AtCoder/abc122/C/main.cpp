@@ -128,12 +128,20 @@ int main() {
     std::cin >> Q;
     std::string S;
     std::cin >> S;
-    std::vector<long long> l(Q);
-    std::vector<long long> r(Q);
-    for(int i = 0 ; i < Q ; i++){
-        std::cin >> l[i];
-        std::cin >> r[i];
+    vll AC(N+1);
+    rep(i,N-1){
+        if(S[i] == 'A' && S[i+1] == 'C'){
+            AC[i+1]++;
+        }
     }
-    cout << solve(N, Q, S, std::move(l), std::move(r)) << endl;
+    rep(i,N){
+        AC[i+1] += AC[i];
+    }
+    for(int i = 0 ; i < Q ; i++){
+        ll l, r;
+        std::cin >> l;
+        std::cin >> r;
+        cout << AC[r-1] -AC[l-1] << endl;
+    }
     return 0;
 }
