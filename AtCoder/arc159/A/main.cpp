@@ -111,15 +111,7 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long K, std::vector<std::vector<long long>> a, long long Q, std::vector<long long> s, std::vector<long long> t) {
-    ll ans = inf;
-
-    return ans;
-}
 
 int main() {
     long long N;
@@ -127,19 +119,51 @@ int main() {
     long long K;
     std::cin >> K;
     std::vector<std::vector<long long>> a(N, std::vector<long long>(N));
-    for(int i = 0 ; i < N ; i++){
-        for(int j = 0 ; j < N ; j++){
+    map<ll, set<ll>> mp;
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
             std::cin >> a[i][j];
+            if (a[i][j]) {
+                mp[i].emplace(j);
+            }
         }
     }
     long long Q;
     std::cin >> Q;
-    std::vector<long long> s(Q);
-    std::vector<long long> t(Q);
-    for(int i = 0 ; i < Q ; i++){
-        std::cin >> s[i];
-        std::cin >> t[i];
+    for (int i = 0; i < Q; i++) {
+        if (mp.size() == 0) {
+            cout << -1 << endl;
+            continue;
+        }
+        ll s, t;
+        std::cin >> s;
+        std::cin >> t;
+        --s;
+        --t;
+        if(s == t){
+            cout << 0 << '\n';
+            continue;
+        }
+        using P = pair<ll, ll>;
+        queue<P> Q;
+        Q.emplace(s, 0);
+        ll ans = -1;
+        set<ll> visited;
+        while (!Q.empty()) {
+            auto [q, dist] = Q.front();
+            Q.pop();
+            if (dist != 0 && q == t % N) {
+                ans = dist;
+                break;
+            }
+            for (auto&& v : mp[q % N]) {
+                if (visited.count(v) == 0) {
+                    Q.emplace(v, dist + 1);
+                    visited.emplace(q);
+                }
+            }
+        }
+        cout << ans << '\n';
     }
-    cout << solve(N, K, std::move(a), Q, std::move(s), std::move(t)) << endl;
     return 0;
 }
