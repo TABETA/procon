@@ -113,11 +113,16 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
 auto solve(long long N, long long X, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
+    ll ans = LLONG_MAX;
+    ll time = 0;
+    rep(i,N){
+        time += A[i] + B[i];
+        --X;
+        chmin(ans, time + X*B[i]);
+        if(X == 0)break;
+    }
     return ans;
 }
 
