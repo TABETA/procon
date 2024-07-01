@@ -113,14 +113,6 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> A) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -128,6 +120,20 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    cout << solve(N, std::move(A)) << endl;
+    ll cnt = N-2;
+    ranges::sort(A, greater<ll>{});
+    ll ans = A[0];
+    ll i = 1;
+    while(cnt){
+        if(cnt >= 2){
+            ans += A[i]*2;
+            cnt -= 2;
+        } else {
+            ans += A[i];
+            cnt -= 1;
+        }
+        ++i;
+    }
+    cout << ans << endl; 
     return 0;
 }
