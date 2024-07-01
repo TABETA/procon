@@ -113,17 +113,54 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long K) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long K;
     std::cin >> K;
-    cout << solve(K) << endl;
+    if(K < 10){
+        cout << K << endl;
+        return 0;
+    }
+
+    set<ll> v;
+    reps(i,1,10){
+        v.emplace(i);
+    }
+    ll e = 1;
+    set<ll> p1;
+    set<ll> p2;
+    p1.emplace(1);
+    while((ll)v.size()<K){
+        K -= v.size();
+        set<ll> w;
+        swap(v,w);
+        v.emplace(e*10);
+        for (auto &&t1 : p2)
+        {
+            v.emplace(e*10+t1);
+            p1.emplace(e*10+t1);
+        }
+        p2.merge(p1);
+        p1.emplace(e*10);
+        for (auto &&x : w)
+        {
+            ll d = x / e;
+            for(ll a = -1; a < 2; ++a){
+                auto y = d+a;
+                if(y > 0 && y < 10){
+                    ll now = y * e * 10 + x;
+                    v.emplace(now);
+                    if(y == 1)p1.emplace(now);
+                }
+            }
+        }
+        e *= 10;
+    }
+    for (auto &&j : v)
+    {
+        if(--K == 0){
+            cout << j << endl;
+            return 0;
+        }
+    }
     return 0;
 }
