@@ -119,23 +119,25 @@ using vvm = vector<vm>;
 const long long MOD = 998244353;
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
-    for(int i = 0 ; i < N ; i++){
+    std::vector<long long> A(N+1);A[0] = -1;
+    std::vector<long long> B(N+1);B[0] = -1;
+    for(int i = 1 ; i <= N ; i++){
         std::cin >> A[i];
         std::cin >> B[i];
     }
-    cout << solve(N, std::move(A), std::move(B)) << endl;
+    vector DP(N+2, vector<mint>(2));
+    DP[1][0] = 1;
+    reps(i,1,N+1){
+        if(A[i] != A[i-1]) DP[i+1][0] += DP[i][0];
+        if(A[i] != B[i-1]) DP[i+1][0] += DP[i][1];
+        if(B[i] != A[i-1]) DP[i+1][1] += DP[i][0];
+        if(B[i] != B[i-1]) DP[i+1][1] += DP[i][1];
+    }
+    mint ans = DP[N+1][0] + DP[N+1][1];
+
+    cout << ans.val() << endl;
     return 0;
 }
