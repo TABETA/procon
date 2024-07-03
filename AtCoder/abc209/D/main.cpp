@@ -111,18 +111,45 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
+using Nodes = vvll;
+using P = pair<ll,ll>;
 
-auto solve() {
-    ll ans = inf;
-
-    return ans;
+auto dijkstra(Nodes G, ll start){
+    vll distance(G.size(), numeric_limits<ll>::max());
+    distance[start] = 0;
+    priority_queue<P, vector<P>, greater<P>> q;
+    q.emplace(0,start);
+    while(!q.empty()){
+        auto [t, from] = q.top(); q.pop();
+        if(distance[from] < t) continue;
+        for (auto &&j : G[from])
+        {
+            auto newDistance = distance[from] + 1;
+            if(distance[j] > newDistance){
+                distance[j] = newDistance;
+                q.emplace(newDistance, j);
+            }
+        }
+    }
+    return distance;
 }
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, N);
+    CIN(ll, Q);
+    vvll AB(N);
+    rep(_, N-1) {
+        CIN(ll, a);--a;
+        CIN(ll, b);--b;
+        AB[a].emplace_back(b);
+        AB[b].emplace_back(a);
+    }
+    auto dist = dijkstra(AB, 0);
+    rep(_, Q) {
+        CIN(ll, c);--c;
+        CIN(ll, d);--d;
+        cout << (abs(dist[c] - dist[d]) % 2 ? "Road" : "Town") << endl;
+    }
+
     return 0;
 }
