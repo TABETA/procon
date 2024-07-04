@@ -113,11 +113,15 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
 auto solve(long long N) {
-    ll ans = inf;
-
+    ll ans = 0;
+    for(ll i = 1; i * i <= N; ++i){
+        for(ll j = 1; i * j <= N && j <= i; ++j){
+            ll now = N/(i*j)-i+1;
+            if(now <=0)break;
+            ans += now;
+        }
+    }
     return ans;
 }
 
