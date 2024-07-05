@@ -113,11 +113,19 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, long long D, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
+auto solve(long long D, std::set<long long> A, std::set<long long> B) {
+    ll ans = -1;
+    for (auto &&a : A)
+    {
+        ll right = a+D;
+        auto it = B.lower_bound(right);
+        if(it == B.end() || D < abs(a - *it)){
+            --it;
+        }
+        if(D >= abs(a - *it)){
+            chmax(ans, a + *it);
+        }
+    }
     return ans;
 }
 
@@ -128,14 +136,16 @@ int main() {
     std::cin >> M;
     long long D;
     std::cin >> D;
-    std::vector<long long> A(N);
+    std::set<long long> A;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        CIN(ll,a);
+        A.emplace(a);
     }
-    std::vector<long long> B(M);
+    std::set<long long> B;
     for(int i = 0 ; i < M ; i++){
-        std::cin >> B[i];
+        CIN(ll,a);
+        B.emplace(a);
     }
-    cout << solve(N, M, D, std::move(A), std::move(B)) << endl;
+    cout << solve(D, std::move(A), std::move(B)) << endl;
     return 0;
 }
