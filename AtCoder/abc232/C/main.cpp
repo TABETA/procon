@@ -115,31 +115,37 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> A, std::vector<long long> B, std::vector<long long> C, std::vector<long long> D) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
-    }
-    std::vector<long long> C(M);
-    std::vector<long long> D(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> C[i];
-        std::cin >> D[i];
-    }
-    cout << solve(N, M, std::move(A), std::move(B), std::move(C), std::move(D)) << endl;
+    auto create = [&](){
+        vector p(N,vector<ll>(N));
+        for(int i = 0 ; i < M ; i++){
+            CIN(ll,a);--a;
+            CIN(ll,b);--b;
+            p[a][b] = 1;
+            p[b][a] = 1;
+        }
+        return p;
+    };
+    auto p = create();
+    auto q = create();
+    vector<ll> a(N);
+    iota(all(a), 0);
+    do{
+        vector b(N,vector<ll>(N));
+        rep(i,N){
+            rep(j,N){
+                b[i][j] = q[a[i]][a[j]];
+            }
+        }
+        if(p == b){
+            cout << YES << endl;
+            return 0;
+        }
+    }while(ranges::next_permutation(a).found);
+    cout << NO << endl;
     return 0;
 }
