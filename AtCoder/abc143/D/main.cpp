@@ -113,11 +113,22 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
 auto solve(long long N, std::vector<long long> L) {
-    ll ans = inf;
-
+    ll ans = 0;
+    ranges::sort(L);
+    reps(j,1,N-1){
+        ll now = 0;
+        rep(i,j){
+            auto ab = L[i]+L[j];
+            auto it = ranges::lower_bound(L, ab);
+            --it;
+            if(*it < ab){
+                ll k = it - L.begin();
+                if(k>j)now += k-j;
+            }
+        }
+        ans += now;
+    }
     return ans;
 }
 
