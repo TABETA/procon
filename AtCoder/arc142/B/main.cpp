@@ -95,6 +95,17 @@ ostream &operator<<(ostream &os, const vector<T> &v) {
     }
     return os;
 }
+template <typename T>
+ostream &operator<<(ostream &os, const vector<vector<T>> &v) {
+    for (int i = 0; i < (int)v.size(); i++) {
+        for (int j = 0; j < (int)v[j].size(); j++) {
+            if(j != 0) os << " ";
+            os << v[i][j];
+        }
+        os << endl;
+    }
+    return os;
+}
 // 第一引数と第二引数を比較し、第一引数(a)をより大きい/小さい値に上書き
 template <typename T> inline bool chmin(T& a, const T& b) {bool compare = a > b; if (a > b) a = b; return compare;}
 template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b; if (a < b) a = b; return compare;}
@@ -113,17 +124,31 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
 auto solve(long long N) {
-    ll ans = inf;
-
-    return ans;
+    vvll ans(N,vll(N));
+    rep(r,N){
+        rep(c,N){
+            ans[r][c] = r*N + (c+1);
+        }
+    }
+    rep(r,N){
+        for(int c = 0; c < N-1; c+=2){
+            if(!(c+1 < N))break;
+            swap(ans[r][c], ans[r][c+1]); 
+        }
+    }
+    rep(r,N){
+        rep(c,N){
+            if(c) cout << " ";
+            cout << ans[r][c];
+        }
+        cout << endl;
+    }
 }
 
 int main() {
     long long N;
     std::cin >> N;
-    cout << solve(N) << endl;
+    solve(N);
     return 0;
 }
