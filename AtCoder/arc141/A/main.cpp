@@ -111,18 +111,46 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
+auto repnum = [](ll v, int n) {
+    string res = "";
+    string s = to_string(v);
+    rep(i, n) { res += s; }
+    return stoll(res);
+};
 
-auto solve() {
-    ll ans = inf;
-
+auto solve(string S) -> ll {
+    ll N = S.size();
+    ll ans = stoll(string(N-1, '9'));
+    reps(i, 1, N / 2 + 1) {
+        if (N % i == 0) {
+            ll q = N / i;
+            string s = "";
+            string m = S.substr(0, i);
+            rep(i, q) { s += m; }
+            ll v = stoll(s);
+            if (stoll(S) >= v) {
+                ll now = v;
+                chmax(ans, now);
+            }
+            if(to_string(stoll(m)-1).size() == m.size()){
+                ll now = repnum(stoll(m)-1, q);
+                chmax(ans, now);
+            }
+            
+        }
+    }
     return ans;
 }
 
+
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    ll T;
+    cin >> T;
+    rep(_,T){
+        string s;
+        cin >> s;
+        cout << solve(s) << endl;
+    }
     return 0;
 }
