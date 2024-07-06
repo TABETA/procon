@@ -113,11 +113,12 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
 auto solve(long long N, std::vector<long long> T) {
-    ll ans = inf;
-
+    ll ans = 1;
+    rep(i,N){
+        ans = lcm(T[i],ans);
+    }
     return ans;
 }
 
