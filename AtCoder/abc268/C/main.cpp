@@ -110,30 +110,30 @@ namespace std{
         }
     };
 }
-
-#include <atcoder/modint>
-using namespace atcoder;
-using mint = modint4;
-using vm = vector<mint>;
-using vvm = vector<vm>;
-const long long MOD = 4;
-
 // clang-format on
-const ll inf = LLONG_MAX;
 
-auto solve(long long N, std::vector<long long> p) {
-    ll ans = inf;
-
-    return ans;
+int mod(int val, int m){
+    return (val%m+m)%m;
 }
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> p(N);
+    std::deque<long long> p(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> p[i];
     }
-    cout << solve(N, std::move(p)) << endl;
+    vll d(N);
+    rep(i,N){
+        int jj = mod(i-p[i], N);
+        reps(j, -1, 2){
+            d[mod(jj+j,N)]++;
+        }
+    }
+    ll ans = 0;
+    rep(i,N){
+        chmax(ans, d[i]);
+    }
+    cout << ans << endl;
     return 0;
 }
