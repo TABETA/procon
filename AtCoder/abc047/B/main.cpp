@@ -128,14 +128,46 @@ int main() {
     std::cin >> H;
     long long N;
     std::cin >> N;
-    std::vector<long long> x(N);
-    std::vector<long long> y(N);
-    std::vector<long long> a(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> x[i];
-        std::cin >> y[i];
-        std::cin >> a[i];
+    vvll G(H, vll(W, 1));
+    for(int _ = 0 ; _ < N ; _++){
+        int x,y,a;
+        std::cin >> x;--x;
+        std::cin >> y;--y;
+        std::cin >> a;
+        if(a == 1){
+            rep(r,H){
+                rep(c,x+1){
+                    G[r][c] = 0;
+                }
+            }
+        } else if(a == 2){
+            rep(r,H){
+                reps(c,x+1,W){
+                    G[r][c] = 0;
+                }
+            }
+
+        } else if(a == 3){
+            rep(r,y+1){
+                rep(c,W){
+                    G[r][c] = 0;
+                }
+            }
+        } else if(a == 4){
+            reps(r,y+1,H){
+                rep(c,W){
+                    G[r][c] = 0;
+                }
+            }
+        }
     }
-    cout << solve(W, H, N, std::move(x), std::move(y), std::move(a)) << endl;
+    ll ans = 0;
+    rep(r,H){
+        rep(c,W){
+            ans += G[r][c]; 
+        }
+    }
+    cout << ans << endl;
+    
     return 0;
 }
