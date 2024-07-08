@@ -128,10 +128,19 @@ auto solve(long long N, long long M) {
 }
 
 int main() {
-    long long N;
-    std::cin >> N;
-    long long M;
-    std::cin >> M;
-    cout << solve(N, M) << endl;
+    int n, m;
+    cin >> n >> m;
+    if(abs(n-m) >= 2){
+        cout << 0 << endl;
+        return 0;
+    }
+    mint ans = (n == m ? 2 : 1);
+    rep(i, n){
+        ans *= (i+1);
+    }
+    rep(i, m){
+        ans *= (i+1);
+    }
+    cout << ans.val() << endl;
     return 0;
 }
