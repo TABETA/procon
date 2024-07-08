@@ -122,7 +122,37 @@ auto solve() {
 }
 
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,N);
+    vll A(N);
+    rep(i,N){
+        cin >> A[i];
+    }
+    map<ll, ll> B;
+    ll pre = 0;
+    ll t = 0;
+    rep(i,N){
+        if(i % 2 == 0){
+            t += A[i] - pre;
+        }
+        B[A[i]] = t;
+        pre = A[i];
+    }
+    auto f =[&](ll t){
+        auto it2 = B.lower_bound(t);
+        auto it1 = prev(it2);
+        ll ans = it1->second;
+        if(it2->second > it1->second){
+            ans += t - it1->first;
+        }
+        return ans;
+    };
+    CIN(ll,Q);
+    rep(_,Q){
+        ll l, r;
+        cin >> l >> r;
+        auto rt = f(r);
+        auto lt = f(l);
+        cout << rt - lt << endl;
+    }
     return 0;
 }
