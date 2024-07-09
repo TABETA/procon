@@ -113,12 +113,11 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
 auto solve(long long a, long long b, long long x) {
-    ll ans = inf;
-
-    return ans;
+    ll s = a/x + (a % x == 0 ? 0 : 1);
+    ll e = b/x;
+    return e-s+1;
 }
 
 int main() {
