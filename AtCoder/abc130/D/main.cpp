@@ -113,11 +113,23 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
 
 auto solve(long long N, long long K, std::vector<long long> a) {
-    ll ans = inf;
-
+    ll ans = N*(1+N)/2;
+    ll now = 0;
+    ll j = 0;
+    for(ll i = 0; i < N;++i){
+        while(j<N && now + a[j] < K){
+            now += a[j];
+            ++j;
+        }
+        ans -= j-i;
+        now-=a[i];
+        while(i<j && now >= K){
+            now -= a[j];
+            --j;
+        }
+    }
     return ans;
 }
 
