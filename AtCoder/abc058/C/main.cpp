@@ -110,24 +110,33 @@ namespace std{
         }
     };
 }
-
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long n, std::vector<std::string> S) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long n;
     std::cin >> n;
-    std::vector<std::string> S(n);
+    std::vector<map<char, ll>> V(n);
     for(int i = 0 ; i < n ; i++){
-        std::cin >> S[i];
+        string s;
+        std::cin >> s;
+        for (auto &&c : s)
+        {
+            V[i][c]++;
+        }
     }
-    cout << solve(n, std::move(S)) << endl;
+    map<char,ll> mp;
+    rep(j,26){
+        ll m = LLONG_MAX;
+        char c = 'a'+j;
+        rep(i,n){
+            chmin(m,V[i][c]);
+        }
+        mp[c] = m;
+    }
+    string ans = "";
+    for (auto &&[k,v] : mp)
+    {
+        ans += string(v, k);
+    }
+    cout << ans << endl;
     return 0;
 }
