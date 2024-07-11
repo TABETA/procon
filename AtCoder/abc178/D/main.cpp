@@ -119,17 +119,26 @@ using vvm = vector<vm>;
 const long long MOD = 1000000007;
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long S) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long S;
     std::cin >> S;
-    cout << solve(S) << endl;
+    ll cnt = S / 3;
+    if(S < 3){
+        cout << 0 << endl;
+        return 0;
+    }
+    vector DP(S+1, vector(cnt+1, mint{}));
+    reps(i,3,S+1){
+        DP[i][1] = 1;
+    }
+    reps(j,2,cnt+1){
+        rep(i,S+1){
+            reps(k, 3, i - 2){
+                DP[i][j] += DP[k][j-1];
+            }
+        }
+    }
+    mint ans = reduce(all(DP[S]));
+    cout << ans.val() << endl;
     return 0;
 }
