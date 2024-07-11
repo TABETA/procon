@@ -113,21 +113,67 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long K, std::string S, std::string T) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long K;
     std::cin >> K;
+    map<ll,ll> m;
+    rep(i,9){
+        m[i+1] = K;
+    }
+    map<ll,ll> a;
+    map<ll,ll> b;
     std::string S;
     std::cin >> S;
+    for (auto &&c : S)
+    {
+        if(c == '#')break;
+        a[c - '0']++;
+    }
+    for (auto &&[k,v] : a)
+    {
+        m[k] -= v;
+    }
     std::string T;
     std::cin >> T;
-    cout << solve(K, S, T) << endl;
+    for (auto &&c : T)
+    {
+        if(c == '#')break;
+        b[c - '0']++;
+    }
+    for (auto &&[k,v] : b)
+    {
+        m[k] -= v;
+    }
+    auto f = [&](map<ll,ll> a){
+        ll p = 0;
+        rep(i,9){
+            p += (i+1)*pow(10, a[i+1]);
+        }
+        return p;
+    };
+    ll cnt = K*9-8;
+    ll total = cnt*(cnt-1)/2;
+    ll win = 0;
+    rep(i,9){
+        if(m[i+1] == 0)continue;
+        m[i+1]--;
+        a[i+1]++;
+        ll s1 = f(a);
+        rep(j,9){
+            if(m[j+1] == 0)continue;
+            m[j+1]--;
+            b[j+1]++;
+            ll s2 = f(b);
+            m[j+1]++;
+            b[j+1]--;
+            if(s1 > s2){
+                win += (m[i+1]+1) * m[j+1];
+            }
+        }
+        m[i+1]++;
+        a[i+1]--;
+    }
+    long double ans = (long double)win / total / 2;
+    cout << setprecision(16) << ans << endl;
     return 0;
 }
