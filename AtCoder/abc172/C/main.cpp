@@ -113,29 +113,44 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, long long K, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    long long N;
-    std::cin >> N;
-    long long M;
-    std::cin >> M;
-    long long K;
-    std::cin >> K;
-    std::vector<long long> A(N);
+    ll N;
+    cin >> N;
+    ll M;
+    cin >> M;
+    ll K;
+    cin >> K;
+    vector<ll> A(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        cin >> A[i];
     }
-    std::vector<long long> B(M);
+    vll C(N+1);
+    rep(i,N){
+        C[i+1] = C[i] + A[i];
+    }
+    vector<ll> B(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> B[i];
+        cin >> B[i];
     }
-    cout << solve(N, M, K, std::move(A), std::move(B)) << endl;
+    vll D(M+1);
+    rep(i,M){
+        D[i+1] = D[i] + B[i];
+    }
+    ll ans = 0;
+    rep(_,2){
+        rep(n,C.size()){
+            ll rem = K - C[n];
+            if(rem < 0)break;
+            auto m = ranges::lower_bound(D, rem) - D.begin();
+            while(m == D.size() || (m > 0 && C[n] + D[m] > K)){
+                --m;
+            }
+            if(C[n] + D[m] <= K){
+                chmax(ans, n+m);
+            }
+        }
+        swap(C,D);
+    }
+    cout << ans << endl;
     return 0;
 }
