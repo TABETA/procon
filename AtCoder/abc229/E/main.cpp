@@ -111,27 +111,45 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
-}
+#include "atcoder/dsu.hpp"
+using namespace atcoder;
 
 int main() {
-    long long N;
-    std::cin >> N;
-    long long M;
-    std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    ll N;
+    cin >> N;
+    ll M;
+    cin >> M;
+    vector<set<ll>> AB(N);
+    for (int i = 0; i < M; i++) {
+        int a, b;
+        cin >> a >> b;
+        --a, --b;
+        if (a > b) swap(a, b);
+        AB[a].emplace(b);
     }
-    cout << solve(N, M, std::move(A), std::move(B)) << endl;
+    deque<ll> ans;
+    dsu uf(N);
+    ans.push_front(0);
+    unordered_set<ll> now;
+    repd(i, N) {
+        if (i == 0) break;
+        now.emplace(i);
+        for (auto&& b : AB[i]) {
+            auto l1 = uf.leader(i);
+            auto l2 = uf.leader(b);
+            auto p = uf.merge(i, b);
+            if(p == l1){
+                now.erase(l2);
+            } else {
+                now.erase(l1);
+            }
+            now.emplace(p);
+        }
+        ans.push_front(now.size());
+    }
+    for (auto&& a : ans) {
+        cout << a << endl;
+    }
     return 0;
 }
