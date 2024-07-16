@@ -113,14 +113,6 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, long long L, std::vector<long long> a, std::vector<long long> b, std::vector<long long> c, std::vector<long long> d) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -128,20 +120,53 @@ int main() {
     std::cin >> M;
     long long L;
     std::cin >> L;
-    std::vector<long long> a(N);
+    using P = pair<ll,ll>;
+    std::vector<P> A(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        CIN(ll,a);
+        A[i].first = a;
+        A[i].second = i+1;
     }
-    std::vector<long long> b(M);
+    std::vector<P> B(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> b[i];
+        CIN(ll,b);
+        B[i].first = b;
+        B[i].second = i+1;
     }
-    std::vector<long long> c(L);
-    std::vector<long long> d(L);
+    map<ll,set<ll>> mp;
     for(int i = 0 ; i < L ; i++){
-        std::cin >> c[i];
-        std::cin >> d[i];
+        ll c,d;
+        std::cin >> c;;
+        std::cin >> d;;
+        mp[c].emplace(d);
     }
-    cout << solve(N, M, L, std::move(a), std::move(b), std::move(c), std::move(d)) << endl;
+    ranges::sort(A);
+    ranges::sort(B);
+    auto ng = [&](ll a, ll b){
+        return mp.count(a) != 0 && mp[a].count(b) != 0;
+    };
+    set<P> used;
+    using PP = pair<ll,P>;
+    priority_queue<PP> Q;
+    Q.emplace(A[N-1].first+B[M-1].first, P{N-1, M-1});
+    while(!Q.empty()){
+        auto [ans, p] = Q.top();Q.pop();
+        auto [i, j] = p; 
+        if(used.count(p))continue;
+        used.insert(p);
+        if(!ng(A[i].second, B[j].second)){
+            cout << ans << endl;
+            break;
+        }
+        for (auto &&key : {
+            P{i-1, j},
+            P{i, j-1}
+            })
+        {
+            if(i < 0 || j < 0) continue;
+            if(used.count(key))continue;
+            Q.emplace(A[key.first].first + B[key.second].first, key);
+        }
+    }
     return 0;
 }
