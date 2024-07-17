@@ -111,18 +111,53 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
 
-auto solve() {
-    ll ans = inf;
+#include "atcoder/dsu.hpp"
+using namespace atcoder;
+using P = pair<ll,ll>;
+auto solve(ll N, map<ll, vector<P>> mp) -> ll {
+    ll ans = 0;
+    ll rem = N - 1;
+    dsu uf(N);
+    for (auto&& [c, vec] : mp) {
+        rep(k,vec.size()){
+            auto [i,j] = vec[k];
+            if (uf.same(j, i))continue;
+            uf.merge(j, i);
+            ans += c;
+            if (--rem == 0) {
+                return ans;
+            }
 
-    return ans;
+        }
+    }
+    return -1;
 }
 
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, N);
+    dsu uf(N);
+    CIN(ll, M);
+    map<ll, vector<P>> mp;
+    rep(i, M) {
+        CIN(ll, k);
+        CIN(ll, c);
+        ll pre = -1;
+        rep(j, k) {
+            CIN(ll, a);
+            --a;
+            if (j != 0) {
+                mp[c].emplace_back(pre, a);
+                uf.merge(pre, a);
+            }
+            pre = a;
+        }
+    }
+    if (uf.groups().size() == 1) {
+        cout << solve(N, mp) << endl;
+    } else {
+        cout << -1 << endl;
+    }
     return 0;
 }
