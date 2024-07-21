@@ -101,26 +101,26 @@ template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b;
 
 namespace std{
     template<>
-    class hash<pair<ll,ll>>{
-        public:
+    struct hash<pair<ll,ll>>{
         size_t operator () ( const pair<ll,ll> &p ) const{
             auto hash1 = hash<ll>{}(p.first);
             auto hash2 = hash<ll>{}(p.second);
             return hash1 ^ hash2;
         }
     };
+    template <>
+    struct hash<set<long long>> {
+        size_t operator()(const set<long long>& s) const {
+            size_t hash_value = 0;
+            for (const auto& elem : s) {
+                hash_value ^= std::hash<long long>()(elem) + 0x9e3779b9 + (hash_value << 6) + (hash_value >> 2);
+            }
+            return hash_value;
+        }
+    };
 }
-
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long K, long long D, std::vector<long long> a) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -128,10 +128,22 @@ int main() {
     std::cin >> K;
     long long D;
     std::cin >> D;
-    std::vector<long long> a(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+    std::vector<long long> A(N);
+    for (int i = 0; i < N; i++) {
+        std::cin >> A[i];
     }
-    cout << solve(N, K, D, std::move(a)) << endl;
+    vector DP(K + 1, vector(D, -1ll));
+    DP[0][0] = 0;
+    rep(i, N) {
+        vector pre{DP};
+        rep(j, K) {
+            for (auto&& v : pre[j]) {
+                if(v == -1) continue;
+                auto val = v + A[i];
+                chmax(DP[j + 1][val%D], val);
+            }
+        }
+    }
+    cout << DP[K][0] << endl;
     return 0;
 }
