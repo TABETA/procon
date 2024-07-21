@@ -110,32 +110,39 @@ namespace std{
         }
     };
 }
+constexpr long long N = 1048576;
 
 #include <atcoder/modint>
 using namespace atcoder;
-using mint = modint1;
+using mint = static_modint<N>;
 using vm = vector<mint>;
 using vvm = vector<vm>;
-const long long MOD = 1;
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long Q, std::vector<long long> t, std::vector<long long> x) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
+    map<ll, ll> A;
+    map<ll, ll> B;
+    rep(i,N){
+        A[i] = -1;
+        B[i] = -1;
+    }
     long long Q;
     std::cin >> Q;
-    std::vector<long long> t(Q);
-    std::vector<long long> x(Q);
-    for(int i = 0 ; i < Q ; i++){
-        std::cin >> t[i];
-        std::cin >> x[i];
+    for (int i = 0; i < Q; i++) {
+        CIN(ll, T);
+        CIN(ll, X);
+        mint x = X;
+        if (T == 1) {
+            auto it = A.lower_bound(x.val());
+            if(it == A.end()){
+                it = A.lower_bound(0);
+            }
+            auto [k,v] = *it;
+            B[k] = X;
+            A.erase(k);
+        } else {
+            cout << B[x.val()] << '\n';
+        }
     }
-    cout << solve(Q, std::move(t), std::move(x)) << endl;
     return 0;
 }
