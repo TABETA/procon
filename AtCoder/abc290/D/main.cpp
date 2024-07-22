@@ -110,25 +110,21 @@ namespace std{
         }
     };
 }
-
-constexpr long long MOD = 4;
-#include <atcoder/modint>
-using namespace atcoder;
-using mint = static_modint<MOD>;
-using vm = vector<mint>;
-using vvm = vector<vm>;
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, T);
+    for (int i = 0; i < T; ++i) {
+        CIN(ll, N);
+        CIN(ll, D);
+        CIN(ll, K);--K;
+        ll ans = 0;
+        if(N%D){
+            ll l = lcm(D, N);
+            ans = D*K%N + D*K / l;
+        } else {
+            ans = K*D/N +K*D%N;
+        }
+        cout << ans << '\n';
+    }
     return 0;
 }
