@@ -115,16 +115,42 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll,N);
+    CIN(ll,M);
+    vvll A(M);
+    rep(i,M){
+        CIN(ll,K)
+        A[i].resize(K);
+        rep(j,K){
+            cin >> A[i][j];
+        }
+    }
+    map<ll, unordered_set<ll>> mp;
+    rep(i,M){
+        queue<ll> Q;
+        Q.emplace(i);
+        while(!Q.empty()){
+            auto j = Q.front();Q.pop();
+            auto v = A[j].back();
+            mp[v].emplace(j);
+            if(mp[v].size() == 2){
+                for (auto &&idx : mp[v])
+                {
+                    A[idx].pop_back();
+                    if(A[idx].size() > 0){
+                        Q.emplace(idx);
+                    }
+                }
+            }
+        }
+    }
+    rep(i,M){
+        if(A[i].size() > 0){
+            cout << NO << endl;
+            return 0;
+        }
+    }
+    cout << YES << endl;
     return 0;
 }
