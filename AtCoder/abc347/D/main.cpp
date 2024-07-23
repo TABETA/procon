@@ -113,14 +113,6 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long a, long long b, long long C) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long a;
     std::cin >> a;
@@ -128,6 +120,37 @@ int main() {
     std::cin >> b;
     long long C;
     std::cin >> C;
-    cout << solve(a, b, C) << endl;
+    ll A = 0;
+    ll B = 0;
+    rep(i,60){
+        ull m = 1ull<<i;
+        if((C&m) == 0)continue;
+        if(a>b){
+            A |= m;
+            --a;
+        } else {
+            B |= m;
+            --b;
+        }
+    }
+    if(a < 0 || b < 0 || a != b){
+        cout << -1 << endl;
+        return 0;
+    }
+    rep(i, 60){
+        if(a == 0)break;
+        ull m = 1ull<<i;
+        if((C&m) == 0){
+            A |= m;
+            B |= m;
+            --a;
+            --b;
+        }
+    }
+    if(a != 0){
+        cout << -1 << endl;
+        return 0;
+    }
+    cout << A << " " << B << endl;
     return 0;
 }
