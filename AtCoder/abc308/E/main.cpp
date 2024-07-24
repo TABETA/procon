@@ -113,11 +113,75 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
+auto solve2(long long N, std::vector<long long> A, std::string S) {
+    map<char,set<ll>> mp;
+    rep(i,N){
+        mp[S[i]].emplace(i);
+    }
+    ll M = 3;
+    vector DP(M+1, vector<uint>{});
+    DP[0] = vector<uint>{0u};
+    string t = "MEX";
+    reps(i,1,N+1){
+        reps(j,1,M+1){
+            if(j > i)break;
+            if(S[i-1] == t[j-1]){
+                for (auto &&v : DP[j-1]){
+                    DP[j].emplace_back(v | (1u<<A[i-1]));
+                }
+            }
+        }
+    }
+    ll ans = 0;
+    auto f = [&](uint v)->int{
+        rep(j,M+1){
+            if((v & (1u<<j)) == 0){
+                return j;
+            }
+        }
+        return 3;
+    };
+    for (auto &&i : DP[M])
+    {
+        ans += f(i);
+    }
+    return ans;
+}
 auto solve(long long N, std::vector<long long> A, std::string S) {
-    ll ans = inf;
-
+    map<ll,ll> mp;
+    map<ll,ll> X;
+    rep(i,N){
+        if(S[i] =='X'){
+            ++X[A[i]];
+        }
+    }
+    ll ans = 0;
+    rep(i,N) {
+        if(S[i] =='X'){
+            --X[A[i]];
+        }
+        if(S[i] == 'E'){
+            auto e = A[i];
+            for (auto &&[m, v1] : mp)
+            {
+                for (auto &&[x, v3] : X)
+                {
+                    set<ll> s;
+                    s.emplace(0);
+                    s.emplace(1);
+                    s.emplace(2);
+                    s.emplace(3);
+                    s.erase(m);
+                    s.erase(e);
+                    s.erase(x);
+                    ans += *s.begin() * v1*v3;
+                }
+            }
+        }
+        if(S[i] =='M'){
+            ++mp[A[i]];
+        }
+    }
     return ans;
 }
 
