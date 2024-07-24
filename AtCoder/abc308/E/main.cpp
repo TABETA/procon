@@ -114,20 +114,16 @@ namespace std{
 
 // clang-format on
 auto solve2(long long N, std::vector<long long> A, std::string S) {
-    map<char,set<ll>> mp;
-    rep(i,N){
-        mp[S[i]].emplace(i);
-    }
     ll M = 3;
-    vector DP(M+1, vector<uint>{});
-    DP[0] = vector<uint>{0u};
+    vector DP(M+1, map<uint, ll>{});
+    DP[0][0] = 1;
     string t = "MEX";
     reps(i,1,N+1){
         reps(j,1,M+1){
             if(j > i)break;
             if(S[i-1] == t[j-1]){
-                for (auto &&v : DP[j-1]){
-                    DP[j].emplace_back(v | (1u<<A[i-1]));
+                for (auto &&[k,v] : DP[j-1]){
+                    DP[j][k | (1u<<A[i-1])] += v;
                 }
             }
         }
@@ -141,9 +137,9 @@ auto solve2(long long N, std::vector<long long> A, std::string S) {
         }
         return 3;
     };
-    for (auto &&i : DP[M])
+    for (auto &&[k,v] : DP[M])
     {
-        ans += f(i);
+        ans += f(k) * v;
     }
     return ans;
 }
@@ -194,6 +190,6 @@ int main() {
     }
     std::string S;
     std::cin >> S;
-    cout << solve(N, std::move(A), S) << endl;
+    cout << solve2(N, std::move(A), S) << endl;
     return 0;
 }
