@@ -111,27 +111,42 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> u, std::vector<long long> v) {
-    ll ans = inf;
-
-    return ans;
-}
 
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> u(M);
-    std::vector<long long> v(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+    vector UV(N, unordered_set<ll>{});
+    for (int i = 0; i < M; i++) {
+        CIN(ll, u);
+        --u;
+        CIN(ll, v);
+        --v;
+        UV[u].emplace(v);
+        UV[v].emplace(u);
     }
-    cout << solve(N, M, std::move(u), std::move(v)) << endl;
+    if (M == 0) {
+        cout << 1 << endl;
+        return 0;
+    }
+    ll ans = 0;
+    unordered_set<ll> used;
+    auto f = [&](auto f, ll cur) {
+        if (1e6 <= ans) {
+            return;
+        }
+        ++ans;
+        used.emplace(cur);
+        for (auto&& i : UV[cur]) {
+            if (used.count(i) == 0) {
+                f(f, i);
+            }
+        }
+        used.erase(cur);
+    };
+    f(f, 0ll);
+    cout << ans << endl;
     return 0;
 }
