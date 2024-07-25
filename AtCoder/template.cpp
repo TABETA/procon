@@ -112,12 +112,12 @@ namespace std{
 }
 
 {% if mod %}
+constexpr long long MOD = {{ mod }};
 #include <atcoder/modint>
 using namespace atcoder;
-using mint = modint{{ mod }};
+using mint = static_modint<MOD>;
 using vm = vector<mint>;
 using vvm = vector<vm>;
-const long long MOD = {{ mod }};
 {% endif %}
 {% if yes_str %}
 const string YES = "{{ yes_str }}";
