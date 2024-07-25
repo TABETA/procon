@@ -113,19 +113,19 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long H, long long W, long long M, std::vector<long long> T, std::vector<long long> A, std::vector<long long> X) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long H;
     std::cin >> H;
     long long W;
     std::cin >> W;
+    set<ll> rows;
+    rep(i,H){
+        rows.emplace(i);
+    }
+    set<ll> cols;
+    rep(i,W){
+        cols.emplace(i);
+    }
     long long M;
     std::cin >> M;
     std::vector<long long> T(M);
@@ -133,9 +133,38 @@ int main() {
     std::vector<long long> X(M);
     for(int i = 0 ; i < M ; i++){
         std::cin >> T[i];
-        std::cin >> A[i];
+        std::cin >> A[i];--A[i];
         std::cin >> X[i];
     }
-    cout << solve(H, W, M, std::move(T), std::move(A), std::move(X)) << endl;
+    map<ll,ll> ans;
+    ll rem = H*W;
+    repd(i,M){
+        if(rem == 0)break;
+        if(T[i] == 1){
+            // row
+            if(rows.count(A[i])){
+                ans[X[i]] += W;
+                rem -= W;
+                --H;
+                rows.erase(A[i]);
+            }
+        } else {
+            // col
+            if(cols.count(A[i])){
+                ans[X[i]] += H;
+                rem -=H;
+                --W;
+                cols.erase(A[i]);
+            }
+        }
+    }
+    if(rem > 0){
+        ans[0] += rem;
+    }
+    cout << ans.size() << endl;
+    for (auto &&[k,v] : ans){
+        if(v == 0)continue;
+        printf("%lld %lld\n", k,v);
+    }
     return 0;
 }
