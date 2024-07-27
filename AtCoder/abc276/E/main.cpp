@@ -115,16 +115,70 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
+using P = pair<ll, ll>;
+auto next_adjacents(P p, ll H, ll W) {
+    auto [r, c] = p;
+    vector<P> ret;
+    for (auto&& q : {
+             P{r - 1, c},
+             P{r + 1, c},
+             P{r, c - 1},
+             P{r, c + 1},
+         }) {
+        auto [y, x] = q;
+        if (y < 0 || y >= H || x < 0 || x >= W) continue;
+        ret.push_back(q);
+    }
+    return ret;
+};
 
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, H);
+    CIN(ll, W);
+    vector C(H, vector(W, char{}));
+    P start = P{};
+    rep(i, H) {
+        rep(j, W) {
+            cin >> C[i][j];
+            if (C[i][j] == 'S') {
+                start = P{i, j};
+            }
+        }
+    }
+    auto ans = NO;
+    using Tp = pair<P, char>;
+    queue<Tp> Q;
+    {
+        auto [y, x] = start;
+        if (y + 1 < H && C[y + 1][x] != '#') {
+            Q.emplace(P{y + 1, x}, 'd');
+        }
+        if (y - 1 >= 0 && C[y - 1][x] != '#') {
+            Q.emplace(P{y - 1, x}, 'u');
+        }
+        if (y + 1 < W && C[y][x + 1] != '#') {
+            Q.emplace(P{y, x + 1}, 'r');
+        }
+        if (x - 1 >= 0 && C[y][x - 1] != '#') {
+            Q.emplace(P{y, x - 1}, 'l');
+        }
+    }
+    while (!Q.empty()) {
+        auto [cur, c] = Q.front();
+        Q.pop();
+        if(C[cur.first][cur.second] != '.')continue;
+        C[cur.first][cur.second] = c;
+        for (auto&& next : next_adjacents(cur, H, W)) {
+            auto [ny, nx] = next;
+            if (C[ny][nx] == '#') continue;
+            if (C[ny][nx] == 'S') continue;
+            if (C[ny][nx] == '.') {
+                Q.emplace(next, c);
+            } else if (C[ny][nx] != c) {
+                ans = YES;
+            }
+        }
+    }
+    cout << ans << endl;
     return 0;
 }
