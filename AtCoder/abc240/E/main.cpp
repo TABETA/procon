@@ -113,23 +113,44 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> u, std::vector<long long> v) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> u(N-1);
-    std::vector<long long> v(N-1);
+    vector UV(N, unordered_set<ll>{});
     for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        UV[u].emplace(v);
+        UV[v].emplace(u);
     }
-    cout << solve(N, std::move(u), std::move(v)) << endl;
+    using P = pair<ll,ll>;
+    vector LR(N, P{});
+    ll id = 1;
+    vector used(N, false);
+    auto dfs = [&](auto dfs, ll cur)->P{
+        used[cur] = true;
+        ll l = LLONG_MAX, r = 0;
+        ll cnt = 0;
+        for (auto &&v : UV[cur])
+        {
+            if(used[v])continue;
+            used[v] = true;
+            ++cnt;
+            auto [nl, nr] = dfs(dfs, v);
+            chmin(l, nl);
+            chmax(r, nr);
+        }
+        if(cnt){
+            LR[cur] = P{l,r};
+        } else {
+            LR[cur] = P{id, id};
+            id++;
+        }
+        return LR[cur];
+    };
+    dfs(dfs, 0);
+    rep(i,N){
+        cout << LR[i].first << " " << LR[i].second << endl;
+    }
     return 0;
 }
