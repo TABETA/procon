@@ -116,60 +116,24 @@ namespace std{
 int main() {
     CIN(ll,N);
     CIN(ll,Q);
-    map<ll,ll> A;
-    map<ll,ll> erased;
+    vll A(N);
     rep(i,N){
-        CIN(ll,a);
-        A[a]++;
+        cin >> A[i];
     }
-    auto dist =[&](ll a, ll b){
-        return abs(a-b);
-    };
-    using P = pair<ll,ll>;
+    ranges::sort(A);
     rep(_,Q){
         CIN(ll,b);
-        CIN(ll,c);
-        priority_queue<P, vector<P>, greater<P> > Q;
-        Q.emplace(0, b);
-        erased.clear();
-        while(!Q.empty()){
-            auto [d, a] = Q.top();Q.pop();
-            if(c-- == 0){
-                cout << d << endl;
-                break;
-            }
-            auto it = A.lower_bound(a);
-            vector<ll> dels;
-            if(it != A.end()){
-                auto [k,v] = *it;
-                auto d2 = dist(k, b);
-                Q.emplace(d2, k);
-                --A[k];
-                erased[k]++;
-                if(A[k] == 0){
-                    dels.emplace_back(k);
-                }
-            }
-            if(it != A.begin()){
-                --it;
-                auto [k,v] = *it;
-                auto d2 = dist(k, b);
-                Q.emplace(d2, k);
-                --A[k];
-                erased[k]++;
-                if(A[k] == 0){
-                    dels.emplace_back(k);
-                }
-            }
-            for (auto &&t : dels)
-            {
-                A.erase(t);
-            }
+        CIN(ll,k);
+        ll l = -1, h = 1e9;
+        while(h - l > 1){
+            ll m = (l+h)/2;
+            auto it1 = ranges::upper_bound(A, b+m);
+            auto it2 = ranges::lower_bound(A, b-m);
+            auto c =  it1 - it2;
+            if(c >= k) h = m;
+            else l = m;
         }
-        for (auto &&[k,v] : erased)
-        {
-            A[k] += v;
-        }
+        cout << h << endl;
     }
     return 0;
 }
