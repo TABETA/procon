@@ -115,25 +115,54 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> X, std::vector<long long> Y) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> X(M);
-    std::vector<long long> Y(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> X[i];
-        std::cin >> Y[i];
+    struct Node {
+        set<ll> next;
+    };
+    vector<Node> Nodes(N);
+    vector<ll> deg(N);
+
+    for (int i = 0; i < M; i++) {
+        CIN(ll, x);
+        --x;
+        CIN(ll, y);
+        --y;
+        if(Nodes[y].next.count(x) == 0){
+            Nodes[y].next.emplace(x);
+            deg[x]++;
+        }
     }
-    cout << solve(N, M, std::move(X), std::move(Y)) << endl;
+    queue<ll> Q;
+    rep(i, N) {
+        if (deg[i] == 0) Q.emplace(i);
+    }
+    ll inf = LLONG_MAX;
+    vector<ll> ans(N, inf);
+    ll n = N;
+    while (!Q.empty()) {
+        if(Q.size() >= 2){
+            cout << NO << endl;
+            return 0;
+        }
+        auto q = Q.front();
+        Q.pop();
+        ans[q] = n--;
+        for (auto&& v : Nodes[q].next) {
+            --deg[v];
+            if (deg[v] == 0) {
+                Q.emplace(v);
+            }
+        }
+    }
+    cout << YES << endl;
+    rep(i, N) {
+        if (i != 0) cout << " ";
+        cout << ans[i];
+    }
+    cout << endl;
     return 0;
 }
