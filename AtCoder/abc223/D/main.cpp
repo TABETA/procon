@@ -113,25 +113,65 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
+    vector<vector<ll>> to(N);
+    vector<ll> deg(N);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+        CIN(ll,a);--a;
+        CIN(ll,b);--b;
+        to[a].emplace_back(b);
+        deg[b]++;
     }
-    cout << solve(N, M, std::move(A), std::move(B)) << endl;
+    auto hasCycle = [&](){
+        map<ll,bool> results;
+        vector<bool> visited(N);
+        vll vs;
+        auto dfs = [&](auto dfs, ll v)->bool{
+            if(results.count(v)) {
+                return results[v];
+            }
+            if(visited[v]){
+                return results[v] = true;
+            }
+            visited[v] = true;
+            bool result = false;
+            for(auto u: to[v]){
+                result |= dfs(dfs, u);
+            }
+            visited[v] = false;
+            return results[v] = result;
+        };
+        rep(i,N){
+            if(dfs(dfs,i)){
+                return true;
+            }
+        }
+        return false;
+    };
+    if(hasCycle()){
+        cout << -1 << endl;
+        return 0;
+    }
+    vll ans;
+    priority_queue<ll, vector<ll>, greater<ll>> Q;
+    rep(i,N) if(deg[i] == 0) Q.emplace(i);
+    while(!Q.empty()){
+        auto q = Q.top();Q.pop();
+        ans.emplace_back(q);
+        for(auto p: to[q]){
+            if(--deg[p] == 0){
+                Q.emplace(p);
+            }
+        }
+    }
+    rep(i,N){
+        if(i != 0)cout << " ";
+        cout << ans[i]+1 ;
+    }
+    cout << endl;
     return 0;
 }
