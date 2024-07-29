@@ -124,29 +124,28 @@ int main() {
         cin >> B[i];
     }
     const ll inf = LLONG_MAX;
-    vector ADP(N+1, vector(N+1, inf));
-    vector BDP(N+1, vector(N+1, inf));
-    ADP[0][0] = 0;
-    BDP[0][0] = 0;
+    vector DP(N+1, vector(X+1, inf));
+    DP[0][0] = 0;
     rep(i,N){
+        vector now(N+1, vector(X+1, inf));
+        swap(DP, now);
+        DP[0][0] = 0;
         rep(j,N){
-            if(j>i)break;
-            chmin(ADP[i+1][j], ADP[i][j]);
-            chmin(BDP[i+1][j], BDP[i][j]);
-            if(ADP[i][j] <= X && BDP[i][j] <= Y){
-                ADP[i+1][j+1] = min(ADP[i][j] + A[i], ADP[i][j+1]); 
-                BDP[i+1][j+1] = min(BDP[i][j] + B[i], BDP[i][j+1]); 
-            } else {
-                ADP[i+1][j+1] = ADP[i][j+1]; 
-                BDP[i+1][j+1] = BDP[i][j+1]; 
-
+            rep(k,X+1){
+                chmin(DP[j][k], now[j][k]);
+                ll nk = k + A[i];
+                ll ny = now[j][k] + B[i];
+                if(now[j][k] == inf || ny > Y || nk > X)continue;
+                chmin(DP[j+1][nk], ny); 
             }
         }
     }
     ll ans = 0;
     rep(j,N+1){
-        if(ADP[N][j] != inf && BDP[N][j] != inf){
-            ans = j;
+        rep(k,X+1){
+            if(DP[j][k] <= Y){
+                ans = j + 1;
+            }
         }
     }
     cout << min(ans, N) << endl;
