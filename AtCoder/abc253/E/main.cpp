@@ -119,14 +119,6 @@ using vm = vector<mint>;
 using vvm = vector<vm>;
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, long long K) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -134,6 +126,29 @@ int main() {
     std::cin >> M;
     long long K;
     std::cin >> K;
-    cout << solve(N, M, K) << endl;
+    vector DP(M, mint{1});
+    rep(i,N-1){
+        vector old(M, mint{});
+        swap(old,DP);
+        mint tot = 0;
+        vector accum(M+1, mint{});
+        rep(j, M)
+        {
+            tot += old[j];
+            accum[j+1] = old[j] + accum[j];
+        }
+        rep(j,M){
+            if(K != 0){
+                ll u = min(j + K, M);
+                ll l = max(j - K + 1, 0ll);
+                DP[j] += tot - (accum[u] - accum[l]);
+            } else {
+                DP[j] += accum[M];
+            }
+        }
+    }
+    mint ans = 0;
+    rep(j,M)ans += DP[j];
+    cout << ans.val() << endl;
     return 0;
 }
