@@ -113,23 +113,46 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long K, std::vector<long long> P) {
-    ll ans = inf;
-
-    return ans;
-}
+#include "atcoder/dsu.hpp"
+using namespace atcoder;
 
 int main() {
     long long N;
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> P(N);
+    set<ll> mp;
+    vll ans(N,-1);
+    dsu uf(N);
+    auto push = [&](ll p){
+        auto it = mp.lower_bound(p);
+        if(it != mp.end()){
+            auto k = *it;
+            uf.merge(k,p);
+            mp.erase(k);
+        }
+        mp.emplace(p);
+    };
+
     for(int i = 0 ; i < N ; i++){
-        std::cin >> P[i];
+        CIN(ll,p);--p;
+        push(p);
+        if((ll)uf.size(p) == K){
+            ans[uf.leader(p)] = i+1;
+            mp.erase(p);
+        }
     }
-    cout << solve(N, K, std::move(P)) << endl;
+    auto groups = uf.groups();
+    for (auto &&g : groups)
+    {
+        ll j = uf.leader(g[0]);
+        for (auto &&i : g)
+        {
+            ans[i] = ans[j];
+        }
+    }
+    rep(i,N){
+        cout << ans[i] << endl;
+    }
     return 0;
 }
