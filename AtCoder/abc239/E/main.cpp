@@ -113,14 +113,6 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long Q, std::vector<long long> X, std::vector<long long> A, std::vector<long long> B, std::vector<long long> V, std::vector<long long> K) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -130,18 +122,52 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> X[i];
     }
-    std::vector<long long> A(N-1);
-    std::vector<long long> B(N-1);
+    vvll UV(N);
     for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+        CIN(ll,a);--a;
+        CIN(ll,b);--b;
+        UV[a].emplace_back(b);
+        UV[b].emplace_back(a);
     }
-    std::vector<long long> V(Q);
-    std::vector<long long> K(Q);
+    using P = pair<ll,ll>;
+    map<ll, set<P, greater<P>>> mp;
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> V[i];
-        std::cin >> K[i];
+        CIN(ll,v);--v;
+        CIN(ll,k);--k;
+        mp[v].emplace(k, i);
     }
-    cout << solve(N, Q, std::move(X), std::move(A), std::move(B), std::move(V), std::move(K)) << endl;
+    vll ans(Q);
+    vector visited(N, false);
+    auto dfs = [&](auto dfs, ll cur)->vector<ll>{
+        vector<ll> now;
+        if(visited[cur]) return now;
+        visited[cur] = true;
+        now.emplace_back(X[cur]);
+        for(auto nxt: UV[cur]){
+            auto ret = dfs(dfs, nxt);
+            now.insert(
+                now.end(),
+                std::make_move_iterator(ret.begin()),
+                std::make_move_iterator(ret.end()));
+            
+        }
+        visited[cur] = false;
+        if(mp.count(cur) != 0){
+            ranges::sort(now, greater<ll>{});
+            if(now.size() > 20){
+                now.resize(20);
+            }
+            auto s = mp[cur];
+            for (auto &&[i, k] : s)
+            {
+                ans[k] = now[i];
+            }
+        }
+        return now;
+    };
+    dfs(dfs, 0);
+    rep(i,Q){
+        cout << ans[i] << endl;
+    }
     return 0;
 }
