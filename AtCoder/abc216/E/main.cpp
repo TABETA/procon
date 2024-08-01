@@ -111,25 +111,49 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long K, std::vector<long long> A) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+    map<ll,ll> A;
+    for (int i = 0; i < N; i++) {
+        CIN(ll,a);
+        A[a]++;
     }
-    cout << solve(N, K, std::move(A)) << endl;
+    ll ans = 0;
+    auto f = [&](ll iv, ll ic, ll jv, ll k){
+        auto sum = k*(jv+1 + iv)/2;
+        ans += sum;
+        K -= k;
+        if(jv > 0){
+            A[jv] += min(k, ic);
+        }
+        A[iv] -= min(k, ic);
+        if(A[iv] == 0){
+            A.erase(iv);
+        }
+    };
+    while (K && A.size() != 0) {
+        auto it = A.rbegin();
+        auto [iv, ic] = *it;
+        auto jt = next(it);
+        auto jv = (jt != A.rend()) ? jt->first : 0 ;
+        auto n = iv - jv;
+        auto k = ic*n; 
+        if(K >= k){
+
+        } else if(K >= ic) {
+            n = K / ic;
+            jv = iv - n;
+            k = ic*n;
+        } else {
+            jv = iv - 1;
+            k = K;
+        }
+        f(iv, ic, jv, k);
+    }
+    cout << ans << endl;
     return 0;
 }
