@@ -111,18 +111,97 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
+using P = pair<ll, ll>;
+auto next_adjacents(P p, ll H, ll W) {
+    auto [r, c] = p;
+    vector<P> ret;
+    for (auto&& q : {
+             P{r - 1, c},
+             P{r + 1, c},
+             P{r, c - 1},
+             P{r, c + 1},
+         }) {
+        auto [y, x] = q;
+        if (y < 0 || y >= H || x < 0 || x >= W) continue;
+        ret.push_back(q);
+    }
+    return ret;
+};
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, H);
+    CIN(ll, W);
+    vector A(H, vector(W, '.'));
+    P s;
+    map<char, set<P>> mp;
+    rep(i, H) {
+        rep(j, W) {
+            cin >> A[i][j];
+            switch (A[i][j]) {
+                case '.':
+                    break;
+                case 'S':
+                    s = P{i, j};
+                    break;
+                case 'G':
+                    break;
+                case '#':
+                    break;
+                default:
+                    mp[A[i][j]].emplace(i, j);
+                    break;
+            }
+        }
+    }
+    for (auto&& [y, x] : mp['>']) {
+        reps(j, x + 1, W) {
+            if (A[y][j] != '!' && A[y][j] != '.') break;
+            A[y][j] = '!';
+        }
+    }
+    for (auto&& [y, x] : mp['v']) {
+        reps(i, y + 1, H) {
+            if (A[i][x] != '!' && A[i][x] != '.') break;
+            A[i][x] = '!';
+        }
+    }
+    for (auto&& [y, x] : mp['<']) {
+        for (ll j = x - 1; j >= 0; --j) {
+            if (A[y][j] != '!' && A[y][j] != '.') break;
+            A[y][j] = '!';
+        }
+    }
+    for (auto&& [y, x] : mp['^']) {
+        for (ll i = y - 1; i >= 0; --i) {
+            if (A[i][x] != '!' && A[i][x] != '.') break;
+            A[i][x] = '!';
+        }
+    }
+    auto bfs = [&]()->ll {
+        queue<P> Q;
+        Q.push(s);
+        vvll B(H, vll(W, -1));
+        B[s.first][s.second] = 0;
+        while (!Q.empty()) {
+            auto q = Q.front();
+            Q.pop();
+            auto d = B[q.first][q.second];
+            for (auto&& [y, x] : next_adjacents(q, H, W)) {
+                switch (A[y][x]) {
+                    case '.':
+                        A[y][x] = 'x';
+                        B[y][x] = d + 1;
+                        Q.emplace(y,x);
+                        break;
+                    case 'G':
+                        return d + 1;
+                        break;
+                }
+            }
+        }
+        return -1ll;
+    };
+
+    cout << bfs() << endl;
     return 0;
 }
