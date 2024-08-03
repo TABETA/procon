@@ -113,14 +113,6 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long X, long long Y, std::vector<long long> A, std::vector<long long> B) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -134,6 +126,23 @@ int main() {
         std::cin >> A[i];
         std::cin >> B[i];
     }
-    cout << solve(N, X, Y, std::move(A), std::move(B)) << endl;
+    const ll inf = LLONG_MAX;
+    vector DP(X+1,vector(Y+1, inf));
+    DP[0][0] = 0;
+    rep(i,N){
+        vector pre(X+1,vector(Y+1, inf));
+        swap(DP,pre);
+        rep(j,X+1){
+            rep(k,Y+1){
+                if(pre[j][k]==inf)continue;
+                chmin(DP[j][k],pre[j][k]);
+                auto nj = min(X,j+A[i]);
+                auto nk = min(Y,k+B[i]);
+                chmin(DP[nj][nk],pre[j][k]+1);
+            }
+        }
+    }
+    ll ans = (DP[X][Y] == inf)? -1ll : DP[X][Y]; 
+    cout << ans << endl;
     return 0;
 }
