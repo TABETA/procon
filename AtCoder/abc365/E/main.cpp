@@ -112,10 +112,8 @@ namespace std{
 }
 
 // clang-format on
-int main() {
-    CIN(ll, N);
-    vll A(N);
-    rep(i, N) { cin >> A[i]; }
+
+auto solveByCumulativeSum(ll N, vll&& A) -> ll {
     vll S(N + 1);
     rep(i, N) { S[i + 1] = S[i] ^ A[i]; }
     ll ans = 0;
@@ -123,7 +121,7 @@ int main() {
         ull mask = 1ull << k;
         ll t = 0;
         ll f = 0;
-        rep(i, N+1) {
+        rep(i, N + 1) {
             if ((S[i] & mask) != 0) {
                 t++;
             } else {
@@ -133,6 +131,46 @@ int main() {
         ans += t * f * mask;
     }
     ll minus = reduce(all(A));
-    cout << ans-minus << endl;
+    return ans - minus;
+}
+
+auto solveByDP(ll N, vll&& A) -> ll {
+    ll ans = 0;
+    rep(k, 30) {
+        // DP[i番目のAが][j番目のセクションであるとき][セクション1に含まれるk桁目の1の個数が奇数かどうか]
+        vector DP(3, vector(2, 0ll));
+        DP[0][0] = 1;
+        rep(i, N) {
+            auto x = (A[i] >> k) & 1;
+            vector pre(3, vector(2, 0ll));
+            swap(DP, pre);
+            rep(j, 3) {
+                rep(nj, 3){
+                    if(nj < j)continue;
+                    if (x && nj == 1) {
+                        // A[i]のk桁目のbitが立っていた場合、セクション1に含まれるk桁目の1の個数の偶奇はA[i-1]の時の結果から変化する
+                        DP[nj][0] += pre[j][1];
+                        DP[nj][1] += pre[j][0];
+                    } else {
+                        // A[i]のk桁目のbitが立っていた場合、セクション1に含まれるk桁目の1の個数の偶奇はA[i-1]の時の結果から変化しないので前回の値をkeep
+                        // A[i]のk桁目のbitが立っていない場合、偶奇は変化しないので前回の値をkeep
+                        DP[nj][0] += pre[j][0];
+                        DP[nj][1] += pre[j][1];
+                    }
+                }
+            }
+        }
+        ll now = (DP[1][1]+DP[2][1])*(1ull<<k);
+        ans += now;
+    }
+    ll minus = reduce(all(A));
+    return ans - minus;
+}
+
+int main() {
+    CIN(ll, N);
+    vll A(N);
+    rep(i, N) { cin >> A[i]; }
+    cout << solveByDP(N, move(A)) << endl;
     return 0;
 }
