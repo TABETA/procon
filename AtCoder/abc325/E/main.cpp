@@ -113,29 +113,57 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long A, long long B, long long C, std::vector<std::vector<long long>> D) {
-    ll ans = inf;
-
-    return ans;
-}
+struct Edge{
+    ll distance;
+    ll to;
+};
+using Edges = vector<Edge>;
+using Nodes = vector<Edges>;
+using P = pair<ll,ll>;
 
 int main() {
     long long N;
-    std::cin >> N;
+    cin >> N;
     long long A;
-    std::cin >> A;
+    cin >> A;
     long long B;
-    std::cin >> B;
+    cin >> B;
     long long C;
-    std::cin >> C;
-    std::vector<std::vector<long long>> D(N, std::vector<long long>(N));
+    cin >> C;
+    Nodes G(N*2);
     for(int i = 0 ; i < N ; i++){
         for(int j = 0 ; j < N ; j++){
-            std::cin >> D[i][j];
+            CIN(ll,d);
+            if(d == 0)continue;
+            // 0 .. N-1は社用車が使える世界
+            G[i].emplace_back(d*A, j);
+            G[i].emplace_back(d*B+C, N+j);
+            // N .. 2N-1は社用車が使えない世界
+            G[N+i].emplace_back(d*B+C, N+j);
         }
     }
-    cout << solve(N, A, B, C, std::move(D)) << endl;
+    auto dijkstra = [&](Nodes G, ll start){
+        vll distance(G.size(), numeric_limits<ll>::max());
+        distance[start] = 0;
+        priority_queue<P, vector<P>, greater<P>> q;
+        q.emplace(0,start);
+        while(!q.empty()){
+            auto [t, from] = q.top(); q.pop();
+            if(distance[from] < t) continue;
+            for (auto &&e : G[from])
+            {
+                auto j = e.to;
+                auto newDistance = distance[from] + e.distance;
+                if(distance[j] > newDistance){
+                    distance[j] = newDistance;
+                    q.emplace(newDistance, j);
+                }
+            }
+        }
+        return distance;
+    };
+    auto d = dijkstra(G, 0);
+    ll ans = min(d[N-1], d[2*N-1]);
+    cout << ans << endl;
     return 0;
 }
