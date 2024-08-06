@@ -113,27 +113,40 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, std::vector<long long> T, std::vector<long long> W, std::vector<long long> S) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> T(M);
-    std::vector<long long> W(M);
-    std::vector<long long> S(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> T[i];
-        std::cin >> W[i];
-        std::cin >> S[i];
+    priority_queue<ll, vector<ll>, greater<ll>> Q;
+    vll ans(N);
+    using Tp = tuple<int, ll,ll,ll>;
+    map<ll, vector<Tp>> mp;
+    rep(i,N){
+        Q.emplace(i);
     }
-    cout << solve(N, M, std::move(T), std::move(W), std::move(S)) << endl;
+    for(int i = 0 ; i < M ; i++){
+        CIN(ll,T);
+        CIN(ll,W);
+        CIN(ll,S);
+        mp[T].emplace_back(1, -1ll, T+S,W);
+    }
+    for(auto& [t,actions]: mp){
+        ranges::sort(actions);
+        for(auto [isSomen,i,ts,w]: actions){
+            if(isSomen != 0){
+                if(!Q.empty()){
+                    auto q = Q.top(); Q.pop();
+                    ans[q] += w;
+                    mp[ts].emplace_back(0, q, -1ll, -1ll);
+                }
+            } else {
+                Q.emplace(i);
+            }
+        }
+    }
+    rep(i,N){
+        cout << ans[i] << endl;
+    } 
     return 0;
 }
