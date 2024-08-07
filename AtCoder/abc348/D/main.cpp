@@ -115,16 +115,72 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
+using P = pair<ll, ll>;
+using Tp = pair<P, ll>;
+auto next_adjacents(P p, ll H, ll W) {
+    auto [r, c] = p;
+    vector<P> ret;
+    for (auto&& q : {
+             P{r - 1, c},
+             P{r + 1, c},
+             P{r, c - 1},
+             P{r, c + 1},
+         }) {
+        auto [y, x] = q;
+        if (y < 0 || y >= H || x < 0 || x >= W) continue;
+        ret.push_back(q);
+    }
+    return ret;
+};
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, H);
+    CIN(ll, W);
+    vector A(H, vector(W, '.'));
+    queue<Tp> Q;
+    rep(i, H) {
+        rep(j, W) {
+            cin >> A[i][j];
+            if (A[i][j] == 'S') {
+                auto p = P{i, j};
+                Q.emplace(p, 0);
+            }
+        }
+    }
+    CIN(ll, N);
+    vvll E(H, vll(W));
+    vvll F(H, vll(W,-1));
+    rep(i, N) {
+        CIN(ll, y);
+        --y;
+        CIN(ll, x);
+        --x;
+        CIN(ll, e);
+        E[y][x] = e;
+    }
+    while (!Q.empty()) {
+        auto [p, e] = Q.front();Q.pop();
+        {
+            auto& ne = E[p.first][p.second];
+            if(ne > e){
+                e = ne;
+            }
+            ne = 0;
+        }
+        if(e <= 0)continue;
+        if(F[p.first][p.second] >= e)continue;
+        F[p.first][p.second] = e;
+        for (auto&& np : next_adjacents(p, H, W)) {
+            auto [y,x] = np;
+            auto ne = e-1;
+            if(F[y][x] >= ne)continue;
+            if(A[y][x] == '#')continue;
+            if(A[y][x] == 'T'){
+                cout << YES << endl;
+                return 0;
+            }
+            Q.emplace(np, ne);
+        }
+    }
+    cout << NO << endl;
     return 0;
 }
