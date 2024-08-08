@@ -113,16 +113,46 @@ namespace std{
 
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
-}
-
+constexpr long double denominator = 362880.;
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    ll N = 9;
+    vll C(N);
+    rep(i,N){
+        cin >> C[i];
+    }
+    vll I(N);
+    iota(all(I),0);
+    ll nominator = denominator;
+    do {
+        auto ng = [&](){
+            vvll G(8);
+            vector M(9, vll{});
+            M[0] = {0,3,6};
+            M[1] = {0,4};
+            M[2] = {0,5,7};
+            M[3] = {1,3};
+            M[4] = {1,4,6,7};
+            M[5] = {1,5};
+            M[6] = {2,3,7};
+            M[7] = {2,4};
+            M[8] = {2,5,6};
+            for(auto&& i: I){
+                for (auto &&j : M[i])
+                {
+                    if(G[j].size() == 1 && G[j][0] == C[i]){
+                        return true;
+                    } else {
+                        G[j].emplace_back(C[i]);
+                    }
+                }
+            }
+            return false;
+        };
+        if(ng()){
+            nominator--;
+        }
+    }while(next_permutation(all(I)));
+    long double ans = nominator / denominator;
+    cout << setprecision(15) << ans << endl;
     return 0;
 }
