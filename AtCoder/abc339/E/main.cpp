@@ -111,25 +111,34 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long D, std::vector<long long> A) {
-    ll ans = inf;
-
-    return ans;
+#include "atcoder/all"
+using namespace atcoder;
+int op(int a, int b){
+    return max(a,b);
 }
-
+int e(){
+    return (int)(0);
+}
 int main() {
     long long N;
     std::cin >> N;
     long long D;
     std::cin >> D;
     std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
+    for (int i = 0; i < N; i++) {
         std::cin >> A[i];
     }
-    cout << solve(N, D, std::move(A)) << endl;
+    constexpr ll a_max = 5e5; 
+    segtree<int, op, e> seg(a_max+1);
+
+    rep(i, N) {
+        auto l = max(0ll,A[i]-D);
+        auto r = min(a_max,A[i]+D);
+        auto next = seg.prod(l, r+1)+1;
+        seg.set(A[i], next);
+    }
+    ll ans = seg.all_prod();
+    cout << ans << endl;
     return 0;
 }
