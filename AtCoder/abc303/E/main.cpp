@@ -111,25 +111,59 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, std::vector<long long> u, std::vector<long long> v) {
-    ll ans = inf;
-
-    return ans;
-}
+using Edges = vector<ll>;
+using Nodes = vector<Edges>;
+using P = pair<ll, ll>;
 
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> u(N-1);
-    std::vector<long long> v(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+    Nodes G(N);
+    for (int i = 0; i < N - 1; i++) {
+        CIN(ll, u);
+        u--;
+        CIN(ll, v);
+        v--;
+        G[u].emplace_back(v);
+        G[v].emplace_back(u);
     }
-    cout << solve(N, std::move(u), std::move(v)) << endl;
+    auto dijkstra = [&](ll start) {
+        vll distance(G.size(), numeric_limits<ll>::max());
+        distance[start] = 0;
+        priority_queue<P, vector<P>, greater<P>> q;
+        q.emplace(0, start);
+        while (!q.empty()) {
+            auto [t, from] = q.top();
+            q.pop();
+            if (distance[from] < t) continue;
+            for (auto&& j : G[from]) {
+                auto newDistance = distance[from] + 1;
+                if (distance[j] > newDistance) {
+                    distance[j] = newDistance;
+                    q.emplace(newDistance, j);
+                }
+            }
+        }
+        return distance;
+    };
+    auto d1 = dijkstra(0);
+    auto d1_max = max_element(all(d1)) - d1.begin();
+    auto d2 = dijkstra(d1_max);
+    auto d2_max = max_element(all(d2)) - d2.begin();
+    auto d3 = dijkstra(d2_max);
+    map<ll, vll> mp;
+    rep(i, N) { mp[d3[i]].emplace_back(i); }
+    vll ans;
+    for(auto&& [d,vec]: mp){
+        if((d-1)%3 != 0)continue;
+        for (auto &&j : vec)
+        {
+            ll dim = G[j].size();
+            ans.emplace_back(dim);
+        }
+    }
+    ranges::sort(ans);
+    cout << ans << endl;
     return 0;
 }
