@@ -111,18 +111,63 @@ namespace std{
     };
 }
 
-
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve() {
-    ll ans = inf;
-
-    return ans;
+using P = pair<ll, ll>;
+P input() {
+    CIN(ll, y);
+    CIN(ll, x);
+    return P{y, x};
 }
-
 int main() {
-    // Failed to predict input format
-    cout << solve() << endl;
+    CIN(ll, H);
+    CIN(ll, W);
+    auto cur = input();
+    CIN(ll, N);
+    map<ll, set<ll>> Y;
+    map<ll, set<ll>> X;
+    rep(i, N) {
+        auto [y, x] = input();
+        Y[y].emplace(x);
+        X[x].emplace(y);
+    }
+
+    auto find_lower = [](ll cur, ll n, set<ll>& obs){
+        ll ans = n;
+        auto t = obs.lower_bound(n);
+        auto s = obs.lower_bound(cur);
+        if (t != s) {
+            ans = *prev(s) + 1;
+        }
+        return ans;
+    };
+    auto find_upper = [](ll cur, ll n, set<ll>& obs){
+        ll ans = n;
+        auto s = obs.lower_bound(cur);
+        if (s != obs.end()) {
+            ans = min(*s - 1, n);
+        }
+        return ans;
+    };
+    CIN(ll, Q);
+    rep(i, Q) {
+        CIN(char, d);
+        CIN(ll, l);
+        auto [cy, cx] = cur;
+        auto [ny, nx] = cur;
+        if (d == 'L') {
+            nx = find_lower(cx, max<ll>(1, nx - l), Y[cy]);
+        }
+        if (d == 'R') {
+            nx = find_upper(cx, min<ll>(W, nx + l), Y[cy]);
+        }
+        if (d == 'U') {
+            ny = find_lower(cy, max<ll>(1, ny - l), X[cx]);
+        }
+        if (d == 'D') {
+            ny = find_upper(cy, min<ll>(H, ny + l), X[cx]);
+        }
+        cur = P{ny, nx};
+        cout << ny << " " << nx << '\n';
+    }
     return 0;
 }
