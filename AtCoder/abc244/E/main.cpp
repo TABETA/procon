@@ -119,14 +119,6 @@ using vm = vector<mint>;
 using vvm = vector<vm>;
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve(long long N, long long M, long long K, long long S, long long T, long long X, std::vector<long long> U, std::vector<long long> V) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     long long N;
     std::cin >> N;
@@ -135,17 +127,33 @@ int main() {
     long long K;
     std::cin >> K;
     long long S;
-    std::cin >> S;
+    std::cin >> S;--S;
     long long T;
-    std::cin >> T;
+    std::cin >> T;--T;
     long long X;
-    std::cin >> X;
-    std::vector<long long> U(M);
-    std::vector<long long> V(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    std::cin >> X;--X;
+    vvll G(N);
+    for (int i = 0; i < M; i++) {
+        CIN(ll, u);
+        --u;
+        CIN(ll, v);
+        --v;
+        G[u].emplace_back(v);
+        G[v].emplace_back(u);
     }
-    cout << solve(N, M, K, S, T, X, std::move(U), std::move(V)) << endl;
+    vector DP(N, vector(2, mint{}));
+    DP[S][0] = 1;
+    rep(i, K) {
+        vector pre(N, vector(2, mint{}));
+        swap(DP, pre);
+        rep(j, N) {
+            for (auto&& v : G[j]) {
+                rep(k, 2) {
+                    DP[v][(k + (v == X)) %2] += pre[j][k];
+                }
+            }
+        }
+    }
+    cout << DP[T][0].val() << endl;
     return 0;
 }
