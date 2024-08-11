@@ -119,7 +119,35 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    ll X = linf;
+    ll a_min = ceil(cbrt(N/4));
+    ll a_max = ceil(cbrt(N));
+    ll b = 0;
+    auto calc =[&](ll a, ll b){
+        ll x = (a*a+b*b)*(a+b);
+        return x;
+    };
+    for(ll a = a_max; a >= a_min; --a){
+        ll x = 0;
+        while(true){
+            x = calc(a,b);
+            if(x < N){
+                ++b;
+            } else {
+                break;
+            }
+        }
+        while(x > N){
+            ll nb = b-1;
+            ll _ = calc(a,nb);
+            if(_ > N){
+                b = nb;
+            } else {
+                break;
+            }
+        }
+        chmin(X, x);
+    }
+    cout << X << endl;
     return 0;
 }
