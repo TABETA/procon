@@ -121,11 +121,40 @@ int main() {
     std::cin >> N;
     std::string T;
     std::cin >> T;
+    ll t = T.size();
     std::vector<std::string> S(N);
+    vll F(N);
+    vll R(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
+        ll M = S[i].size();
+        ll k = -1;
+        rep(j,M){
+            if(k == t)break;
+            if(T[k+1] == S[i][j])++k;
+        }
+        F[i] = k;
+        k = t;
+        repd(j,M){
+            if(k == 0)break;
+            if(T[k-1] == S[i][j])--k;
+        }
+        R[i] = k;
+    }
+    map<ll,ll> f_match_count;
+    vll RM(t+1);
+    rep(i,N){
+        f_match_count[F[i]]++;
+        RM[R[i]]++;
+    }
+    rep(i,t){
+        RM[i+1] += RM[i];
     }
     ll ans = 0;
+    for (auto &&[k,v] : f_match_count)
+    {
+        ans += v*RM[k+1];
+    }
     cout << ans << endl;
     return 0;
 }
