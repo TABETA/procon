@@ -51,6 +51,9 @@ using vvll = vector<vll>;
 using vs = vector<string>;
 using pii = pair<int, int>;
 
+const int inf = 1001001001;
+const ll linf = 1001001001001001001ll;
+
 /* define short */
 #define CIN(type, name) type name; cin >> name;
 #define pb push_back
@@ -127,20 +130,13 @@ const string NO = "{{ no_str }}";
 {% endif %}
 
 // clang-format on
-const ll inf = LLONG_MAX;
-
-auto solve({{ formal_arguments }}) {
-    ll ans = inf;
-
-    return ans;
-}
-
 int main() {
     {% if prediction_success %}
     {{input_part}}
     {% else %}
     // Failed to predict input format
     {% endif %}
-    cout << solve({{ actual_arguments }}) << endl;
+    ll ans = 0;
+    cout << ans << endl;
     return 0;
 }
