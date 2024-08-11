@@ -114,14 +114,6 @@ namespace std{
 const string NO = "Impossible";
 
 // clang-format on
-struct Edge{
-    ll value;
-    ll to;
-};
-using Edges = vector<Edge>;
-using Nodes = vector<Edges>;
-
-
 int main() {
     long long N;
     std::cin >> N;
@@ -130,45 +122,30 @@ int main() {
         std::cin >> A[i];
     }
     std::vector<std::string> S(N);
-    Nodes G(N);
+    using P = pair<ll,ll>;
+    const ll linf = 1001001001001001001ll;
+    vector G(N, vector(N, P{linf, 0ll}));
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
         rep(j,S[i].size()){
-            if(S[i][j] == 'Y') G[i].emplace_back(A[j], j);
+            if(S[i][j] == 'Y') G[i][j] = P{1, -A[j]};
         }
     }
-    const ll inf = numeric_limits<ll>::max();
-
-    vector distance(G.size(), vector(G.size(), inf));
-    vector values(G.size(), vector(G.size(), -1ll));
-    rep(s,G.size()){
-        distance[s][s] = 0;
-        values[s][s] = A[s];
-        queue<ll> q;
-        q.emplace(s);
-        while(!q.empty()){
-            auto from = q.front(); q.pop();
-            for (auto &&e : G[from])
-            {
-                auto j = e.to;
-                auto newDistance = distance[s][from] + 1;
-                if(distance[s][j] >= newDistance){
-                    chmax(values[s][j], values[s][from] + A[j]);
-                }
-                if(distance[s][j] == inf){
-                    distance[s][j] = newDistance;
-                    q.emplace(j);
-                }
-            }
-        }
+    rep(i,N){
+        G[i][i] = P{0, 0};
+    }
+    auto add = [&](P l, P r){ return P{l.first + r.first, l.second + r.second};  };
+    rep(k,N)rep(i,N)rep(j,N) {
+        chmin(G[i][j], add(G[i][k], G[k][j]));
     }
     long long Q;
     std::cin >> Q;
     rep(_,Q){
         CIN(ll,s);--s;
         CIN(ll,t);--t;
-        if(distance[s][t] == inf) cout << NO << '\n';
-        else cout << distance[s][t] << " " << values[s][t] << '\n';
+        auto [distance, value] = G[s][t];
+        if(distance == linf) cout << NO << '\n';
+        else cout << distance << " " << A[s]-value << '\n';
     }
     return 0;
 }
