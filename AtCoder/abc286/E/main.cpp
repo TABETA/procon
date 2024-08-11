@@ -114,13 +114,13 @@ namespace std{
 const string NO = "Impossible";
 
 // clang-format on
-const ll inf = LLONG_MAX;
+struct Edge{
+    ll value;
+    ll to;
+};
+using Edges = vector<Edge>;
+using Nodes = vector<Edges>;
 
-auto solve(long long N, std::vector<long long> A, std::vector<std::string> S, long long Q, std::vector<long long> U, std::vector<long long> V) {
-    ll ans = inf;
-
-    return ans;
-}
 
 int main() {
     long long N;
@@ -130,17 +130,45 @@ int main() {
         std::cin >> A[i];
     }
     std::vector<std::string> S(N);
+    Nodes G(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
+        rep(j,S[i].size()){
+            if(S[i][j] == 'Y') G[i].emplace_back(A[j], j);
+        }
+    }
+    const ll inf = numeric_limits<ll>::max();
+
+    vector distance(G.size(), vector(G.size(), inf));
+    vector values(G.size(), vector(G.size(), -1ll));
+    rep(s,G.size()){
+        distance[s][s] = 0;
+        values[s][s] = A[s];
+        queue<ll> q;
+        q.emplace(s);
+        while(!q.empty()){
+            auto from = q.front(); q.pop();
+            for (auto &&e : G[from])
+            {
+                auto j = e.to;
+                auto newDistance = distance[s][from] + 1;
+                if(distance[s][j] >= newDistance){
+                    chmax(values[s][j], values[s][from] + A[j]);
+                }
+                if(distance[s][j] == inf){
+                    distance[s][j] = newDistance;
+                    q.emplace(j);
+                }
+            }
+        }
     }
     long long Q;
     std::cin >> Q;
-    std::vector<long long> U(Q);
-    std::vector<long long> V(Q);
-    for(int i = 0 ; i < Q ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    rep(_,Q){
+        CIN(ll,s);--s;
+        CIN(ll,t);--t;
+        if(distance[s][t] == inf) cout << NO << '\n';
+        else cout << distance[s][t] << " " << values[s][t] << '\n';
     }
-    cout << solve(N, std::move(A), std::move(S), Q, std::move(U), std::move(V)) << endl;
     return 0;
 }
