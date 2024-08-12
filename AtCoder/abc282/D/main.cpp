@@ -116,18 +116,169 @@ namespace std{
 
 
 // clang-format on
+auto solve(ll N ,vector<set<ll>>& G)->ll{
+    vector<vector<vector<ll>>> C;
+    vector group(N,-1ll);
+    bool ng = false;
+    auto f = [&](auto f, ll cur, vvll& B, ll i)->void{
+        B[i].emplace_back(cur);
+        group[cur] = i;
+        for (auto &&v : G[cur])
+        {
+            if(group[v] == i) {
+                ng = true;
+            }
+            if(group[v] != -1) continue;
+            f(f, v, B, i^1);
+        }
+    };
+    rep(i,N){
+        if(group[i] == -1){
+            vector B(2, vector<ll>{});
+            f(f, i, B, 0);
+            C.emplace_back(B);
+        }
+    }
+    if(ng){
+        return 0;
+    }
+    vector V(C.size()+1, vector(2, 0ll));
+    rep(i,C.size()){
+        V[i+1][0] = V[i][0] + C[i][0].size();
+        V[i+1][1] = V[i][1] + C[i][1].size();
+    }
+    ll ans = 0;
+    rep(i,C.size()){
+        for (auto &&a : C[i][0])
+        {
+            ans += C[i][1].size() - G[a].size();
+        }
+        ll r = (V[C.size()][0] - V[i+1][0]) + (V[C.size()][1] - V[i+1][1]);
+        ans += (r)*C[i][0].size();
+        ans += (r)*C[i][1].size();
+    }
+    return ans;
+}
+auto solve_slow(ll N ,vector<set<ll>>& G)->ll{
+    ll ans = 0;
+    rep(u,N){
+        reps(v,u+1,N){
+            if(G[u].count(v))continue;
+            auto GG{G};
+            GG[u].emplace(v);
+            GG[v].emplace(u);
+            vector B(2, vector<ll>{});
+            vector group(N,-1ll);
+            bool ng = false;
+            auto f = [&](auto f, ll cur, ll i)->void{
+                B[i].emplace_back(cur);
+                group[cur] = i;
+                for (auto &&v : GG[cur])
+                {
+                    if(group[v] == i) {
+                        ng = true;
+                    }
+                    if(group[v] != -1) continue;
+                    f(f, v, i^1);
+                }
+            };
+            rep(i,N){
+                if(group[i] == -1){
+                    f(f, i, 0);
+                }
+            }
+            if(!ng){
+                // printf("%lld %lld\n", u+1,v+1);
+                ++ans;
+            }
+        }
+    }
+    return ans;
+}
+/*
+# description
+
+頂点数Nの単純グラフを構成する辺の集合を返します。
+ここで単純グラフとは以下を指します。
+・自己ループが無い
+・多重辺が無い
+辺の情報は文字列で表現され、頂点Uと頂点Vを繋ぐことを以下の書式で表現します。
+"U V"
+例えば、頂点1と頂点2を繋ぐ場合、以下の文字列が返されます。
+"1 2"
+
+# args
+
+N: 頂点数。1から200000を取ることが可能。
+
+# return value
+
+辺の集合を表すvector
+
+*/
+std::vector<std::string> generate_edges(long long N){
+    std::vector<std::string> edges;
+    srand(static_cast<unsigned int>(time(0)));
+    for (long long U = 1; U <= N; ++U) {
+        for (long long V = U + 1; V <= N; ++V) {
+            if (rand() % 5 == 0) {
+                edges.push_back(std::to_string(U) + " " + std::to_string(V));
+            }
+        }
+    }
+    return edges;
+}
+
+auto test(ll N, ll M, istringstream& cin, ostringstream& cout)->bool{
+    vector G(N, set<ll>{});
+    for(int i = 0 ; i < M ; i++){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        G[u].emplace(v);
+        G[v].emplace(u);
+    }
+    ll expected = solve_slow(N, G);
+    ll actual = solve(N, G);
+    if(expected != actual){
+        printf("expected: %lld\n", expected);
+        printf("actual: %lld\n", actual);
+        return true;
+    }
+    return false;
+}
+
+#if 1
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> u(M);
-    std::vector<long long> v(M);
+    vector G(N, set<ll>{});
     for(int i = 0 ; i < M ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        G[u].emplace(v);
+        G[v].emplace(u);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    cout << solve(N, G) << endl;
+    // cout << solve_slow(N, G) << endl;
     return 0;
 }
+#else
+int main() {
+    while(true){
+        long long N = 10;
+        auto edges = generate_edges(N);
+        ll M = edges.size();
+        string input = "";
+        rep(i,M){
+            input += edges[i] + '\n';
+        }
+		istringstream iss(input);
+		ostringstream oss;
+        auto ok = test(N, M, iss, oss);
+        if(ok)break;
+    }
+    return 0;
+}
+#endif
