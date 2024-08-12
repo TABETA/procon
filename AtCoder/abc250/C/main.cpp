@@ -119,13 +119,27 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
+    map<ll,ll> v2p;
+    map<ll,ll> p2v;
+    rep(i,N){
+        v2p[i+1] = i;
+        p2v[i] = i+1;
+    }
     long long Q;
     std::cin >> Q;
-    std::vector<long long> x(Q);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> x[i];
+        CIN(ll,x);
+        ll pos1 = v2p[x];
+        ll pos2 = pos1 + (pos1 == N-1 ? -1 : +1);
+        ll y = p2v[pos2];
+        swap(v2p[y],v2p[x]);
+        swap(p2v[pos1],p2v[pos2]);
     }
-    ll ans = 0;
+    vll ans;
+    for (auto &&[k,v] : p2v)
+    {
+        ans.emplace_back(v);
+    }
     cout << ans << endl;
     return 0;
 }
