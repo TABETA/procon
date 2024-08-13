@@ -123,19 +123,47 @@ int main() {
     std::cin >> M;
     long long K;
     std::cin >> K;
-    std::vector<long long> a(M);
-    std::vector<long long> b(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    std::vector<long long> p(K);
-    std::vector<long long> h(K);
+    using P = pair<ll,ll>;
+    priority_queue<P> Q;
+    vll E(N,-1);
     for(int i = 0 ; i < K ; i++){
-        std::cin >> p[i];
-        std::cin >> h[i];
+        CIN(ll,p);--p;
+        CIN(ll,h);
+        Q.emplace(h, p);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    set<ll> ans;
+    while(!Q.empty()){
+        auto [h,p] = Q.top();Q.pop();
+        if(E[p] >= h) continue;
+        else E[p] = h;
+        ans.emplace(p);
+        ll nh = h-1;
+        if(nh < 0) continue;
+        for (auto &&v : to[p])
+        {
+            if(E[v] >= nh) continue;
+            Q.emplace(nh, v);
+        }
+    }
+
+    cout << ans.size() << endl;
+    bool is1st = true;
+    for (auto &&i : ans)
+    {
+        if(is1st) {
+            is1st = false;
+        } else {
+            cout << " ";
+        }
+        cout << i+1;
+    }
+    cout << endl;
     return 0;
 }
