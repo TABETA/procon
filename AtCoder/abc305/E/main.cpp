@@ -114,7 +114,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long N;
@@ -124,45 +123,36 @@ int main() {
     long long K;
     std::cin >> K;
     vvll to(N);
-    rep(_,M){
-        CIN(ll,u);--u;
-        CIN(ll,v);--v;
+    rep(_, M) {
+        CIN(ll, u); --u;
+        CIN(ll, v); --v;
         to[u].emplace_back(v);
         to[v].emplace_back(u);
     }
-    using P = pair<ll,ll>;
+    using P = pair<ll, ll>;
     priority_queue<P> Q;
-    vll E(N,-1);
-    for(int i = 0 ; i < K ; i++){
-        CIN(ll,p);--p;
-        CIN(ll,h);
+    vll E(N, -1);
+    for (int i = 0; i < K; i++) {
+        CIN(ll, p); --p;
+        CIN(ll, h);
+        E[p] = h;
         Q.emplace(h, p);
     }
     set<ll> ans;
-    while(!Q.empty()){
-        auto [h,p] = Q.top();Q.pop();
-        if(E[p] >= h) continue;
-        else E[p] = h;
-        ans.emplace(p);
-        ll nh = h-1;
-        if(nh < 0) continue;
-        for (auto &&v : to[p])
-        {
-            if(E[v] >= nh) continue;
-            Q.emplace(nh, v);
+    while (!Q.empty()) {
+        auto [h, v] = Q.top(); Q.pop();
+        if (E[v] != h) continue; // 同じでない場合は他の頂点から更新されたということなのでSkip
+        ll nh = h - 1;
+        for (auto&& u : to[v]) {
+            if (E[u] >= nh) continue;
+            E[u] = nh;
+            Q.emplace(nh, u);
         }
     }
-
+    rep(i, N) if (E[i] >= 0) ans.emplace(i + 1);
     cout << ans.size() << endl;
-    bool is1st = true;
-    for (auto &&i : ans)
-    {
-        if(is1st) {
-            is1st = false;
-        } else {
-            cout << " ";
-        }
-        cout << i+1;
+    for (auto&& i : ans) {
+        cout << i << " ";
     }
     cout << endl;
     return 0;
