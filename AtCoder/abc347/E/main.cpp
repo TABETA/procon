@@ -121,11 +121,24 @@ int main() {
     std::cin >> N;
     long long Q;
     std::cin >> Q;
-    std::vector<long long> x(Q);
+    map<ll, ll> mp;
+    vll A(N);
+    vll B(Q+1);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> x[i];
+        ll x;
+        std::cin >> x;--x;
+        if(mp.count(x)) {
+            A[x] += B[i] - B[mp[x]];
+            mp.erase(x);
+        }
+        else mp[x] = i;
+        B[i+1] = mp.size() + B[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    for (auto &&[x,i] : mp)
+    {
+        A[x] += B[Q] - B[i];
+    }
+    
+    cout << A << endl;
     return 0;
 }
