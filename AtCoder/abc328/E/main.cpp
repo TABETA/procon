@@ -114,17 +114,49 @@ namespace std{
     };
 }
 
-constexpr long long MOD = 328;
-#include <atcoder/modint>
-using namespace atcoder;
-using mint = static_modint<MOD>;
-using vm = vector<mint>;
-using vvm = vector<vm>;
-
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll,N);
+    CIN(ll,M);
+    CIN(ll,K);
+    struct Edge {
+        ll v;
+        ll w;
+    };
+    vector<vector<Edge>> to(N);
+    vector<tuple<ll,ll,ll>> UVW(M);
+    rep(i,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,w);
+        to[u].emplace_back(v, w);
+        to[v].emplace_back(u, w);
+        UVW[i] ={u,v,w};
+    }
+    ll ans = linf;
+    using P = pair<ll, dsu>;
+    queue<P> Q;
+    Q.emplace(0, dsu(N));
+    rep(i,M){
+        queue<P> R;
+        swap(R,Q);
+        while(!R.empty()){
+            auto [cost, uf] = R.front();R.pop();
+            Q.emplace(cost, uf);
+            auto [u,v,w] = UVW[i];
+            if(!uf.same(u,v)){
+                uf.merge(u, v);
+                ll nc = (cost+w)%K;
+                if((ll)uf.size(0) == N) {
+                    chmin(ans, nc);
+                } else {
+                    Q.emplace(nc, uf);
+                }
+            }
+        }
+    }
     cout << ans << endl;
     return 0;
 }
