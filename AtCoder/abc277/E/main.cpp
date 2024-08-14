@@ -123,19 +123,43 @@ int main() {
     std::cin >> M;
     long long K;
     std::cin >> K;
-    std::vector<long long> u(M);
-    std::vector<long long> v(M);
-    std::vector<long long> a(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
-        std::cin >> a[i];
+    vector<vvll> to(2, vvll(N));
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,a);
+        to[a][u].emplace_back(v);
+        to[a][v].emplace_back(u);
     }
-    std::vector<long long> s(K);
+    set<ll> S;
     for(int i = 0 ; i < K ; i++){
-        std::cin >> s[i];
+        CIN(ll,s);--s;
+        S.emplace(s);
     }
-    ll ans = 0;
+    vvll dist(2,vll(N,linf));
+    using P = pair<ll,ll>;
+    queue<P> Q;
+    auto push =[&](ll a, ll v, ll d){
+        if(dist[a][v] > d){
+            dist[a][v] = d;
+            Q.emplace(v, a);
+        }
+        if(S.count(v) && dist[a^1][v] > d) {
+            dist[a^1][v] = d;
+            Q.emplace(v, a^1);
+        }
+
+    };
+    push(1, 0, 0);
+    while(!Q.empty()){
+        auto [u, a] = Q.front();Q.pop();
+        for (auto &&v : to[a][u])
+        {
+            push(a,v, dist[a][u]+1);
+        }
+    }
+    ll ans = min(dist[0][N-1], dist[1][N-1]);
+    if(ans == linf) ans = -1;
     cout << ans << endl;
     return 0;
 }
