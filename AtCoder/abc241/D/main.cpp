@@ -117,8 +117,38 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    const ll na = linf;
+    auto search =[&](multiset<ll>& mp, ll x, ll k){
+        auto it = mp.lower_bound(x);
+        rep(i,k-1){
+            if(it == mp.end()) return na;
+            ++it;
+        }
+        if(it == mp.end()) return na;
+        return *it;
+    };
+
+    CIN(ll,z);
+    multiset<ll> posi;
+    multiset<ll> nega;
+    rep(_,z){
+        CIN(ll,q);
+        CIN(ll,x);
+        if(q == 1){
+            posi.emplace(x);
+            nega.emplace(-x);
+        }else {
+            CIN(ll,k);
+            if(q == 2){
+                auto v = search(nega, -x, k);
+                if(v != na) cout << -v << endl;
+                else cout << -1 << endl;
+            } else{
+                auto v = search(posi, x, k);
+                if(v != na) cout << v << endl;
+                else cout << -1 << endl;
+            }
+        }
+    }
     return 0;
 }
