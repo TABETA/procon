@@ -114,7 +114,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long H;
@@ -122,18 +121,87 @@ int main() {
     long long W;
     std::cin >> W;
     std::vector<std::vector<long long>> A(H, std::vector<long long>(W));
-    for(int i = 0 ; i < H ; i++){
-        for(int j = 0 ; j < W ; j++){
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
             std::cin >> A[i][j];
         }
     }
     std::vector<std::vector<long long>> B(H, std::vector<long long>(W));
-    for(int i = 0 ; i < H ; i++){
-        for(int j = 0 ; j < W ; j++){
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
             std::cin >> B[i][j];
         }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    if (A == B) {
+        cout << 0 << endl;
+        return 0;
+    }
+    {
+        vector mp(2, vector<map<ll, ll>>(H));
+        rep(i, H) {
+            rep(j, W) {
+                mp[0][i][A[i][j]]++;
+                mp[1][i][B[i][j]]++;
+            }
+        }
+        ranges::sort(mp[0]);
+        ranges::sort(mp[1]);
+        if (mp[0] != mp[1]) {
+            cout << -1 << endl;
+            return 0;
+        }
+    }
+    {
+        vector mp(2, vector<map<ll, ll>>(W));
+        rep(j, W) {
+            rep(i, H) {
+                mp[0][j][A[i][j]]++;
+                mp[1][j][B[i][j]]++;
+            }
+        }
+        ranges::sort(mp[0]);
+        ranges::sort(mp[1]);
+        if (mp[0] != mp[1]) {
+            cout << -1 << endl;
+            return 0;
+        }
+    }
+
+    using P = pair<vvll, ll>;
+    set<vvll> used;
+    queue<P> Q;
+    used.emplace(A);
+    Q.emplace(A, 0);
+    auto next_grids = [&](vvll& a) -> vector<vvll> {
+        vector<vvll> results;
+        auto swap_row = [&](ll r) { swap(a[r], a[r + 1]); };
+        auto swap_col = [&](ll c) {
+            rep(r, H) { swap(a[r][c], a[r][c + 1]); }
+        };
+        rep(i, H - 1) {
+            swap_row(i);
+            results.emplace_back(a);
+            swap_row(i);
+        }
+        rep(i, W - 1) {
+            swap_col(i);
+            results.emplace_back(a);
+            swap_col(i);
+        }
+        return results;
+    };
+    while (!Q.empty()) {
+        auto [a, cnt] = Q.front();
+        Q.pop();
+        for (auto&& g : next_grids(a)) {
+            if (used.count(g)) continue;
+            if (g == B) {
+                cout << cnt + 1 << endl;
+                return 0;
+            }
+            used.emplace(g);
+            Q.emplace(g, cnt + 1);
+        }
+    }
     return 0;
 }
