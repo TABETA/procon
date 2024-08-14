@@ -122,10 +122,26 @@ int main() {
     long long K;
     std::cin >> K;
     std::vector<long long> A(N);
+    priority_queue<ll, vector<ll>, greater<ll>> Q;
+    set<ll> ans;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        Q.emplace(A[i]);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    while(!Q.empty()){
+        auto q = Q.top();Q.pop();
+        if(ans.count(q))continue;
+        ans.emplace(q);
+        if((ll)ans.size() == K){
+            cout << q << endl;
+            return 0;
+        }
+        for (auto &&a : A)
+        {
+            ll n = q+a;
+            if(ans.count(n))continue;
+            Q.emplace(n);
+        }
+    }
     return 0;
 }
