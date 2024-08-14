@@ -132,46 +132,14 @@ int main() {
             std::cin >> B[i][j];
         }
     }
-    if (A == B) {
-        cout << 0 << endl;
-        return 0;
-    }
-    {
-        vector mp(2, vector<map<ll, ll>>(H));
-        rep(i, H) {
-            rep(j, W) {
-                mp[0][i][A[i][j]]++;
-                mp[1][i][B[i][j]]++;
-            }
-        }
-        ranges::sort(mp[0]);
-        ranges::sort(mp[1]);
-        if (mp[0] != mp[1]) {
-            cout << -1 << endl;
-            return 0;
-        }
-    }
-    {
-        vector mp(2, vector<map<ll, ll>>(W));
-        rep(j, W) {
-            rep(i, H) {
-                mp[0][j][A[i][j]]++;
-                mp[1][j][B[i][j]]++;
-            }
-        }
-        ranges::sort(mp[0]);
-        ranges::sort(mp[1]);
-        if (mp[0] != mp[1]) {
-            cout << -1 << endl;
-            return 0;
-        }
-    }
-
-    using P = pair<vvll, ll>;
-    set<vvll> used;
-    queue<P> Q;
-    used.emplace(A);
-    Q.emplace(A, 0);
+    map<vvll, ll> dist;
+    queue<vvll> Q;
+    auto push = [&](vvll& g, ll d){
+        if(dist.count(g))return;
+        dist[g] = d;
+        Q.emplace(g);
+    };
+    push(A,0);
     auto next_grids = [&](vvll& a) -> vector<vvll> {
         vector<vvll> results;
         auto swap_row = [&](ll r) { swap(a[r], a[r + 1]); };
@@ -191,17 +159,13 @@ int main() {
         return results;
     };
     while (!Q.empty()) {
-        auto [a, cnt] = Q.front();
-        Q.pop();
+        auto a = Q.front();Q.pop();
+        ll nd = dist[a] + 1;
         for (auto&& g : next_grids(a)) {
-            if (used.count(g)) continue;
-            if (g == B) {
-                cout << cnt + 1 << endl;
-                return 0;
-            }
-            used.emplace(g);
-            Q.emplace(g, cnt + 1);
+            push(g, nd);
         }
     }
+    if(dist.count(B)) cout << dist[B] << endl;
+    else cout << -1 << endl;
     return 0;
 }
