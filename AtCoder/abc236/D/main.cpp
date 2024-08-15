@@ -116,9 +116,41 @@ namespace std{
 
 
 // clang-format on
+
+// 16C2 * 14C2* ... 2C2 = 81729648000
+// このままだとペアの順序違いによる重複が含まれているので8!で割る必要がある。
+// 81729648000 / 8! = 2027025
+// →全探索が可能
 int main() {
-    // Failed to predict input format
+    CIN(ll,N);
+    vvll A(2*N, vll(2*N, -1));
+    rep(i,2*N){
+        rep(j,2*N){
+            if(i == j)continue;
+            if(A[i][j] != -1) continue;
+            cin >> A[i][j];
+            A[j][i] = A[i][j];
+        }
+    }
     ll ans = 0;
+    auto dfs = [&](auto dfs, vector<bool> used, ll cnt, ll now = -1){
+        if(cnt == N){
+            chmax(ans,now);
+            return;
+        }
+        ll i = 0;
+        while(used[i])++i;
+        reps(j,i+1,2*N){
+            if(used[i] || used[j])continue;
+            used[i] = used[j] = true;
+            ll next = now == -1 ?
+                A[i][j]:
+                now ^ A[i][j];
+            dfs(dfs, used, cnt+1, next);
+            used[i] = used[j] = false;
+        }
+    };
+    dfs(dfs, vector<bool>(2*N, false), 0);
     cout << ans << endl;
     return 0;
 }
