@@ -121,15 +121,26 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    std::vector<long long> C(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
-        std::cin >> C[i];
+    using P = pair<ll,ll>;
+    vector dist(N,vector(N, linf));
+    vector<vector<P>> to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,c);
+        to[u].emplace_back(v, c);
+        dist[u][v] = c;
+    }
+    rep(i,N){
+        dist[i][i] = 0;
     }
     ll ans = 0;
+    rep(k,N)
+    rep(i,N)
+    rep(j,N){
+        chmin(dist[i][j], dist[i][k] + dist[k][j]);
+        if(dist[i][j] < linf) ans += dist[i][j];
+    }
     cout << ans << endl;
     return 0;
 }
