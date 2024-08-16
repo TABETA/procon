@@ -122,9 +122,63 @@ using vm = vector<mint>;
 using vvm = vector<vm>;
 
 // clang-format on
+using P = pair<ll,ll>;
+auto next_adjacents(P p, ll H, ll W) {
+    auto [r, c] = p;
+    vector<P> ret;
+    for (auto &&q : {
+        P{r - 1, c},
+        P{r + 1, c},
+        P{r, c - 1},
+        P{r, c + 1},
+    })
+    {
+        auto [y,x] = q;
+        if (y < 0 || y >= H || x < 0 || x >= W) continue;
+        ret.push_back(q);
+    }
+    return ret;
+};
+
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,H);
+    CIN(ll,W);
+    vs S(H);
+    map<char, vector<P>> Nodes;
+    vvll G(H, vll(W, -1));
+    rep(i,H){
+        cin >> S[i];
+        rep(j,W){
+            Nodes[S[i][j]].emplace_back(i,j);
+        }
+    }
+    ll col = 0;
+    set<P> used;
+    auto dfs = [&](auto dfs, P cur, ll col)->void{
+        G[cur.first][cur.second] = col;
+        for (auto &&[y,x] : next_adjacents(cur,H,W)){
+            if(G[y][x] != -1) continue;
+            if(S[y][x] != '#') continue;
+            dfs(dfs, {y,x}, col);
+        }
+    };
+    for (auto &&[y,x] : Nodes['#'])
+    {
+        if(G[y][x] != -1) continue;
+        dfs(dfs, {y,x}, col++);
+    }
+    mint nom = 0;
+    ll den = Nodes['.'].size();
+    for (auto &&cur : Nodes['.'])
+    {
+        set<ll> cols;
+        for (auto &&[y,x] : next_adjacents(cur,H,W)){
+            if(G[y][x] == -1) continue;
+            cols.emplace(G[y][x]);
+        }
+        nom += col - cols.size();
+    }
+    mint ans = nom / den + 1;
+    cout << ans.val() << endl;
     return 0;
 }
