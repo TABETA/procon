@@ -116,6 +116,8 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
@@ -127,7 +129,36 @@ int main() {
         std::cin >> y[i];
         std::cin >> P[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto f = [&](ll s){
+        scc_graph g(N);
+        vector<set<ll>> to(N);
+        rep(i,N){
+            rep(j,N){
+                if(i == j)continue;
+                if(abs(x[j] - x[i])+ abs(y[j]-y[i]) <= P[i]*s){
+                    g.add_edge(i,j);
+                    to[i].emplace(j);
+                }
+            }
+        }
+        set<ll> used;
+        auto dfs = [&](auto dfs, ll u)->void{
+            used.emplace(u);
+            for (auto &&v : to[u])
+            {
+                if(used.count(v))continue;
+                dfs(dfs, v);
+            }
+        };
+        dfs(dfs, g.scc()[0][0]);
+        return (ll)used.size() == N;
+    };
+    ll wa = -1, ac = 1e10;
+    while(ac-wa > 1){
+        ll wj = (wa+ac)/2;
+        if(f(wj)) ac = wj;
+        else wa = wj;
+    }
+    cout << ac << endl;
     return 0;
 }
