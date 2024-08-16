@@ -121,21 +121,39 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> a(M);
-    std::vector<long long> b(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
     long long Q;
     std::cin >> Q;
-    std::vector<long long> x(Q);
-    std::vector<long long> k(Q);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> x[i];
-        std::cin >> k[i];
+        ll x, k;
+        std::cin >> x;--x;
+        std::cin >> k;
+        ll ans = 0;
+        [&](){
+            vector used(N, false);
+            using P = pair<ll,ll>;
+            queue<P> Q;
+            Q.emplace(x, k);
+            while(!Q.empty()){
+                auto [u, k] = Q.front();Q.pop();
+                used[u] = true;
+                ans += u+1;
+                if(k == 0)continue;
+                for (auto &&v : to[u])
+                {
+                    if(used[v])continue;
+                    used[v] = true;
+                    Q.emplace(v, k-1);
+                }
+            }
+        }();
+        cout << ans << '\n';
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
