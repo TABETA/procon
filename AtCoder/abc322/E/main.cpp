@@ -117,8 +117,41 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll,N);
+    CIN(ll,K);
+    CIN(ll,P);
+    vvll A(N, vll(K));
+    vll C(N);
+    rep(i,N){
+        cin >> C[i];
+        rep(j,K){
+            cin >> A[i][j];
+        }
+    }
+    map<vll, ll> DP;
+    DP[vector(K,0ll)] = 0;
+    auto push =[&](vll vec, ll c){
+        if(DP.count(vec)) {
+            chmin(DP[vec], c); 
+        } else {
+            DP[vec] = c;
+        }
+    };
+    rep(i,N){
+        map<vll, ll> pre;
+        swap(DP,pre);
+        for (auto &&[vec,c] : pre)
+        {
+            push(vec, c);
+            auto nv{vec};
+            rep(j,nv.size()){
+                nv[j] = min(P, nv[j]+ A[i][j]);
+            }
+            push(nv, C[i]+c);
+        }
+    }
+    ll ans = DP[vector(K,P)];
+    if(ans == 0) ans = -1;
     cout << ans << endl;
     return 0;
 }
