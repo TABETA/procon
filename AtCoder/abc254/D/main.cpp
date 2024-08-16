@@ -114,12 +114,38 @@ namespace std{
     };
 }
 
-
 // clang-format on
+auto prime_factorize(ll N) {
+    map<ll,ll> res;
+    for (ll a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        ll ex = 0;
+        while (N % a == 0) {
+            ex++;
+            N /= a;
+        }
+        if(ex % 2){
+            res[a] = 1;
+        }
+    }
+    if (N != 1) res[N] = 1;
+    return res;
+};
+
 int main() {
     long long N;
     std::cin >> N;
     ll ans = 0;
+    map<map<ll,ll>, vll> mp;
+    mp[map<ll,ll>{}].emplace_back(1);
+    reps(i,2,N+1){
+        auto p = prime_factorize(i);
+        mp[p].emplace_back(i);
+    }
+    for (auto &&[k,v] : mp)
+    {
+        ans += v.size()*v.size();
+    }
     cout << ans << endl;
     return 0;
 }
