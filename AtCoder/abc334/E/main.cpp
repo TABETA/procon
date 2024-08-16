@@ -167,18 +167,21 @@ int main() {
         if(G[y][x] != -1) continue;
         dfs(dfs, {y,x}, col++);
     }
-    mint nom = 0;
-    ll den = Nodes['.'].size();
+    mint sum = 0;
+    ll tot = Nodes['.'].size();
     for (auto &&cur : Nodes['.'])
     {
+        // 点が増える=どこともつながらなければ連結成分は増えるのであらかじめ+1する
+        ll now = col + 1;
         set<ll> cols;
         for (auto &&[y,x] : next_adjacents(cur,H,W)){
             if(G[y][x] == -1) continue;
             cols.emplace(G[y][x]);
         }
-        nom += col - cols.size();
+        now -= cols.size();
+        sum += now;
     }
-    mint ans = nom / den + 1;
+    mint ans = sum / tot;
     cout << ans.val() << endl;
     return 0;
 }
