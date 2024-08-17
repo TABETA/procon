@@ -114,7 +114,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long N;
@@ -125,13 +124,43 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> H[i];
     }
-    std::vector<long long> U(M);
-    std::vector<long long> V(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    using P = pair<ll,ll>;
+    vector<vector<P>> to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        if(H[u] > H[v])swap(u,v);
+        to[u].emplace_back(-2*(H[v]-H[u]), v);
+        to[v].emplace_back(H[v]-H[u], u);
     }
+    auto bfs = [&](ll start){
+        vll distance(N, -linf);
+        distance[start] = 0;
+        deque<P> q;
+        q.emplace_back(0,start);
+        while(!q.empty()){
+            auto [t, from] = q.front(); q.pop_front();
+            if(distance[from] != t) continue;
+            for (auto &&[dist, j] : to[from])
+            {
+                auto newDistance = distance[from] + dist;
+                if(distance[j] < newDistance){
+                    distance[j] = newDistance;
+                    if(dist <= 0) {
+                        q.emplace_front(newDistance, j);
+                    } else {
+                        q.emplace_back(newDistance, j);
+                    }
+                }
+            }
+        }
+        return distance;
+    };
+    auto d = bfs(0);
     ll ans = 0;
+    rep(i,N){
+        chmax(ans, d[i]);
+    }
     cout << ans << endl;
     return 0;
 }
