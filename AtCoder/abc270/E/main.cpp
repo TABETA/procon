@@ -116,16 +116,47 @@ namespace std{
 
 
 // clang-format on
-int main() {
+
+auto solve_by_simulation(){
     long long N;
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> A(N);
+    std::vector<ll> A(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        CIN(ll,a);
+        A[i] = a;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto B = A;
+    ranges::sort(B);
+    ll pre = 0;
+    rep(i,N){
+        ll n = N-i;
+        if(ll sub = (B[i]-pre)*n;K >= sub){
+            K-=sub;
+            pre = B[i];
+        } else {
+            if(n > 0){
+                ll sub = K/n;
+                K = K%n;
+                pre += sub;
+            }
+            break;
+        }
+    }
+    rep(i,N){
+        A[i] = max<ll>(0, A[i]-pre);
+    }
+    rep(i,N){
+        if(K==0)break;
+        if(A[i]) {
+            A[i]--;
+            --K;
+        }
+    }
+    cout << A << endl;
+}
+int main() {
+    solve_by_simulation();
     return 0;
 }
