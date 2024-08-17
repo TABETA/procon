@@ -114,11 +114,29 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, N);
+    CIN(ll, Q);
+    vector<set<ll>> C(N);
+    rep(i, N) {
+        CIN(ll,c);
+        C[i].emplace(c);
+    }
+    rep(i, Q) {
+        CIN(ll, a);--a;
+        CIN(ll, b);--b;
+        set<ll> _;
+        if(C[a].size() > C[b].size()){
+            _.swap(C[b]);
+            C[a].merge(_);
+            C[a].swap(C[b]);
+        }else {
+            _.swap(C[a]);
+            C[b].merge(_);
+        }
+        ll ans = C[b].size();
+        cout << ans << '\n';
+    }
     return 0;
 }
