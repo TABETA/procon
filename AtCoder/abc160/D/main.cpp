@@ -120,10 +120,37 @@ int main() {
     long long N;
     std::cin >> N;
     long long X;
-    std::cin >> X;
+    std::cin >> X;--X;
     long long Y;
-    std::cin >> Y;
-    ll ans = 0;
-    cout << ans << endl;
+    std::cin >> Y;--Y;
+    vvll to(N);
+    rep(i,N-1){
+        to[i].emplace_back(i+1);
+        to[i+1].emplace_back(i);
+    }
+    to[X].emplace_back(Y);
+    to[Y].emplace_back(X);
+    map<ll,ll> ans;
+    rep(i,N){
+        vll D(N, linf);
+        queue<ll> Q;
+        Q.emplace(i);
+        D[i] = 0;
+        while(!Q.empty()){
+            auto u = Q.front();Q.pop();
+            for (auto &&v : to[u])
+            {
+                if(D[v] != linf) continue;
+                D[v] = D[u]+1;
+                Q.emplace(v);
+            }
+        }
+        reps(j,i+1,N){
+            ans[D[j]]++;
+        }
+    }
+    reps(i,1,N){
+        cout << ans[i] << endl;
+    }
     return 0;
 }
