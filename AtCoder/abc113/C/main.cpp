@@ -114,20 +114,49 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> P(M);
-    std::vector<long long> Y(M);
+    using P = tuple<ll,ll,ll,string>;
+    vector<P> PY(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> P[i];
-        std::cin >> Y[i];
+        CIN(ll,p);
+        CIN(ll,y);
+        PY[i] = {p,y,i,""};
     }
-    ll ans = 0;
-    cout << ans << endl;
+    ranges::sort(PY, [](P l, P r){
+        auto [l1,l2,l3,l4] = l;
+        auto [r1,r2,r3,r4] = r;
+        if(l1 != r1){
+            return l1 < r1;
+        } else {
+            return l2 < r2;
+        }
+    });
+    ll pre = -1;
+    ll id = 0;
+    rep(i,M)
+    {
+        auto& [p, ignore1, ignore2, str] = PY[i];
+        if(pre != p) id = 1;
+        else ++id;
+        string sp = to_string(p);
+        string sy = to_string(id);
+        auto pad = [](string s){while(s.size() < 6)s = "0" + s; return s;};
+        str = pad(sp)+pad(sy);
+        pre = p;
+    }
+    ranges::sort(PY, [](P l, P r){
+        auto [l1,l2,l3,l4] = l;
+        auto [r1,r2,r3,r4] = r;
+        return l3 < r3;
+    });
+    rep(i,M){
+        auto [p,y,j,s] = PY[i];
+        cout << s << endl;
+    }
     return 0;
 }
