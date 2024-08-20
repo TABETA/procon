@@ -117,9 +117,32 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long N;
-    std::cin >> N;
-    ll ans = 0;
+    string n;
+    std::cin >> n;
+    ll N = stoll(n);
+    ll ans = 0; 
+    string S = "2";
+    for(int i = 1; N >= stoll(S); ++i, S += '0'){
+        ans += stoll(string(i, '1'));
+    }
+    if(N >= stoll(S) && n.size() == S.size()){
+        // 桁数が同じで2****以上の場合は答えが確定する
+        cout << ans << endl;
+        return 0;
+    }
+    S[0] = '1';
+    rep(i,S.size()){
+        string s = string(S.size(), '0');
+        rep(j,i+1){
+            s[j] = '1'; 
+        }
+        ll l = stoll(s);
+        s[i] = '2';
+        ll r = stoll(s);
+        if(N >= l) {
+            ans += min<ll>(N-l+1, r-l);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
