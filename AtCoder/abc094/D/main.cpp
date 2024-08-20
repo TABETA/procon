@@ -117,13 +117,23 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long n;
-    std::cin >> n;
-    std::vector<long long> a(n);
-    for(int i = 0 ; i < n ; i++){
-        std::cin >> a[i];
+    CIN(ll,N);
+    std::vector<long long> A(N);
+    for(int i = 0 ; i < N ; i++){
+        std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    ranges::sort(A);
+    ll a = A.back();
+    double m = a/2.0;
+    double min = linf;
+    ll b = 0;
+    rep(i,N){
+        double diff = fabs(A[i] - m);   
+        if(min > diff){
+            min = diff;
+            b = A[i];
+        }
+    }
+    cout << a << " " << b  << endl;
     return 0;
 }
