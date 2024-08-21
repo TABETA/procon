@@ -125,13 +125,31 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    std::vector<long long> B(M);
-    std::vector<long long> C(M);
+    ranges::sort(A);
+    ll ans = reduce(all(A));
+    using P = pair<ll,ll>;
+    vector<P> BC(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> B[i];
-        std::cin >> C[i];
+        CIN(ll,B);
+        CIN(ll,C);
+        BC[i] = {C,B};
     }
-    ll ans = 0;
+    ranges::sort(BC, greater<P>{});
+    ll i = 0;
+    rep(j,M){
+        auto [c,b] = BC[j];
+        while(b > 0 && i < N){
+            if(A[i] < c){
+                ans += c - A[i];
+                ++i;
+            } else {
+                cout << ans << endl;
+                return 0;
+            }
+            --b;
+        }
+        if(i >= N)break;
+    }
     cout << ans << endl;
     return 0;
 }
