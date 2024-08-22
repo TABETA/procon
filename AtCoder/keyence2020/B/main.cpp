@@ -119,13 +119,22 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> X(N);
-    std::vector<long long> L(N);
+    using P = pair<ll,ll>;
+    vector<P> R(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> X[i];
-        std::cin >> L[i];
+        CIN(ll,x);
+        CIN(ll,l);
+        R[i] = {x+l, x-l};
     }
+    ranges::sort(R);
     ll ans = 0;
+    ll last = -linf;
+    rep(i,N){
+        auto [r,l] = R[i];
+        if(l < last)continue;
+        ++ans;
+        last = r;
+    }
     cout << ans << endl;
     return 0;
 }
