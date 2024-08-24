@@ -119,7 +119,18 @@ namespace std{
 int main() {
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    ll a = 7 % K;
+    set<ll> used;
+    for(int i = 1; ; ++i, a = (a * 10 + 7)%K){
+        if(a == 0){
+            cout << i << endl;
+            return 0;
+        }
+        if(used.count(a)){
+            break;
+        }
+        used.emplace(a);
+    }
+    cout << -1 << endl;
     return 0;
 }
