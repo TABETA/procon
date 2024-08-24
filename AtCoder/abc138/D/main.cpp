@@ -114,26 +114,40 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long N;
     std::cin >> N;
     long long Q;
     std::cin >> Q;
-    std::vector<long long> a(N-1);
-    std::vector<long long> b(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
+    ll M = N-1;
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    std::vector<long long> p(Q);
-    std::vector<long long> x(Q);
+    map<ll,ll> mp;
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> p[i];
-        std::cin >> x[i];
+        ll p = in_ll();
+        --p;
+        ll x = in_ll();
+        mp[p] += x;
     }
-    ll ans = 0;
+    vll ans(N);
+    vector used(N, false);
+    auto dfs = [&](auto dfs, ll u, ll val)->void{
+        used[u] = true;
+        ll nval = val + mp[u];
+        ans[u] = nval;
+        for (auto &&v : to[u])
+        {
+            if(used[v])continue;
+            dfs(dfs, v, nval);
+        }
+    };
+    dfs(dfs, 0, 0);
     cout << ans << endl;
     return 0;
 }
