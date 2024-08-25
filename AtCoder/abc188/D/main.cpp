@@ -126,15 +126,33 @@ int main() {
     std::cin >> N;
     long long C;
     std::cin >> C;
-    std::vector<long long> a(N);
-    std::vector<long long> b(N);
-    std::vector<long long> c(N);
+    map<ll,ll> A;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
-        std::cin >> c[i];
+        auto a = in_ll();
+        auto b = in_ll();++b;
+        auto c = in_ll();
+        A[a] += c;
+        A[b] -= c;
+    }
+    ll pre = 0;
+    for (auto &&[k,v] : A)
+    {
+        A[k] += pre;
+        pre = A[k];
+    }
+    for (auto &&[k,v] : A)
+    {
+        chmin(A[k], C);
     }
     ll ans = 0;
+    ll pk = 0;
+    ll pv = 0;
+    for (auto &&[k,v] : A)
+    {
+        ans += pv*(k-pk);
+        pk = k;
+        pv = A[k];
+    }
     cout << ans << endl;
     return 0;
 }
