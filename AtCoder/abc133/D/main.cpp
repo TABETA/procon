@@ -128,7 +128,16 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    std::vector<long long> M(N);
+    M[0] = 0;
+    rep(i, N-1){
+        M[i+1] = (A[i] - M[i]/2)*2;
+    }
+    ll diff = abs(A.back() - (M[0]+M[N-1])/2);
+    M[0] = diff;
+    rep(i, N-1){
+        M[i+1] = (A[i] - M[i]/2)*2;
+    }
+    cout << M << endl;
     return 0;
 }
