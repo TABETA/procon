@@ -122,8 +122,43 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
+    CIN(ll,H);
+    CIN(ll,W);
+    vs S(H);
+    rep(i,H){
+        cin >> S[i];
+    }
+    ll N = H*W;
+    vector G(N,vector(N, linf));
+    rep(i,N){
+        G[i][i] = 0;
+    }
+    auto id = [&](ll y, ll x){
+        return y*W + x;
+    };
+    rep(i,H){
+        rep(j,W){
+            ll l = id(i,j);
+            if(i+1 < H && S[i][j] != '#' && S[i+1][j] != '#'){
+                ll r = id(i+1,j);
+                G[l][r] = 1;
+                G[r][l] = 1;
+            }
+            if(j+1 < W && S[i][j] != '#' && S[i][j+1] != '#'){
+                ll r = id(i,j+1);
+                G[l][r] = 1;
+                G[r][l] = 1;
+            }
+        }
+    }
+    rep(k,N)rep(i,N)rep(j,N) chmin(G[i][j], G[i][k] + G[k][j]);
     ll ans = 0;
+    rep(i,N){
+        rep(j,N){
+            if(G[i][j] == linf)continue;
+            chmax(ans, G[i][j]);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
