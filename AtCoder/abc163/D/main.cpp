@@ -127,12 +127,37 @@ using vm = vector<mint>;
 using vvm = vector<vm>;
 
 // clang-format on
+auto nCr(ll n, ll r)->ll{
+    ll denominator = 1;
+    ll numerator = 1;
+    while(r){
+        denominator *= n--;
+        numerator *= r--;
+        ll g = gcd(denominator, numerator);
+        denominator /= g;
+        numerator /= g;
+    }
+    return denominator/numerator;
+}
+
 int main() {
     long long N;
     std::cin >> N;
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    mint ans = 0;
+    ll l = 0;
+    ll r = N;
+    ll L = 0;
+    ll R = 0;
+
+    rep(i,N+1){
+        L += l++;
+        R += r--;
+        if(i+1 >= K){
+            ans += R-L+1;
+        }
+    }
+    cout << ans.val() << endl;
     return 0;
 }
