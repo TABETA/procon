@@ -122,8 +122,37 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll,N);
+    using P = pair<ll,ll>;
+    vector<vector<P>> A(N);
+    rep(i,N){
+        CIN(ll,M);
+        rep(j,M){
+            CIN(ll,x);--x;
+            CIN(ll,y);
+            A[i].emplace_back(x,y);
+        }
+    }
+    int ans = 0;
+    for(uint b = 0; b < (1u<<N); ++b){
+        vector H(N, false);
+        rep(i,N){
+            H[i] = b>>i & 1u;
+        }
+        auto now = [&](){
+            rep(i,N){
+                if(H[i]){
+                    for (auto &&[x,y] : A[i])
+                    {
+                        if(!H[x] &&  y )return 0;
+                        if(H[x]  && !y )return 0;
+                    }
+                }
+            }
+            return popcount(b);
+        }();
+        chmax(ans, now);
+    }
     cout << ans << endl;
     return 0;
 }
