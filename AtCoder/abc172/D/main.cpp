@@ -118,13 +118,42 @@ namespace std{
         }
     };
 }
-
-
 // clang-format on
+
+auto solve1(ll N){
+    ll ans = 1;
+    vll A(N+1, 1);
+    for (ll i = 2; i <= N; ++i) {
+        for (ll j = i; j <= N; j+=i)
+        {
+            A[j]++;
+        }
+        ans += i * A[i];
+    }
+    cout << ans << endl;
+}
+auto solve2(ll N){
+    ll ans = 0;
+    for (ll i = 1; i <= N; ++i) {
+        ll q = N/i;
+        ll now = (i + i*q)*q/2;
+        ans += now;
+    }
+    cout << ans << endl;
+}
+auto solve3(ll N){
+    ll ans = 0;
+    auto g = [&](ll n){
+        return n*(n+1)/2;
+    };
+    for (ll i = 1; i <= N; ++i) {
+        ans += i*g(N/i);
+    }
+    cout << ans << endl;
+}
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    solve3(N);
     return 0;
 }
