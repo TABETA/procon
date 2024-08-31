@@ -132,7 +132,26 @@ int main() {
     std::cin >> X;
     long long Y;
     std::cin >> Y;
-    ll ans = 0;
-    cout << ans << endl;
+
+    if(X > Y) swap(X,Y);
+    ll n = X;
+    {
+        ll y = X*2;
+        while(y > Y){
+            y -= 3;
+            n -= 1;
+        }
+        if(y != Y){
+            cout << 0 << endl;
+            return 0;
+        }
+    }
+    ll x = n;
+    ll xdiff = X - x;
+    mint ans = 1;
+    for(ll i = 0; i < xdiff; ++i){
+        ans = ans * (n--) / (i+1);
+    }
+    cout << ans.val() << endl;
     return 0;
 }
