@@ -126,13 +126,26 @@ int main() {
     std::cin >> H;
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    using P = pair<ll,ll>;
+    vector<P> A(N);
+    for (auto &[a,b] : A)
+    {
+        cin >> a;
+        cin >> b;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector<ll> DP(H+1, linf);
+    DP[0] = 0;
+    rep(i,N){
+        vector<ll> pre(H+1, linf);
+        pre[0] = 0;
+        swap(pre,DP);
+        auto [a,b] = A[i];
+        reps(j,1,H+1){
+            ll jj = max(j-a,0ll);
+            ll now = min(pre[jj], DP[jj])+ b; 
+            DP[j] = min(now, pre[j]);
+        }
+    }
+    cout << DP[H] << endl;
     return 0;
 }
