@@ -127,6 +127,13 @@ using vm = vector<mint>;
 using vvm = vector<vm>;
 
 // clang-format on
+mint nCr(ll n, ll r){
+    mint ans = 1;
+    for(ll i = 0; i < r; ++i){
+        ans = ans * n-- / (i+1);
+    }
+    return ans;
+}
 int main() {
     long long n;
     std::cin >> n;
@@ -134,7 +141,11 @@ int main() {
     std::cin >> a;
     long long b;
     std::cin >> b;
-    ll ans = 0;
-    cout << ans << endl;
+    mint ans = 2;
+    ans = ans.pow(n) - 1;
+    auto c1 = nCr(n, a);
+    auto c2 = nCr(n, b);
+    ans = ans - c1 - c2;
+    cout << ans.val() << endl;
     return 0;
 }
