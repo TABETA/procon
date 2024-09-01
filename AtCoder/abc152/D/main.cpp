@@ -124,7 +124,31 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
+    ll M = to_string(N).size();
+
     ll ans = 0;
+    reps(i,1,N+1){
+        string s = to_string(i);
+        if(s.back() == '0')continue;
+        reverse(all(s));
+        int head = s.front() - '0';
+        int tail = s.back() - '0';
+        ll ex = 10;
+        ll now = 0;
+        if(head == tail){
+            ll l = head;
+            if(N < l)continue;
+            ++now;
+        }
+        rep(j,M){
+            ll l = head * ex + tail;
+            if(N < l)continue;
+            ll u = min((head+1) * ex + tail, N+1);
+            now += ceil((u-l)/10.);
+            ex *= 10;
+        }
+        ans += now;
+    }
     cout << ans << endl;
     return 0;
 }
