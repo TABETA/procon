@@ -121,12 +121,92 @@ namespace std{
 
 
 // clang-format on
+
+auto solve1(ll N, string&& S){
+    string ans = "";
+    auto dfs = [&](auto dfs, ll& i)->string{
+        string ans = "(";
+        for(;i < N; ++i){
+            if(S[i] == '('){
+                ans += dfs(dfs, ++i);
+            } else if(S[i] == ')'){
+                return "";
+            } else {
+                ans += S[i];
+            }
+        }
+        return ans;
+    };
+    for(ll i = 0; i < N; ++i){
+        if(S[i] == '('){
+            ans += dfs(dfs, ++i);
+        } else {
+            ans += S[i];
+        }
+    }
+    cout << ans << endl;
+}
+auto solve2(ll N, string&& S){
+    vector<ll> T(N+1, 0);
+    set<ll> o;
+    set<ll> c;
+    rep(i,N){
+        if(S[i] == '('){
+            o.emplace(i);
+        }
+        if(S[i] == ')'){
+            c.emplace(i);
+        }
+    }
+    while(o.size() > 0){
+        auto l = *o.rbegin();
+        auto jt = c.lower_bound(l);
+        if(jt != c.end()){
+            auto r = *jt;
+            ++T[l];
+            --T[r+1];
+            c.erase(r);
+        }
+        o.erase(l);
+    }
+    string ans = "";
+    rep(i,N){
+        T[i+1] += T[i];
+    }
+    rep(i,N){
+        if(T[i] == 0)ans += S[i];
+    }
+    cout << ans << endl;
+}
+auto solve3(ll N, string&& S){
+    deque<string> T(1);
+    ll j = 0;
+    for(ll i = 0; i < N; ++i){
+        if(S[i] == '('){
+            T.emplace_back("(");
+            ++j;
+        } else if(S[i] == ')'){
+            if(j == 0){
+                T[0] += S[i];
+            } else {
+                T.pop_back();
+                --j;
+            }
+        } else {
+            T[j] += S[i];
+        }
+    }
+    string ans = "";
+    for(auto&& s: T){
+        ans += s;
+    }
+    cout << ans << endl;
+}
 int main() {
     long long N;
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    solve3(N, move(S));
     return 0;
 }
