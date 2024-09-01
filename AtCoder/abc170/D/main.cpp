@@ -125,10 +125,24 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
+    map<ll,ll> mp;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        mp[A[i]]++;
     }
+    ranges::sort(A);
+    ll M = 1e6;
+    vector<bool> used(M+1, false);
     ll ans = 0;
+    rep(i,N){
+        ll a = A[i];
+        if(!used[a]){
+            if(mp[a] == 1)++ans;
+            for(ll j = a; j <= M; j += a){
+                used[j] = true;
+            }
+        }
+    }
     cout << ans << endl;
     return 0;
 }
