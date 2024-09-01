@@ -121,11 +121,8 @@ namespace std{
 
 
 // clang-format on
-int main() {
-    long long N;
-    std::cin >> N;
+auto solve1(ll N){
     ll M = to_string(N).size();
-
     ll ans = 0;
     reps(i,1,N+1){
         string s = to_string(i);
@@ -150,5 +147,28 @@ int main() {
         ans += now;
     }
     cout << ans << endl;
+}
+auto solve2(ll N){
+    ll ans = 0;
+    using P = pair<char,char>;
+    map<P,ll> mp;
+    reps(i,1,N+1){
+        string s = to_string(i);
+        char h = s.front();
+        char t = s.back();
+        mp[P{h, t}]++;
+    }
+    reps(i,1,N+1){
+        string s = to_string(i);
+        char h = s.front();
+        char t = s.back();
+        ans += mp[P{t, h}];
+    }
+    cout << ans << endl;
+}
+int main() {
+    long long N;
+    std::cin >> N;
+    solve2(N);
     return 0;
 }
