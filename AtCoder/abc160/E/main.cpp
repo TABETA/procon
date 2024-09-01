@@ -144,7 +144,19 @@ int main() {
     for(int i = 0 ; i < C ; i++){
         std::cin >> r[i];
     }
-    ll ans = 0;
+    ranges::sort(p, greater<ll>{});
+    ranges::sort(q, greater<ll>{});
+    ranges::sort(r, greater<ll>{});
+    multiset<ll> Q;
+    rep(i,X) Q.emplace(p[i]);
+    rep(i,Y) Q.emplace(q[i]);
+    rep(i,C) {
+        auto d = r[i] - *Q.begin();
+        if(d <= 0)break;
+        Q.emplace(r[i]);
+        Q.erase(Q.begin());
+    }
+    ll ans = reduce(all(Q));
     cout << ans << endl;
     return 0;
 }
