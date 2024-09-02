@@ -121,9 +121,34 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+uint op(uint a, uint b){
+    return a^b;
+}
+uint e(){
+    return (uint)(0);
+}
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    CIN(ll,Q);
+    vector<uint> A(N);
+    segtree<uint, op, e> seg(N+1);
+    rep(i,N){
+        cin >> A[i];
+        seg.set(i, A[i]);
+    }
+    rep(i,Q){
+        CIN(ll,T);
+        CIN(ll,X);--X;
+        CIN(uint,Y);
+        if(T == 1){
+            uint a = seg.get(X);
+            seg.set(X, a^Y);
+        } else {
+            ll ans = seg.prod(X, Y);
+            cout << ans << endl;
+        }
+    }
     return 0;
 }
