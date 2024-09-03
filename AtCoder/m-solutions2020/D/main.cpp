@@ -125,10 +125,21 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
+    ll cur = 1000;
+    ll keep = cur;
+    ll stock = 0;
+    ll ans = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        cur = max(cur + stock * A[i], keep);
+        chmax(ans, cur);
+        keep = cur;
+        auto d = div(cur, A[i]);
+        cur = d.rem;
+        stock = d.quot;
     }
-    ll ans = 0;
+    cur = max(cur + stock * A.back(), keep);
+    chmax(ans, cur);
     cout << ans << endl;
     return 0;
 }
