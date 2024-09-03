@@ -130,11 +130,27 @@ using vvm = vector<vm>;
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+    map<ll, mint> mp;
+    CIN(ll,pre);
+    mp[pre] = 1;
+    auto f = [](const ll a, const ll b){
+        return (b + a)%10;
+    };
+    auto g = [](const ll a, const ll b){
+        return (b * a)%10;
+    };
+    for(int i = 1 ; i < N ; i++){
+        CIN(ll,a);
+        map<ll, mint> pre;
+        swap(pre,mp);
+        for (auto &&[k,v] : pre)
+        {
+            mp[f(a,k)] += v;
+            mp[g(a,k)] += v;
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    rep(i,10){
+        cout << mp[i].val() << '\n';
+    }
     return 0;
 }
