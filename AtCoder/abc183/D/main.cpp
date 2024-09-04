@@ -128,6 +128,8 @@ int main() {
     std::cin >> N;
     long long W;
     std::cin >> W;
+    ll M = 2e5+1;
+    vll A(M);
     std::vector<long long> S(N);
     std::vector<long long> T(N);
     std::vector<long long> P(N);
@@ -135,8 +137,20 @@ int main() {
         std::cin >> S[i];
         std::cin >> T[i];
         std::cin >> P[i];
+        A[S[i]] += P[i];
+        A[T[i]] -= P[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    if(A[0] > W){
+        cout << NO << endl;
+        return 0;
+    }
+    rep(i,M-1){
+        A[i+1] += A[i];
+        if(A[i+1] > W){
+            cout << NO << endl;
+            return 0;
+        }
+    }
+    cout << YES << endl;
     return 0;
 }
