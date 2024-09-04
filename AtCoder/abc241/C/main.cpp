@@ -130,7 +130,58 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    rep(i,N){
+        map<char,ll> mp;
+        rep(j,N){
+            ++mp[S[i][j]];
+            if(mp['#'] + mp['.'] == 6){
+                if(mp['#'] >= 4){
+                    cout << YES << endl;
+                    return 0;
+                }
+                --mp[S[i][j-5]];
+            }
+        }
+    }
+    rep(j,N){
+        map<char,ll> mp;
+        rep(i,N){
+            ++mp[S[i][j]];
+            if(mp['#'] + mp['.'] == 6){
+                if(mp['#'] >= 4){
+                    cout << YES << endl;
+                    return 0;
+                }
+                --mp[S[i-5][j]];
+            }
+        }
+    }
+    rep(i,N*2){
+        map<char,ll> mp;
+        for(ll y = min(i,N-1), x = max(0ll, i-N); x < N && y >= 0; --y, ++x){
+            ++mp[S[y][x]];
+            if(mp['#'] + mp['.']  == 6){
+                if(mp['#'] >= 4){
+                    cout << YES << endl;
+                    return 0;
+                }
+                --mp[S[y+5][x-5]];
+            }
+        }
+    }
+    rep(i,N*2){
+        map<char,ll> mp;
+        for(ll y = max(0ll,i-N), x = max(N-1-i, 0ll); x < N && y < N; ++y, ++x){
+            ++mp[S[y][x]];
+            if(mp['#'] + mp['.'] == 6){
+                if(mp['#'] >= 4){
+                    cout << YES << endl;
+                    return 0;
+                }
+                --mp[S[y-5][x-5]];
+            }
+        }
+    }
+    cout << NO << endl;
     return 0;
 }
