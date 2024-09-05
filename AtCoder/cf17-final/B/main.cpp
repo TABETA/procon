@@ -126,7 +126,27 @@ const string NO = "NO";
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    map<char, ll> mp;
+    for (auto &&c : S)
+    {
+        mp[c]++;
+    }
+    ll N = S.size();
+    ll n = N / 3;
+    ll m = N % 3;
+    for (auto &&[k,v] : mp)
+    {
+        if(v == n)continue;
+        if(v == n + 1){
+            if(--m < 0){
+                cout << NO << endl;
+                return 0;
+            }
+            continue;
+        }
+        cout << NO << endl;
+        return 0;
+    }
+    cout << YES << endl;
     return 0;
 }
