@@ -123,9 +123,12 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
+    dsu uf(N);
     long long M;
     std::cin >> M;
     std::vector<long long> a(N);
@@ -136,13 +139,25 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> b[i];
     }
-    std::vector<long long> c(M);
-    std::vector<long long> d(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> c[i];
-        std::cin >> d[i];
+        ll c, d;
+        std::cin >> c;--c;
+        std::cin >> d;--d;
+        uf.merge(c,d);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto groups = uf.groups();
+    for (auto &&group : groups){
+        ll A = 0;
+        ll B = 0;
+        for (auto &&i : group){
+            A += a[i];
+            B += b[i];
+        }
+        if(A != B){
+            cout << NO << endl;
+            return 0;
+        }
+    }
+    cout << YES << endl;
     return 0;
 }
