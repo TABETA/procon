@@ -132,11 +132,18 @@ int main() {
     std::cin >> N;
     long long P;
     std::cin >> P;
-    std::vector<long long> A(N);
+    std::vector<long long> A(2);
+    A[0] = 1;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        vector<long long> pre(2);
+        swap(pre,A);
+        CIN(ll,a);
+        rep(j,2){
+            A[j] += pre[j];
+            A[(j+a)%2] += pre[j];
+        }
     }
-    ll ans = 0;
+    ll ans = A[P];
     cout << ans << endl;
     return 0;
 }
