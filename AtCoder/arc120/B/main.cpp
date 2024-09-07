@@ -128,8 +128,35 @@ using vvm = vector<vm>;
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,H);
+    CIN(ll,W);
+    vs S(H);
+    rep(i,H){
+        cin >> S[i];
+    }
+    mint ans = 1;
+    auto f = [&](ll y, ll x){
+        map<char, ll> mp;
+        while(y >= 0 && x < W){
+            ++mp[S[y][x]];
+            --y;
+            ++x;
+        }
+        ll now = 0;
+        if(mp['B'] == 0)++now;
+        if(mp['R'] == 0)++now;
+        if(now == 0){
+            cout << 0 << endl;
+            return false;
+        }
+        ans *= now;
+        return true;
+    };
+    rep(i, H+W-1){
+        ll y = min(i, H-1);
+        ll x = max(0ll, i-(H-1));
+        if(!f(y,x))return 0;
+    }
+    cout << ans.val() << endl;
     return 0;
 }
