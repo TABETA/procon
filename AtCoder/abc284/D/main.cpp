@@ -121,9 +121,61 @@ namespace std{
 
 
 // clang-format on
+template<typename Container, typename Value> struct InsertHelper;
+template<typename Value>
+struct InsertHelper<std::set<Value>, Value> {
+  static void insert(std::set<Value>& container, const Value& value) {
+    container.emplace(value);
+  }
+};
+
+template<typename Value>
+struct InsertHelper<std::vector<Value>, Value> {
+  static void insert(std::vector<Value>& container, const Value& value) {
+    container.push_back(value);
+  }
+};
+
+template<typename Value>
+struct InsertHelper<std::map<Value, bool>, Value> {
+  static void insert(std::map<Value, bool>& container, const Value& value) {
+    container[value] = true;
+  }
+};
+template<typename T, template<typename...> class Container>
+Container<T> enumeratePrimeNumbers(const T N) {
+  std::vector<bool> is_prime(N + 1, true);
+  Container<T> P;
+  for (T i = 2; i <= N; i++) {
+    if (is_prime[i]) {
+      for (T j = 2 * i; j <= N; j += i) {
+      is_prime[j] = false;
+      }
+      InsertHelper<Container<T>, T>::insert(P, i);
+    }
+  }
+  return P;
+}
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,T);
+    ll n = cbrt(9e18);
+    auto P = enumeratePrimeNumbers<ll, vector>(n);
+    rep(i,T){
+        CIN(ll,N);
+        for (auto &&p : P)
+        {
+            if(N%p == 0){
+                ll pp = N/p;
+                if(pp%p == 0){
+                    ll q = pp/p;
+                    printf("%lld %lld\n", p,q);
+                } else {
+                    ll q = sqrt(pp);
+                    printf("%lld %lld\n", q,p);
+                }
+                break;
+            }
+        }
+    }
     return 0;
 }
