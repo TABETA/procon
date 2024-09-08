@@ -119,16 +119,44 @@ namespace std{
     };
 }
 
-
 // clang-format on
+template <typename T>
+vector<pair<T, T> > prime_factorize(T N) {
+    vector<pair<T, T> > res;
+    for (T a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        T ex = 0;
+        while (N % a == 0) {
+            ++ex;
+            N /= a;
+        }
+        res.push_back({a, ex});
+    }
+    if (N != 1) res.push_back({N, 1});
+    return res;
+}
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+    for (int i = 0; i < N; i++) {
+        CIN(ll,a);
+        auto factors = prime_factorize(a);
+        ll dim = 0;
+        for (auto &&[a, ex] : factors)
+        {
+            dim += ex;
+        }
+        A[i] = dim;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    uint r = A[0];
+    reps(i,1,N){
+        r ^= A[i];
+    }
+    if(r == 0){
+        cout << "Bruno" << endl;
+    } else {
+        cout << "Anna" << endl;
+    }
     return 0;
 }
