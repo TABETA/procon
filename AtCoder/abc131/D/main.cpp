@@ -126,13 +126,22 @@ const string NO = "No";
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    using P = pair<ll,ll>;
+    
+    vector<P> A(N);
+    for(auto& [b, a]: A){
+        cin >> a;
+        cin >> b;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    ranges::sort(A);
+    ll t = 0;
+    for(auto&& [b, a]: A){
+        t += a;
+        if(t > b){
+            cout << NO << endl;
+            return 0;
+        }
+    }
+    cout << YES << endl;
     return 0;
 }
