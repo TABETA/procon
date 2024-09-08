@@ -124,13 +124,20 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> x(N);
-    std::vector<long long> y(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> x[i];
-        std::cin >> y[i];
+    using P = pair<ll,ll>;
+    vector<P> A(N);
+    for(auto& [x, y]: A){
+        cin >> x;
+        cin >> y;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    ranges::sort(A, [](P l, P r){ return l.first + l.second < r.first + r.second;});
+    auto dist = [&](P l, P r)->ll{
+        return abs(l.first - r.first) + abs(l.second - r.second);
+    };
+    ll d_max = 0;
+    chmax(d_max, dist(A[0], A[N-1]));
+    ranges::sort(A, [](P l, P r){ return l.first - l.second < r.first -  r.second;});
+    chmax(d_max, dist(A[0], A[N-1]));
+    cout << d_max << endl;
     return 0;
 }
