@@ -136,7 +136,24 @@ int main() {
     for(int i = 0 ; i < M ; i++){
         std::cin >> B[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto check = [&](ll i, ll j){
+        rep(r,M){
+            rep(c,M){
+                if(A[i+r][j+c] != B[r][c]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+    rep(i,N-M+1){
+        rep(j,N-M+1){
+            if(check(i,j)){
+                cout << YES << endl;
+                return 0;
+            }
+        }
+    }
+    cout << NO << endl;
     return 0;
 }
