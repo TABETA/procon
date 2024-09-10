@@ -124,7 +124,15 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
+    auto f = [&](ll i)->ll{
+        return max<ll>(to_string(i).size(), to_string(N/i).size());
+    };
+    ll ans = f(1);
+    ll n = sqrt(N);
+    for(ll i = 2; i <= n; ++i){
+        if(N%i != 0)continue;
+        chmin(ans, f(i));
+    }
     cout << ans << endl;
     return 0;
 }
