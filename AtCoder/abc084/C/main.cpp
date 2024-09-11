@@ -124,15 +124,31 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> C(N-1);
-    std::vector<long long> S(N-1);
-    std::vector<long long> F(N-1);
+    std::vector<long long> C(N, 0);
+    std::vector<long long> S(N, 0);
+    std::vector<long long> F(N, 1);
     for(int i = 0 ; i < N-1 ; i++){
         std::cin >> C[i];
         std::cin >> S[i];
         std::cin >> F[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll A;
+    rep(i,N){
+        ll ans = 0;
+        reps(j,i,N){
+            if(ans < S[j]){
+                ans = S[j];
+            } else {
+                if(ans % F[j]){
+                    ans = ((ans/F[j])+1)*F[j];
+                }
+            }
+            ans += C[j];
+        }
+        A.emplace_back(ans);
+    }
+    for(auto&& v: A){
+        cout << v << endl;
+    }
     return 0;
 }
