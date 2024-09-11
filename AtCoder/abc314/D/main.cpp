@@ -122,8 +122,53 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    CIN(string,S);
+    CIN(ll,Q);
+    ll last = 0;
+    auto toL = [&](){
+        rep(j,N)S[j] = tolower(S[j]);
+    };
+    auto toU = [&](){
+        rep(j,N)S[j] = toupper(S[j]);
+    };
+    vector<ll> forceL;
+    vector<ll> forceU;
+    rep(i,Q){
+        CIN(ll,t);
+        CIN(ll,x);--x;
+        CIN(char,c);
+        if(t == 1) {
+            S[x] = c;
+            if(islower(c) && last == 3){
+                forceL.emplace_back(x);
+            } else if(isupper(c) && last == 2){
+                forceU.emplace_back(x);
+            }
+        } else if(t == 2) {
+            last = 2;
+            forceL.clear();
+            forceU.clear();
+        } else if(t == 3) {
+            last = 3;
+            forceL.clear();
+            forceU.clear();
+        }
+    }
+    if(last == 2){
+        toL();
+        for (auto &&i : forceU)
+        {
+            S[i] = toupper(S[i]);
+        }
+        
+    } else if(last == 3){
+        toU();
+        for (auto &&i : forceL)
+        {
+            S[i] = tolower(S[i]);
+        }
+    }
+    cout << S << endl;
     return 0;
 }
