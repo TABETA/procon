@@ -126,7 +126,22 @@ const string NO = "NO";
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    string s = "";
+    while(S.size() > 0){
+        s = S.back() + s;
+        S.pop_back();
+        if(s == "erase"){
+            s = "";
+        } else if(s == "dream"){
+            s = "";
+        } else if(s == "eraser"){
+            s = "";
+        } else if(s == "dreamer"){
+            s = "";
+        }
+        if(s.size() > 6)break;
+    }
+    if(s == "") cout << YES << endl;
+    else cout << NO << endl;
     return 0;
 }
