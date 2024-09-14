@@ -134,7 +134,26 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    mint ans = 0;
+    reps(m,1,N+1){
+        auto B = [&](){
+            vll B(N);
+            rep(j,N){
+                B[j] = a[j]%m;
+            }
+            return B;
+        }();
+        vector DP(m+1, vector(m, mint{}));
+        DP[0][0] = 1;
+        rep(i,N){
+            repd(j,m){
+                rep(k,m){
+                    DP[j+1][(k+B[i])%m] += DP[j][k];
+                }
+            }
+        }
+        ans += DP[m][0];
+    }
+    cout << ans.val() << endl;
     return 0;
 }
