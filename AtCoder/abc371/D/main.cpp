@@ -132,15 +132,24 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> P[i];
     }
+    map<ll,ll> mp;
+    mp[1e9+1] = 0;
+    ll pre = 0;
+    rep(i,N){
+        ll cur = P[i] + pre;
+        mp[-X[i]] += cur;
+        pre = cur;
+    }
     long long Q;
     std::cin >> Q;
-    std::vector<long long> L(Q);
-    std::vector<long long> R(Q);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> L[i];
-        std::cin >> R[i];
+        ll l , r;
+        std::cin >> l;
+        std::cin >> r;
+        auto it1 = mp.upper_bound(-l);
+        auto it2 = mp.lower_bound(-r);
+        ll now = it2->second - it1->second;
+        cout << now << '\n';
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
