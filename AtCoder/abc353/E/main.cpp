@@ -119,16 +119,74 @@ namespace std{
     };
 }
 
-
 // clang-format on
+template <typename element_type, typename array_type>
+struct Trie {
+    struct Node {
+        Node(element_type val)
+            : m_val(val),
+              m_used(),
+              m_descendantCount(),
+              m_terminalCount(),
+              m_children() {}
+        Node() : Node(element_type{}) {}
+        bool canTerminate() const { return m_terminalCount != 0; }
+        bool hasChild(const element_type& val) const {
+            return m_children.count(val) != 0;
+        }
+        Node* getChild(const element_type& val) const {
+            if (!hasChild(val)) return nullptr;
+            return &m_children[val];
+        }
+        int insert(const array_type& vals) { return insert(vals, 0); }
+        size_t size() const { return m_descendantCount; }
+
+       private:
+        element_type m_val;
+        int m_used;
+        int m_descendantCount;
+        int m_terminalCount;
+        map<element_type, Node> m_children;
+        int insert(const array_type& vals, int i) {
+            ++m_used;
+            if(i == (int)vals.size()){
+                ++m_terminalCount;
+                return m_used-1;
+            }
+            const element_type& val = vals[i];
+            if(!m_children.count(val)){
+                m_children[val] = Node(val);
+            }
+            ll cnt = m_children[val].insert(vals, i + 1);
+            return (m_used-1)*(i!=0) + cnt;
+        }
+    };
+    Node m_root;
+    Trie() : m_root() {}
+    int insert(const array_type& word) { return m_root.insert(word); }
+    bool exists(const array_type& word, bool prefix = false) {
+        Node* cur = &m_root;
+        for (auto&& c : word) {
+            auto next = cur->getChild(c);
+            if (next == nullptr) {
+                return false;
+            }
+        }
+        return (prefix) ? true : cur->canTerminate();
+    }
+    bool startsWith(const array_type& prefix) { return exists(prefix, true); }
+    size_t size() const { return m_root.size(); }
+};
+
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<std::string> S(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> S[i];
-    }
+    Trie<char, string> trie;
     ll ans = 0;
+    for (int i = 0; i < N; i++) {
+        CIN(string, s);
+        ans += trie.insert(s);
+    }
     cout << ans << endl;
     return 0;
 }
