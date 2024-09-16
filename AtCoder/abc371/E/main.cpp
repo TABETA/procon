@@ -125,10 +125,22 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
+    map<ll,set<ll>> mp;
+    ll sum = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        mp[A[i]].emplace(i);
+        sum += mp.size();
     }
     ll ans = 0;
+    rep(i,N){
+        ans += sum;
+        sum -= N-i;
+        auto it = mp[A[i]].upper_bound(i);
+        if(it != mp[A[i]].end()){
+            sum += N-*it;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
