@@ -124,13 +124,17 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> X(N);
-    std::vector<long long> Y(N);
+    vll DP(2, -linf);
+    DP[0] = 0;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> X[i];
-        std::cin >> Y[i];
+        CIN(ll,x);
+        CIN(ll,y);
+        if(x == 0){
+            chmax(DP[0], max(DP[0]+y, DP[1]+y));
+        } else {
+            chmax(DP[1], DP[0]+y);
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    cout << max(DP[0], DP[1]) << endl;
     return 0;
 }
