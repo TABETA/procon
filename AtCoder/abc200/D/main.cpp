@@ -130,13 +130,55 @@ const string NO = "No";
 
 // clang-format on
 int main() {
+    const ll M = 200;
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        A[i] %= M;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    map<ll, map<ll,ll>> to;
+    map<ll,ll> mp;
+    mp[0] = 1;
+    rep(i,N){
+        map<ll,ll> pre(mp);
+        for (auto &&[j, cnt] : pre){
+            int next = (j+A[i])%M;
+            to[j][i] = next;
+            mp[next] += cnt;
+            if(mp[next] >= 2+(next==0)){
+                ll goal = next;
+                vvll ans;
+                auto dfs = [&](auto dfs, ll cur, vll path){
+                    if(ans.size() >= 2)return;
+                    if(cur == goal){
+                        ans.emplace_back(path);
+                    }
+                    reps(i,path.back()+1,N){
+                        if(!to[cur].count(i)) continue;
+                        auto next = path;
+                        next.emplace_back(i);
+                        dfs(dfs, to[cur][i], next);
+                    }
+                };
+                rep(i,N){
+                    if(ans.size() >= 2) break;
+                    if(!to[0].count(i)) continue;
+                    dfs(dfs, to[0][i], vll{i});
+                }
+                cout << YES << endl;
+                for (auto &&a : ans){
+                    cout << a.size();
+                    for (auto &&v : a){
+                        cout << " " << v+1;
+                    }
+                    cout << endl;
+                }
+                return 0;                
+            }
+        }
+    }
+    cout << NO << endl;
     return 0;
 }
