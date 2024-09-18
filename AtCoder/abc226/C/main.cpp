@@ -122,8 +122,33 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
+    CIN(ll,N);
+    vll T(N);
+    vll K(N);
+    vvll A(N);
+    rep(i,N){
+        cin >> T[i];
+        cin >> K[i];
+        vll a(K[i]);
+        rep(j,K[i]){
+            cin >> a[j];--a[j];
+        }
+        A[i] = a;
+    }
     ll ans = 0;
+    queue<ll> Q;
+    Q.emplace(N-1);
+    vector used(N, false);
+    while(!Q.empty()){
+        auto u = Q.front();Q.pop();
+        used[u] = true;
+        ans += T[u];
+        for(auto&& v: A[u]){
+            if(used[v])continue;
+            used[v] = true;
+            Q.emplace(v);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
