@@ -126,13 +126,29 @@ const string NO = "No";
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    vll S(2*N);
+    for(int i = 1 ; i < N+1 ; i++){
+        CIN(int,l);--l;
+        CIN(int,r);--r;
+        if(l>r)swap(l,r);
+        S[l] = i;
+        S[r] = -i;
     }
-    ll ans = 0;
+    vll st;
+    auto ans = [&](){
+        rep(i,2*N){
+            if(S[i] > 0){
+                st.emplace_back(S[i]);
+            } else {
+                if(st.size() == 0 || st.back() != -S[i]){
+                    return YES;
+                } else if(st.back() == -S[i]){
+                    st.pop_back();
+                }
+            }
+        }
+        return NO;
+    }();
     cout << ans << endl;
     return 0;
 }
