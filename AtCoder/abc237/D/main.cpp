@@ -126,7 +126,17 @@ int main() {
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    deque<ll> A;
+    A.emplace_back(N);
+    repd(i,N){
+        if(S[i] == 'L'){
+            A.emplace_back(i);
+        } else {
+            A.emplace_front(i);
+        }
+    }
+    for (auto &&a : A){
+        cout << a << " ";
+    }
     return 0;
 }
