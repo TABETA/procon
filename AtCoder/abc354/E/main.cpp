@@ -130,7 +130,29 @@ int main() {
         std::cin >> A[i];
         std::cin >> B[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector S(N, true);
+    unordered_map<vector<bool>, bool> memo;
+    auto dfs = [&](auto dfs)->bool{
+        if(memo.count(S)){
+            return memo[S];
+        }
+        bool canWin = false;
+        rep(i,N){
+            rep(j,i){
+                if(!S[i] || !S[j])continue;
+                if(A[i] == A[j] || B[i] == B[j]){
+                    S[i] = false;
+                    S[j] = false;
+                    canWin |= !dfs(dfs);
+                    S[i] = true;
+                    S[j] = true;
+                }
+            }
+        }
+        return memo[S] = canWin;
+    };
+    dfs(dfs);
+    if(memo[S]) cout << "Takahashi" << endl;
+    else  cout << "Aoki" << endl;
     return 0;
 }
