@@ -128,21 +128,68 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> u(M);
-    std::vector<long long> v(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
     long long K;
     std::cin >> K;
-    std::vector<long long> p(K);
-    std::vector<long long> d(K);
-    for(int i = 0 ; i < K ; i++){
-        std::cin >> p[i];
-        std::cin >> d[i];
+    auto ans = string(N, '1');
+    if(K > 0){
+        using P = pair<ll,ll>;
+        vector<P> A(K);
+        for(int i = 0 ; i < K ; i++){
+            CIN(ll,p);--p;
+            CIN(ll,d);
+            A[i] = P{d,p};
+        }
+        ranges::sort(A);
+        queue<P> Q;
+        rep(i,K){
+            Q.emplace(A[i].first,A[i].second);
+            vector used(N, false);
+            used[A[i].second] = true;
+            while(!Q.empty()){
+                auto [d,u] = Q.front();Q.pop();
+                if(d == 0)continue;
+                else ans[u] = '0'; 
+                for(auto&& v: to[u]){
+                    if(used[v])continue;
+                    used[v] = true;
+                    Q.emplace(d-1, v);
+                }
+            }
+        }
+        rep(i,K){
+            bool ok = false;
+            Q.emplace(A[i].first,A[i].second);
+            vector used(N, false);
+            used[A[i].second] = true;
+            while(!Q.empty()){
+                auto [d,u] = Q.front();Q.pop();
+                if(d == 0) {
+                    if(ans[u] == '1'){
+                        ok = true;
+                        break;
+                    }
+                    continue;
+                }
+                for(auto&& v: to[u]){
+                    if(used[v])continue;
+                    used[v] = true;
+                    Q.emplace(d-1, v);
+                }
+            }
+            if(!ok){
+                cout << NO << endl;
+                return 0;
+            }
+        }
     }
-    ll ans = 0;
+    cout << YES << endl;
     cout << ans << endl;
     return 0;
 }
