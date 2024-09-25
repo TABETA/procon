@@ -123,9 +123,50 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+#include "atcoder/all"
+using namespace atcoder;
+int op(int a, int b){
+    return max(a,b);
+}
+int e(){
+    return (int)(0);
+}
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    CIN(ll,Q);
+    CIN(string,S);
+    if(N == 1) {
+        rep(i,Q){
+            CIN(ll,X);
+            CIN(ll,L);--L;
+            CIN(ll,R);--R;
+            if(X == 2){
+                cout << YES << '\n';
+            }
+        }
+        return 0;
+    }
+    segtree<int, op, e> seg(N);
+    rep(i,N-1){
+        seg.set(i, S[i+1] == S[i]);
+    }
+    rep(i,Q){
+        CIN(ll,X);
+        CIN(ll,L);--L;
+        CIN(ll,R);--R;
+        auto flip = [&](int p){
+            if(p >= 0){
+                seg.set(p, seg.get(p)^1);
+            }
+        };
+        if(X == 1){
+            flip(L-1);
+            flip(R);
+        } else {
+            auto ng = seg.prod(L,R);
+            auto ans = ng ? NO : YES;
+            cout << ans << '\n';
+        }
+    }
     return 0;
 }
