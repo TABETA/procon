@@ -121,18 +121,33 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> X(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> X[i];
+        std::cin >> X[i];--X[i];
     }
     std::vector<long long> C(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> C[i];
     }
+    scc_graph G(N);
+    rep(i,N){
+        G.add_edge(i, X[i]);
+    }
     ll ans = 0;
+    auto scc = G.scc();
+    for (auto &&v : scc){
+        if(v.size() == 1)continue;
+        ll now = linf;
+        for (auto &&u : v){
+            chmin(now, C[u]);
+        }
+        ans += now;
+    }
     cout << ans << endl;
     return 0;
 }
