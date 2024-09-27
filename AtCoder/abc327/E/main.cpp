@@ -128,7 +128,24 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> P[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(N+1,-1.);
+    DP[0] = 0;
+    rep(i,N){
+        vector pre(N+1,-1.);
+        swap(pre,DP);
+        rep(j,N){
+            if(pre[j] < 0)break;
+            chmax(DP[j],pre[j]),
+            chmax(DP[j+1], 0.9*pre[j] + P[i]);
+        }
+    }
+    using ld = long double;
+    ld ans = -linf;
+    rep(j,N){
+        ld bunbo = (pow(0.9,j+1)-1)/(0.9-1);
+        ld minus = 1200/sqrt(j+1);
+        chmax(ans, DP[j+1]/bunbo - minus);
+    }
+    cout << setprecision(15) << ans << endl;
     return 0;
 }
