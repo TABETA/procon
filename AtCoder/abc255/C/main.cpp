@@ -124,13 +124,33 @@ namespace std{
 int main() {
     long long X;
     std::cin >> X;
-    std::string A;
+    ll A;
     std::cin >> A;
     long long D;
     std::cin >> D;
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    if(D == 0){
+        ll ans = abs(X - A);
+        cout << ans << endl;
+    } else {
+        ll Z = A+D*(N-1);
+        if(A>Z)swap(A,Z);
+        if(A <= X && X <= Z){
+            X -= A;
+            ll rem = X % D;
+            X -= rem;
+            ll ans = min(rem, abs(D)-rem);
+            ll q = (X / D);
+            q = max<ll>(q-N, 0);
+            ans += q;
+            cout << ans << endl;
+        } else {
+            ll diff1 = abs(X - A);
+            ll diff2 = abs(X - Z);
+            ll ans = min(diff1, diff2);
+            cout << ans << endl;
+        }
+    }
     return 0;
 }
