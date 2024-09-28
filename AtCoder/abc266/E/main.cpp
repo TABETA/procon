@@ -124,7 +124,17 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    double ans = 3.5;
+    rep(i,N-1){
+        vll now;
+        reps(j,1,7){
+            if(ans < j){
+                now.emplace_back(j);
+            }
+        }
+        ll sum = reduce(all(now));
+        ans = (sum + ans*(6-now.size()))/6;
+    }
+    cout << setprecision(10) << ans << endl;
     return 0;
 }
