@@ -128,7 +128,25 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
+    ll ans = linf;
+    {
+        vector DP(N+1, linf);
+        DP[0] = 0;
+        rep(i,N){
+            if(i-1 >= 0) chmin(DP[i+1], DP[i-1]+A[i]);
+            chmin(DP[i+1], DP[i]+A[i]);
+        }
+        chmin(ans, DP[N]);
+    }
+    {
+        vector DP(N+1, linf);
+        DP[0] = 0;
+        rep(i,N){
+            if(i-2 >= 0) chmin(DP[i+1], DP[i-1]+A[i]);
+            chmin(DP[i+1], DP[i]+A[i]);
+        }
+        chmin(ans, DP[N-1]);
+    }
     cout << ans << endl;
     return 0;
 }
