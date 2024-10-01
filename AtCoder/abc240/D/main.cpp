@@ -124,11 +124,24 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
-    }
+    using P = pair<ll,ll>;
+    vector<P> A;
     ll ans = 0;
-    cout << ans << endl;
+    for(int i = 0 ; i < N ; i++){
+        ll a;
+        cin >> a;
+        if(A.size() > 0 && A.back().first == a){
+            ++A[A.size()-1].second;
+        } else {
+            A.emplace_back(a, 1);
+        }
+        ++ans;
+        auto [v,n] = A.back();
+        if(v == n) {
+            A.pop_back();
+            ans -= n;
+        }
+        cout << ans << endl;
+    }
     return 0;
 }
