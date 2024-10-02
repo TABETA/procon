@@ -128,9 +128,30 @@ int main() {
     std::cin >> M;
     std::vector<long long> X(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> X[i];
+        std::cin >> X[i];--X[i];
     }
-    ll ans = 0;
+    ll ans = linf;
+    vector cost(2*N, 0ll);
+    rep(j,M-1){
+        ll src = X[j];
+        ll dst = X[j+1];
+        if(src > dst) swap(src,dst);
+        ll to_r = dst - src;
+        ll to_l = N - to_r;
+        cost[src] += to_l;
+        cost[dst] -= to_l;
+        cost[dst] += to_r;
+        cost[N+src] -= to_r;
+    }
+    rep(i,2*N-1){
+        cost[i+1] += cost[i];
+    }
+    rep(i,N){
+        cost[i] += cost[N+i];
+    }
+    rep(i,N){
+        chmin(ans, cost[i]);
+    }    
     cout << ans << endl;
     return 0;
 }
