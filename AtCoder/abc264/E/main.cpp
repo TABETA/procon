@@ -121,6 +121,8 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
@@ -130,17 +132,54 @@ int main() {
     std::cin >> E;
     std::vector<long long> U(E);
     std::vector<long long> V(E);
+    set<ll> uv;
+    dsu uf(N+M);
     for(int i = 0 ; i < E ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+        std::cin >> U[i];--U[i];
+        std::cin >> V[i];--V[i];
+        uv.emplace(i);
     }
     long long Q;
     std::cin >> Q;
     std::vector<long long> X(Q);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> X[i];
+        std::cin >> X[i];--X[i];
+        uv.erase(X[i]);
+    }
+    for (auto &&x : uv){
+        uf.merge(U[x], V[x]);
     }
     ll ans = 0;
-    cout << ans << endl;
+    map<ll,ll> mp;
+    reps(j,N,N+M){
+        ll l = uf.leader(j);
+        if(mp.count(l) == 0){
+            ans += mp[l] = uf.size(l) - 1;
+        } else {
+            --ans;
+        }
+    }
+    vll ans_list;
+    repd(i,Q){
+        ans_list.pb(ans);
+        ll x = X[i];
+        ll a = uf.leader(U[x]);
+        ll b = uf.leader(V[x]);
+        if(a != b){
+            if(mp.count(a) == 0 && mp.count(b) != 0){
+                mp[a] = 1;
+                ans += uf.size(a);
+            }
+            if(mp.count(a) != 0 && mp.count(b) == 0){
+                mp[b] = 1;
+                ans += uf.size(b);
+            }
+            uf.merge(U[x], V[x]);
+        }
+    }
+    reverse(all(ans_list));
+    repr(i,ans_list){
+        cout << i << endl;
+    }
     return 0;
 }
