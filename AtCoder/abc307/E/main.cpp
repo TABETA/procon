@@ -132,7 +132,15 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(2, mint{});
+    DP[0] = 1;
+    rep(i,N-1){
+        vector pre(2, mint{});
+        swap(pre,DP);
+        DP[0] = pre[1];
+        DP[1] = pre[0] * (M-1) + pre[1] * (M-2);
+    }
+    mint ans = DP[1]*M;
+    cout << ans.val() << endl;
     return 0;
 }
