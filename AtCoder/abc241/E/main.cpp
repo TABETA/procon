@@ -127,16 +127,61 @@ using vm = vector<mint>;
 using vvm = vector<vm>;
 
 // clang-format on
+enum Status {
+    unvisited,
+    visited,
+    looped,
+};
+long long N;
+long long K;
+vector<Status> stats;
+vll A;
+ll sum = 0;
+ll cnt = 0;
+ll ans = 0;
+deque<ll> B;
+
+auto dfs(ll i)->bool{
+    if(stats[i] != unvisited){
+        stats[i] = looped;
+        return true;
+    }
+    stats[i] = visited;
+    --K;
+    ans += A[i];
+    if(K == 0){
+        return false;
+    }
+    auto res = dfs(ans%N);
+    if(res){
+        sum += A[i];
+        ++cnt;
+        B.push_front(A[i]);
+    }
+    if(stats[i] == looped){
+        res = false;
+    }
+    return res;
+};
+
 int main() {
-    long long N;
     std::cin >> N;
-    long long K;
+    stats.resize(N, unvisited);
     std::cin >> K;
-    std::vector<long long> A(N);
+    A.resize(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
+    dfs(0);
+    rep(i,B.size()-1){
+        B[i+1] += B[i];
+    }
+    if(cnt > 0){
+        ll q = K / cnt;
+        ans += sum * q;
+        ll r = K % cnt;
+        if(r)ans += B[r-1];
+    }
     cout << ans << endl;
     return 0;
 }
