@@ -132,7 +132,13 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    mint x = 1;
+    mint q = mint(2)/ N /N;
+    mint p = mint(N-1) * q;
+    rep(i, K){
+        x = (mint(1)-p)*x + q*(mint(1)-x);
+    }
+    mint ans = x + (mint(1)-x)*mint(2+N)/2;
+    cout << ans.val() << endl;
     return 0;
 }
