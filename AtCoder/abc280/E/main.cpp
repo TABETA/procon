@@ -132,7 +132,13 @@ int main() {
     std::cin >> N;
     long long P;
     std::cin >> P;
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(N+1, mint{});
+    mint p = mint(P)/100;
+    mint q = mint(1)-p;
+    reps(i,1,N+1){
+        DP[i] = DP[max(i-2,0ll)] * p + DP[i-1] * q + 1;
+    }
+    mint ans = DP[N];
+    cout << ans.val() << endl;
     return 0;
 }
