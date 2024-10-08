@@ -122,8 +122,16 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, N);
+    CIN(ll, Q);
+    vll R(N);
+    rep(i, N) { R[i] = in_ll(); }
+    ranges::sort(R);
+    rep(i, N-1) { R[i+1] += R[i]; }
+    rep(i, Q) {
+        CIN(ll, X);
+        ll ans = ranges::upper_bound(R, X) - R.begin();
+        cout << ans << '\n';
+    }
     return 0;
 }
