@@ -1,27 +1,26 @@
-#ifdef _MSVC_LANG
-#include <float.h>
+#ifdef _MSVC_LANG 
+#include <tuple>
+#include <sstream>
+#include <queue>
+#include <map>
+#include <numeric>
+#include <list>
 #include <limits.h>
-#include <stdio.h>
-
-#include <algorithm>
+#include <vector>
+#include <utility>
+#include <string>
+#include <iostream>
 #include <array>
-#include <chrono>
+#include <algorithm>
+#include <stdio.h>
+#include <stack>
+#include <float.h>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
-#include <iostream>
-#include <list>
-#include <map>
-#include <numeric>
-#include <queue>
 #include <set>
-#include <sstream>
-#include <stack>
-#include <string>
-#include <tuple>
 #include <unordered_set>
-#include <utility>
-#include <vector>
+#include <chrono>
 
 #else
 #include <bits/stdc++.h>
@@ -51,12 +50,9 @@ using vvll = vector<vll>;
 using vs = vector<string>;
 using pii = pair<int, int>;
 
-const int inf = 1001001001;
-const ll linf = 1001001001001001001ll;
-
 /* define short */
-#define CIN(type, name) type name; cin >> name;
 #define pb push_back
+#define mp make_pair
 #define all(obj) (obj).begin(), (obj).end()
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
@@ -91,18 +87,6 @@ template <typename T, typename S> inline void print(const pair<T, S>& p)
 template <typename T> inline void print(const T& x) {cout << x << "\n";}
 template <typename T, typename S> inline void print(const vector<pair<T, S>>& v)
     {for (auto&& p : v) print(p);}
-template <typename T>
-ostream &operator<<(ostream &os, const vector<T> &v) {
-    for (int i = 0; i < (int)v.size(); i++) {
-        os << v[i] << (i + 1 != (int)v.size() ? " " : "");
-    }
-    return os;
-}
-template<typename T>
-pair<T,T> operator+(const pair<T,T>& lhs, const pair<T,T> rhs){
-    return pair<T,T>{lhs.first+rhs.first, lhs.second+rhs.second};
-}
-
 // 第一引数と第二引数を比較し、第一引数(a)をより大きい/小さい値に上書き
 template <typename T> inline bool chmin(T& a, const T& b) {bool compare = a > b; if (a > b) a = b; return compare;}
 template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b; if (a < b) a = b; return compare;}
@@ -120,7 +104,11 @@ namespace std{
 }
 
 
+auto func(long long N, std::vector<long long> A){
+
+}
 // clang-format on
+
 int main() {
     long long N;
     std::cin >> N;
@@ -128,7 +116,6 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    func(N, std::move(A));
     return 0;
 }
