@@ -119,7 +119,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long N;
@@ -128,11 +127,40 @@ int main() {
     std::cin >> X;
     long long Y;
     std::cin >> Y;
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+    vll now;
+    vvll AA;
+    for (int i = 0; i < N; i++) {
+        ll a;
+        std::cin >> a;
+        if (a >= Y && a <= X) {
+            now.pb(a);
+        } else {
+            if (now.size() > 0) {
+                AA.pb(now);
+                now.clear();
+            }
+        }
+    }
+    if (now.size() > 0) {
+        AA.pb(now);
+        now.clear();
     }
     ll ans = 0;
+    for (auto&& A : AA) {
+        map<ll, ll> mp;
+        ll n = A.size();
+        for (ll l = 0, r = 0; l < n; ++l) {
+            while (r < n && !(mp[Y] && mp[X])) {
+                mp[A[r]]++;
+                ++r;
+            }
+            if (mp[Y] && mp[X]) {
+                ll now = n - r + 1;
+                ans += now;
+            }
+            mp[A[l]]--;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
