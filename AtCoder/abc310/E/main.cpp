@@ -127,6 +127,18 @@ int main() {
     std::string S;
     std::cin >> S;
     ll ans = 0;
+    vll X(2, 0ll);
+    rep(i,N){
+        ll s = S[i] - '0';
+        vll pre(2, 0ll);
+        swap(pre,X);
+        rep(j,2){
+            ll nj = !(j & s); 
+            X[nj] += pre[j];
+        }
+        X[s]++;
+        ans += X[1];
+    }
     cout << ans << endl;
     return 0;
 }
