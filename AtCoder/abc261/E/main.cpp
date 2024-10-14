@@ -128,11 +128,24 @@ int main() {
     std::cin >> C;
     std::vector<long long> T(N);
     std::vector<long long> A(N);
+    auto f = [&](uint t, uint x, uint a) -> uint {
+        if(t == 1){
+            return x & a;
+        }
+        if(t == 2){
+            return x | a;
+        }
+        return x ^ a;
+    };
+    uint zero = 0u;
+    uint one = 0xFFFFFFFFu;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> T[i];
-        std::cin >> A[i];
+        uint t, a;
+        cin >> t >> a;
+        zero = f(t, zero, a);
+        one = f(t, one, a);
+        C = (zero & (~C)) | (one & C);
+        cout << C << '\n';
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
