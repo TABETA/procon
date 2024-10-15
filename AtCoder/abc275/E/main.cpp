@@ -134,7 +134,26 @@ int main() {
     std::cin >> M;
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(N+1, mint{});
+    DP[0] = 1;
+    mint ans = 0;
+    rep(i, K) {
+        vector pre(N+1, mint{});
+        swap(DP, pre);
+        rep(k, N){
+            rep(j,M){
+                if(pre[k] == 0) continue;
+                mint now = pre[k] * mint{1} / mint{M};
+                ll nk = k+j+1;
+                if(nk>N){
+                    ll rem = nk%N;
+                    nk = N - rem;
+                }
+                DP[nk] += now;
+            }
+        }
+        ans += DP[N];
+    }
+    cout << ans.val() << endl;
     return 0;
 }
