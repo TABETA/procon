@@ -128,13 +128,41 @@ int main() {
     std::cin >> K;
     long long Q;
     std::cin >> Q;
-    std::vector<long long> X(Q);
-    std::vector<long long> Y(Q);
-    for(int i = 0 ; i < Q ; i++){
-        std::cin >> X[i];
-        std::cin >> Y[i];
+    vll A(N);
+    multiset<ll> H;
+    multiset<ll> L;
+    rep(i,N){
+        if(i < K){
+            H.insert(A[i]);
+        } else  {
+            L.insert(A[i]);
+        }
     }
     ll ans = 0;
-    cout << ans << endl;
+    auto add =[&](ll x){
+        H.insert(x);ans += x;
+        ll y = *H.begin();
+        H.erase(H.find(y));ans -= y;
+        L.insert(y);
+    };
+    auto del = [&](ll x){
+        if(H.find(x) != H.end()){
+            H.erase(H.find(x)); ans -= x;
+            ll y = *L.rbegin();
+            L.erase(L.find(y));
+            H.insert(y); ans += y;
+        } else {
+            L.erase(L.find(x));
+        }
+    };
+    for(int i = 0 ; i < Q ; i++){
+        ll x, y;
+        cin >> x >> y;
+        --x;
+        add(y);
+        del(A[x]);
+        A[x] = y;
+        cout << ans << '\n';
+    }
     return 0;
 }
