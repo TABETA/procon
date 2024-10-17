@@ -121,18 +121,37 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> u(M);
-    std::vector<long long> v(M);
+    vector<unordered_set<ll>> to(N);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+        ll u, v;
+        std::cin >> u;--u;
+        std::cin >> v;--v;
+        to[u].emplace(v);
     }
     ll ans = 0;
+    rep(i,N){
+        queue<ll> Q;
+        Q.emplace(i);
+        unordered_set<ll> used;
+        used.emplace(i);
+        while(!Q.empty()){
+            auto u = Q.front();Q.pop();
+            for(auto&& v: to[u]){
+                if(used.count(v))continue;
+                used.emplace(v);
+                Q.emplace(v);
+                ++ans;
+            }
+        }
+    }
+    ans -= M;
     cout << ans << endl;
     return 0;
 }
