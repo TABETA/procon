@@ -126,7 +126,7 @@ int main() {
     std::cin >> N;
     long long W;
     std::cin >> W;
-    ll ans = 0;
+    ll ans = N/W;
     cout << ans << endl;
     return 0;
 }
