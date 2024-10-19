@@ -122,8 +122,24 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, N);
+    vll H(N);
+    rep(i, N) { H[i] = in_ll(); }
+    map<ll, ll> mp;
+    ll sum = 0;
+    vll ans(N);
+    rep(i, N) {
+        auto it = mp.upper_bound(H[i]);
+        if(it != mp.end()) {
+            sum = ans[it->second] + H[i]*(i-it->second);
+            mp.erase(mp.begin(), it);
+        } else {
+            sum = H[i] *(i+1);
+            mp.clear();
+        }
+        ans[i] = sum;
+        mp[H[i]] = i;
+        cout << ans[i]+1 << ' ';
+    }
     return 0;
 }
