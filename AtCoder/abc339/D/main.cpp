@@ -125,10 +125,75 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<std::string> S(N);
+    using P = pair<ll,ll>;
+    vector<P> ps;
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
+        rep(j, S[i].size()){
+            if(S[i][j] == 'P'){
+                S[i][j] = '.';
+                ps.emplace_back(i,j);
+            }
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    using PP = pair<P,P>;
+    auto next = [&](PP p){
+        auto f = [&](P p){
+            vector<P> res;
+            auto [y, x] = p;
+            ll dx[] = {0, 1, 0, -1};
+            ll dy[] = {1, 0, -1, 0};
+            rep(i, 4){
+                ll nx = x + dx[i];
+                if(nx < 0) nx = 0;
+                if(nx >= N) nx = N-1;
+                ll ny = y + dy[i];
+                if(ny < 0) ny = 0;
+                if(ny >= N) ny = N-1;
+                if(S[ny][nx] == '#') nx = x, ny = y;
+                res.emplace_back(ny, nx);
+            }
+            return res;
+        };
+        auto res1 = f(p.first);
+        auto res2 = f(p.second);
+        vector<PP> res;
+        rep(i, 4){
+            res.emplace_back(res1[i], res2[i]);
+        }
+        return res;
+    };
+    vector used(N, vector(N, vector(N, vector(N, false))));
+    queue<pair<PP, ll>> Q;
+    PP s = {ps[0], ps[1]};
+    Q.emplace(PP{ps[0], ps[1]},0);
+    auto use = [&](PP p){
+        auto [p1, p2] = p;
+        auto [y1, x1] = p1;
+        auto [y2, x2] = p2;
+        used[y1][x1][y2][x2] = true;
+        used[y2][x2][y1][x1] = true;
+    };
+    auto isUsed = [&](PP p){
+        auto [p1, p2] = p;
+        auto [y1, x1] = p1;
+        auto [y2, x2] = p2;
+        return used[y1][x1][y2][x2] || used[y2][x2][y1][x1];
+    };
+    use(s);
+    while(!Q.empty()){
+        auto [u, cost] = Q.front();Q.pop();
+        auto [p, q] = u;
+        if(p == q){
+            cout << cost << endl;
+            return 0;
+        }
+        for(auto&& v: next(u)){
+            if(isUsed(v))continue;
+            use(v);
+            Q.emplace(v, cost+1);
+        }
+    }
+    cout << -1 << endl;
     return 0;
 }
