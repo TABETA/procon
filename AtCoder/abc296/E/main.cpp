@@ -121,14 +121,25 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
+    scc_graph G(N);    
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        --A[i];
+        G.add_edge(i, A[i]);
     }
+    auto scc = G.scc();
     ll ans = 0;
+    for (auto &&g : scc){
+        if(g.size() > 1 || g[0] == A[g[0]]){
+            ans += g.size();
+        }
+    }
     cout << ans << endl;
     return 0;
 }
