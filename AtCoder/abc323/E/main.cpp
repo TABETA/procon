@@ -136,7 +136,22 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> T[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(X+1, mint{});
+    DP[0] = 1;
+    mint p = mint{1} / mint{N};
+    rep(i,X+1){
+        rep(j,N){
+            ll ni = i+T[j];
+            if(ni > X) continue;
+            DP[ni] += DP[i] * p;
+        }
+    }
+    mint ans = 0;
+    rep(i,X+1){
+        if(i+T[0] > X){
+            ans += DP[i]*p;
+        }
+    }
+    cout << ans.val() << endl;
     return 0;
 }
