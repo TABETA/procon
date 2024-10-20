@@ -126,19 +126,31 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> P(N);
+    multiset<ll> A;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> P[i];
+        ll a;
+        std::cin >> a;
+        A.insert(a);
     }
-    std::vector<long long> L(M);
+    using P = pair<ll,ll>;
+    vector<P> V(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> L[i];
+        std::cin >> V[i].second;
     }
-    std::vector<long long> D(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> D[i];
+        std::cin >> V[i].first;
     }
+    ranges::sort(V, greater<P>{});
     ll ans = 0;
+    rep(i,M){
+        auto it = A.lower_bound(V[i].second);
+        if(it == A.end()) continue;
+        ans += *it - V[i].first;
+        A.erase(it);
+    }
+    repr(a,A){
+        ans += a;
+    }
     cout << ans << endl;
     return 0;
 }
