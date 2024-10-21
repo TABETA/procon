@@ -121,18 +121,45 @@ namespace std{
 
 
 // clang-format on
+bool areCollinear(std::pair<int, int> a, std::pair<int, int> b, std::pair<int, int> c) {
+    // ベクトル (x2 - x1, y2 - y1) と (x3 - x1, y3 - y1) の外積を計算
+    int crossProduct = (b.second - a.second) * (c.first - a.first) - (b.first - a.first) * (c.second - a.second);
+    return crossProduct == 0;
+}
 int main() {
     long long N;
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> X(N);
-    std::vector<long long> Y(N);
+    using P = pair<ll,ll>;
+    vector<P> V(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> X[i];
-        std::cin >> Y[i];
+        std::cin >> V[i].first;
+        std::cin >> V[i].second;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    if(K == 1){
+        cout << "Infinity" << endl;
+        return 0;
+    }
+    ranges::sort(V);
+    set<set<ll>> ans;
+    rep(i,N){
+        rep(j,i){
+            set<ll> now;
+            now.emplace(i);
+            now.emplace(j);
+            rep(k,N){
+                if(i == k || j == k)continue;
+                if(areCollinear(V[i],V[j],V[k])){
+                    now.emplace(k);
+                }
+            }
+            if((ll)now.size() >= K){
+                if(ans.count(now))continue;
+                ans.emplace(now);
+            }
+        }
+    }
+    cout << ans.size() << endl;
     return 0;
 }
