@@ -122,8 +122,22 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(string, S);
+    CIN(ll, Q);
+    rep(i, Q) {
+        CIN(ll, T);
+        CIN(ll, K);--K;
+        ll si = 0;
+        if(T <= 60){
+            ll b = (1ll<<T);
+            si = K/b;
+            K %= b;
+        }
+        ll r = __builtin_popcountll(K);
+        ll l = T - r;
+        ll x = l + r * 2 + (S[si]-('A'));
+        char ans = 'A' + x%3;
+        cout << ans << '\n';
+    }
     return 0;
 }
