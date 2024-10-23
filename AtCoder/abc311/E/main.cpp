@@ -128,13 +128,26 @@ int main() {
     std::cin >> W;
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
-    std::vector<long long> b(N);
+    vector DP(H,vector(W, 1ll));
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
+        ll r, c;
+        std::cin >> r;--r;
+        std::cin >> c;--c;
+        DP[r][c] = 0;
+    }
+    rep(y,H){
+        rep(x,W){
+            if(DP[y][x] == 0) continue;
+            if(y == 0 || x == 0) continue;
+            DP[y][x] = min(min(DP[y-1][x], DP[y][x-1]), DP[y-1][x-1])+1;
+        }
     }
     ll ans = 0;
+    rep(y,H){
+        rep(x,W){
+            ans += DP[y][x];
+        }
+    }
     cout << ans << endl;
     return 0;
 }
