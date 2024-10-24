@@ -121,20 +121,47 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+struct Edge{
+    ll distance;
+    ll to;
+    ll i;
+};
+using Edges = vector<Edge>;
+using Nodes = vector<Edges>;
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    std::vector<long long> C(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
-        std::cin >> C[i];
+    Nodes to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,c);--c;
+        to[u].emplace_back(c, v, _+1);
+        to[v].emplace_back(c, u, _+1);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    dsu uf(N);
+    vll distance(N, linf);
+    distance[0] = 0;
+    using PP = tuple<ll,ll, ll>;
+    using P = pair<ll,PP>;
+    priority_queue<P, vector<P>, greater<P>> q;
+    q.emplace(0,PP{0,0,-1});
+    while(!q.empty() && uf.size(0) != N){
+        auto [t, p] = q.top(); q.pop();
+        auto [from, pre, n] = p;
+        if(distance[from] < t) continue;
+        uf.merge(from,pre);
+        if(n != -1) printf("%lld ", n);
+        for (auto &&next : to[from]) {
+            if(uf.same(from,next.to)) continue;
+            if(chmin(distance[next.to], distance[from]+next.distance)){
+                q.emplace(distance[next.to], PP{next.to, from, next.i});
+            }
+        }
+    }
     return 0;
 }
