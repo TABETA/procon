@@ -138,7 +138,41 @@ int main() {
     std::cin >> P;
     long long Q;
     std::cin >> Q;
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(2, vector(N + 1, mint(0)));
+    DP[0][A] = 1;
+    DP[1][B] = 1;
+    mint ans = 0;
+    mint p = mint{1}/P;
+    mint q = mint{1}/Q;
+    while(true) {
+        auto f = [&](vector<mint>& dp, ll P, mint p) ->tuple<ll,mint,mint> {
+            ll cnt = 0;
+            mint goal = 0;
+            mint no_goal = 0;
+            vector pre(N + 1, mint(0));
+            swap(dp, pre);
+            rep(i,N){
+                reps(j,1,P+1){
+                    if(pre[i] == mint{0}) continue;
+                    ++cnt;
+                    auto ni = min(N, i+j);
+                    auto np = pre[i] * p;
+                    if(ni == N){
+                        goal += np;
+                    }else{
+                        dp[ni] += np;
+                        no_goal += np;
+                    }
+                }
+            }
+            return {cnt, goal, no_goal};
+        };
+        auto [cnt1, win, no_win] = f(DP[0], P, p);
+        auto [cnt2, lose, no_lose] = f(DP[1], Q, q);
+        if(cnt1 == 0 || cnt2 == 0)break;
+        // 高橋君がゴールせず、青木君がゴールする確率
+        ans += no_win * lose;
+    }
+    cout << (1-ans).val() << endl;
     return 0;
 }
