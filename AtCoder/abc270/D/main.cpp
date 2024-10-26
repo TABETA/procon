@@ -121,6 +121,8 @@ namespace std{
 
 
 // clang-format on
+ll mem[10001][2];
+bool used[10001][2];
 int main() {
     long long N;
     std::cin >> N;
@@ -128,9 +130,34 @@ int main() {
     std::cin >> K;
     std::vector<long long> A(K);
     for(int i = 0 ; i < K ; i++){
-        std::cin >> A[i];
+        ll a;
+        std::cin >> a;
+        A[i] = a;
     }
-    ll ans = 0;
+    auto f = [&](auto f, ll rem, ll t) -> ll {
+        if(rem == 0) return 0;
+        if(used[rem][t]) return mem[rem][t];
+        if(t == 0){
+            ll res = 0;
+            rep(i, K){
+                ll nr = rem - A[i];
+                if(nr < 0) continue;
+                chmax(res,f(f, nr, 1)+A[i]);
+            }
+            used[rem][t] = true;
+            return mem[rem][t] = res;
+        } else {
+            ll res = linf;
+            repd(i, K){
+                ll nr = rem - A[i];
+                if(nr < 0) continue;
+                chmin(res,f(f, nr, 0));
+            }
+            used[rem][t] = true;
+            return mem[rem][t] = res;
+        }
+    };
+    ll ans = f(f, N, 0);
     cout << ans << endl;
     return 0;
 }
