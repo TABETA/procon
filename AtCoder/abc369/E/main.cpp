@@ -56,7 +56,6 @@ const ll linf = 1001001001001001001ll;
 
 /* define short */
 #define CIN(type, name) type name; cin >> name;
-#define pb push_back
 #define all(obj) (obj).begin(), (obj).end()
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
@@ -75,9 +74,6 @@ const ll linf = 1001001001001001001ll;
 #define debug(x) cerr << "\033[33m(line:" << __LINE__ << ") " << #x << ": " << x << "\033[m" << endl;
 
 /* func */
-inline int in_int() {int x; cin >> x; return x;}
-inline ll in_ll() {ll x; cin >> x; return x;}
-inline string in_str() {string x; cin >> x; return x;}
 // search_length: 走査するベクトル長の上限(先頭から何要素目までを検索対象とするか、1始まりで)
 template <typename T> inline bool vector_finder(std::vector<T> vec, T element, unsigned int search_length) {
     auto itr = std::find(vec.begin(), vec.end(), element);
@@ -121,9 +117,53 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    CIN(ll,M);
+    vector UV(M, vector(2, 0ll));
+    vll T(M);
+    vector to(N,vector(N, linf));
+    rep(i,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,t);
+        UV[i][0] = u;
+        UV[i][1] = v;
+        T[i] = t;
+        chmin(to[u][v], t);
+        chmin(to[v][u], t);
+    }
+    rep(k,N)rep(i,N)rep(j,N) chmin(to[i][j], to[i][k] + to[k][j]);
+    CIN(ll,Q);
+    rep(i,Q){
+        CIN(ll,K);
+        vll B(K);
+        rep(j,K){
+            cin >> B[j];--B[j];
+        }
+        ll ans = linf;
+        do{
+            rep(dir,1<<K){
+                ll pre = 0;
+                ll now = 0;
+                rep(j,K){
+                    ll d = dir>>j&1;
+                    ll cur = UV[B[j]][d];
+                    if(pre != cur){
+                        now += to[pre][cur];
+                    }
+                    now += T[B[j]];
+                    pre = UV[B[j]][d^1];
+                }
+                if(pre != N-1){
+                    now += to[pre][N-1];
+                }
+                chmin(ans, now);
+            }
+        } while(next_permutation(all(B)));
+        cout << ans << '\n';
+    }
     return 0;
 }
