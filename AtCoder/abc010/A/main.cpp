@@ -120,7 +120,6 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << S+"pp" << endl;
     return 0;
 }
