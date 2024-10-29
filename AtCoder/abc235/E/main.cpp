@@ -119,6 +119,8 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
@@ -126,23 +128,34 @@ int main() {
     std::cin >> M;
     long long Q;
     std::cin >> Q;
-    std::vector<long long> a(M);
-    std::vector<long long> b(M);
-    std::vector<long long> c(M);
+    using P = tuple<ll,ll,ll,ll>;
+    set<P> S;
     for(int i = 0 ; i < M ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
-        std::cin >> c[i];
+        ll a, b, c;
+        std::cin >> a;--a;
+        std::cin >> b;--b;
+        std::cin >> c;
+        S.emplace(c,a,b,-1);
     }
-    std::vector<long long> u(Q);
-    std::vector<long long> v(Q);
-    std::vector<long long> w(Q);
+    
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
-        std::cin >> w[i];
+        ll u, v, w;
+        std::cin >> u;--u;
+        std::cin >> v;--v;
+        std::cin >> w;
+        S.emplace(w,u,v,i);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    dsu uf(N);
+    vs ans(Q);
+    for (auto &&[w, u, v, i] : S)
+    {
+        if(i < 0){
+            if(uf.same(u,v))continue;
+            uf.merge(u,v);
+        } else {
+            ans[i] = uf.same(u,v) ? NO : YES;
+        }
+    }
+    repr(i, ans) cout << i << '\n';
     return 0;
 }
