@@ -120,13 +120,63 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> u(N-1);
-    std::vector<long long> v(N-1);
+    vvll to(N);
     for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    using P = pair<ll,ll>;
+    auto bfs = [&](ll s) -> ll {
+        vector dist(N, linf);
+        queue<P> Q;
+        Q.emplace(s,0);
+        dist[s] = 0;
+        ll ans = -1;
+        while(!Q.empty()){
+            auto [u,d] = Q.front();Q.pop();
+            ans = u;
+            ll nd = d+1;
+            for(auto&& v: to[u]){
+                if(dist[v] != linf)continue;
+                dist[v] = nd;
+                Q.emplace(v, nd);
+            }
+        }
+        return ans;
+    };
+    ll p1 = bfs(0);
+    ll p2 = bfs(p1);
+    auto dfs = [&](auto &&f, ll v, ll p, ll d) -> ll {
+        ll res = d;
+        for (auto &&u : to[v]){
+            if (u == p)continue;
+            res += f(f, u, v, d+1);
+        }
+        return res;
+    };
+    vll ans(N);
+    ans[p2] = dfs(dfs,p2,p2, 0);
+    vll R(N);
+    auto dfs1 = [&](auto &&f, ll v, ll p = -1) ->ll {
+        ll r = 1;
+        for (auto &&u : to[v]){
+            if (u == p)continue;
+            r += f(f, u, v);
+        }
+        return R[v] = r;
+    };
+    dfs1(dfs1, p2);
+
+    auto dfs2 = [&](auto &&f, ll v, ll p = -1) ->void {
+        for (auto &&u : to[v]){
+            if (u == p)continue;
+            ans[u] = ans[v] - R[u] + (N-R[u]);
+            f(f, u, v);
+        }
+    };
+    dfs2(dfs2, p2);
+    repr(i, ans) cout << i << '\n';
     return 0;
 }
