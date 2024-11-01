@@ -118,8 +118,53 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll,N);
+    CIN(string,T);
+    vll ans;
+    rep(i,N){
+        CIN(string,S);
+        auto ok = [&](){
+            if(S == T){
+                return true;
+            } 
+            if(S.size() == T.size()){
+                ll cnt = 0;
+                rep(i,S.size()){
+                    if(S[i] != T[i]){
+                        cnt++;
+                    }
+                    if(cnt > 1)break;
+                }
+                return cnt == 1;
+            }
+            if(S.size() == T.size()+1){
+                ll cnt = 0;
+                rep(i,T.size()){
+                    if(S[i+cnt] != T[i]){
+                        cnt++;
+                        --i;
+                    }
+                    if(cnt > 1)break;
+                }
+                return cnt <= 1;
+            }
+            if(S.size()+1 == T.size()){
+                ll cnt = 0;
+                rep(i,S.size()){
+                    if(S[i] != T[i+cnt]){
+                        cnt++;
+                        --i;
+                    }
+                    if(cnt > 1)break;
+                }
+                return cnt <= 1;
+            }
+            return false;
+        };
+        if(ok())
+            ans.push_back(i+1);
+    }
+    cout << ans.size() << endl;
     cout << ans << endl;
     return 0;
 }
