@@ -120,11 +120,21 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
+    deque<ll> a(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
     }
-    ll ans = 0;
+    vll A(N+1);
+    rep(i,N) A[i+1] = A[i] + a[i];
+    vector memo(N+1, vector(N+1, linf));
+    auto dfs = [&](auto dfs, ll l, ll r) -> ll {
+        if(l==r) return 0;
+        if (memo[l][r] != linf) return memo[l][r];
+        ll res = linf;
+        reps(m,l,r) chmin(res, dfs(dfs, l, m) + dfs(dfs, m+1, r));
+        return memo[l][r] = res + A[r] - A[l-1];
+    };
+    ll ans = dfs(dfs, 1, N);
     cout << ans << endl;
     return 0;
 }
