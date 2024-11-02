@@ -123,6 +123,23 @@ int main() {
     long long K;
     std::cin >> K;
     ll ans = 0;
+    auto f = [&](ll AB) -> ll {
+        ll ans = 0;
+        if(AB <= N+1){
+            ans = AB-1;
+        } else {
+            ans = N - (AB-N)+1;
+        }
+        return ans;
+    };
+    reps(AB, 2, 2*N+1){
+        ll CD = -K + AB;
+        if(CD > 2*N || CD < 2) continue;
+        ll ab = f(AB);
+        ll cd = f(CD);
+        ll now = ab * cd;
+        ans += now;
+    }
     cout << ans << endl;
     return 0;
 }
