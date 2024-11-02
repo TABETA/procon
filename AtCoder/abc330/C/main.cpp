@@ -120,7 +120,23 @@ namespace std{
 int main() {
     long long D;
     std::cin >> D;
-    ll ans = 0;
-    cout << ans << endl;
+    auto f = [&](ll xy){
+        ll m = sqrt(xy)+1;
+        rep(x,m){
+            ll y = sqrt(xy-x*x);
+            if(x*x+y*y == xy){
+                return true;
+            }
+        }
+        return false;
+    };
+    rep(i,D){
+        for (auto &&sign : {-1,1}){
+            if(f(D+sign*i)){
+                cout << i << endl;
+                return 0;
+            }
+        }
+    }
     return 0;
 }
