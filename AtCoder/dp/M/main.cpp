@@ -128,11 +128,23 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> a(N);
+    vector DP(K+1, mint{});
+    DP[0] = 1;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        ll a;
+        std::cin >> a;
+        mint sum  = 0;
+        for(ll k = K; k >= max(0ll,K-a); --k){
+            sum += DP[k];
+        }
+        mint pre = 0;
+        repd(j,K+1) {
+            pre = DP[j];
+            DP[j] = sum;
+            sum -= pre;
+            if(j-a-1 >= 0) sum += DP[j-a-1];
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    cout << DP[K].val() << endl;
     return 0;
 }
