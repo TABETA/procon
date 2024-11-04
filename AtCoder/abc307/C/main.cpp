@@ -121,30 +121,55 @@ const string NO = "No";
 // clang-format on
 int main() {
     long long H_A;
-    std::cin >> H_A;
+    cin >> H_A;
     long long W_A;
-    std::cin >> W_A;
-    std::vector<std::string> A(H_A);
-    for(int i = 0 ; i < H_A ; i++){
-        std::cin >> A[i];
+    cin >> W_A;
+    vs A(H_A);
+    vll Z(2, 0);
+    for (int i = 0; i < H_A; i++) {
+        cin >> A[i];
+        repr(v, A[i]) if(v == '#') Z[0]++;
     }
     long long H_B;
-    std::cin >> H_B;
+    cin >> H_B;
     long long W_B;
-    std::cin >> W_B;
-    std::vector<std::string> B(H_B);
-    for(int i = 0 ; i < H_B ; i++){
-        std::cin >> B[i];
+    cin >> W_B;
+    vs B(H_B);
+    for (int i = 0; i < H_B; i++) {
+        cin >> B[i];
+        repr(v, B[i]) if(v == '#') Z[1]++;
     }
     long long H_X;
-    std::cin >> H_X;
+    cin >> H_X;
     long long W_X;
-    std::cin >> W_X;
-    std::vector<std::string> X(H_X);
-    for(int i = 0 ; i < H_X ; i++){
-        std::cin >> X[i];
+    cin >> W_X;
+    vs X(H_X);
+    for (int i = 0; i < H_X; i++) {
+        cin >> X[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto is_b = [&](const vs& g, ll y, ll x) {
+        if (y < 0 || y >= (ll)g.size() || x < 0 || x >= (ll)g[0].size()) return false;
+        return g[y][x] == '#';
+    };
+    reps(ya, -10,10) reps(xa, -10,10) reps(yb, -10,10) reps(xb, -10,10) {
+        vs C(H_X, string(W_X, '.'));
+        vll used(2, 0);
+        rep(y, H_X) {
+            rep(x, W_X) {
+                vector ok(2, false);
+                ok[0] = is_b(A, ya+y, xa+x);
+                ok[1] = is_b(B, yb+y, xb+x);
+                if (ok[0]) used[0]++;
+                if (ok[1]) used[1]++;
+                C[y][x] = ok[0] || ok[1] ? '#' : '.';
+            }
+        }
+        if (C == X && used == Z) {
+            cout << YES << endl;
+            return 0;
+        }
+    }
+
+    cout << NO << endl;
     return 0;
 }
