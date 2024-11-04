@@ -56,12 +56,10 @@ const ll linf = 1001001001001001001ll;
 
 /* define short */
 #define CIN(type, name) type name; cin >> name;
-#define pb push_back
 #define all(obj) (obj).begin(), (obj).end()
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
 #define YesNo(bool) if(bool){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
-#define sb(var,l,r) {var[l].pb(r); var[r].pb(l);}
 
 /* REP macro */
 #define reps(i, a, n) for (ll i = (a); i < (ll)(n); ++i)
@@ -75,9 +73,6 @@ const ll linf = 1001001001001001001ll;
 #define debug(x) cerr << "\033[33m(line:" << __LINE__ << ") " << #x << ": " << x << "\033[m" << endl;
 
 /* func */
-inline int in_int() {int x; cin >> x; return x;}
-inline ll in_ll() {ll x; cin >> x; return x;}
-inline string in_str() {string x; cin >> x; return x;}
 // search_length: 走査するベクトル長の上限(先頭から何要素目までを検索対象とするか、1始まりで)
 template <typename T> inline bool vector_finder(std::vector<T> vec, T element, unsigned int search_length) {
     auto itr = std::find(vec.begin(), vec.end(), element);
@@ -98,6 +93,11 @@ ostream &operator<<(ostream &os, const vector<T> &v) {
     }
     return os;
 }
+template<typename T>
+pair<T,T> operator+(const pair<T,T>& lhs, const pair<T,T> rhs){
+    return pair<T,T>{lhs.first+rhs.first, lhs.second+rhs.second};
+}
+
 // 第一引数と第二引数を比較し、第一引数(a)をより大きい/小さい値に上書き
 template <typename T> inline bool chmin(T& a, const T& b) {bool compare = a > b; if (a > b) a = b; return compare;}
 template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b; if (a < b) a = b; return compare;}
