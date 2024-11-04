@@ -60,7 +60,6 @@ const ll linf = 1001001001001001001ll;
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
 #define YesNo(bool) if(bool){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
-#define sb(var,l,r) {var[l].pb(r); var[r].pb(l);}
 
 /* REP macro */
 #define reps(i, a, n) for (ll i = (a); i < (ll)(n); ++i)
@@ -122,15 +121,55 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<std::string> S(N);
+    ll tot = 0;
+    vector<string> S(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> S[i];
+        cin >> S[i];
+        tot += S[i].size();
     }
-    std::vector<std::string> T(M);
+    // 最低でもN-1個の_を作成する必要がある
+    // 残りの文字数がRの場合、N-1を引いた値が自由に使える数
+    ll R = (16 - tot) - (N-1);
+    set<string> T;
     for(int i = 0 ; i < M ; i++){
-        std::cin >> T[i];
+        string t;
+        std::cin >> t;
+        T.emplace(t);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    set<vs> U;
+    auto f = [&](auto f, ll r, vs u){
+        if((ll)u.size() == N-1){
+            U.emplace(u);
+            return;
+        }
+        rep(j, r+1){
+            u.emplace_back(j+1, '_');
+            f(f, r-j, u);
+            u.pop_back();
+        }
+    };
+    f(f, R, {});
+    vll is(N);
+    iota(all(is), 0);
+    do{
+        auto u = U.begin();
+        do{
+            string X = "";
+            rep(_, N){
+                ll i = is[_];
+                X += S[i];
+                if(_ != N-1 && u != U.end()) X += (*u)[_];
+            }
+            if(3 <= X.size() && X.size() <= 16){
+                if(!T.count(X)){
+                    cout << X << endl;
+                    return 0;
+                }
+            }
+            ++u;
+        }while( u!= U.end());
+
+    }while(next_permutation(all(is)));
+    cout << -1 << endl;
     return 0;
 }
