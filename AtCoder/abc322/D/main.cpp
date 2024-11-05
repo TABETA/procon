@@ -118,9 +118,94 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+using P = pair<ll,ll>;
+struct Mino {
+    auto operator<=>(const Mino&) const = default;
+    set<P> S;
+    Mino(): S() {}
+    void input(){
+        rep(i, 4) {
+            string s;
+            cin >> s;
+            rep(j, 4) {
+                if (s[j] == '#') S.insert(P(i, j));
+            }
+        }
+    }
+    void normalize(){
+        ll x = linf, y = inf;
+        repr(p, S) chmin(y, p.first), chmin(x, p.second);
+        set<P> T;
+        repr(p, S) T.emplace(p.first - y, p.second - x);
+        S = T;
+    }
+    Mino rotate()const{
+        Mino ans;
+        repr(p, S) ans.S.emplace(p.second, 3 - p.first);
+        ans.normalize();
+        return ans;
+    }
+    set<Mino> getRotated()const{
+        set<Mino> ans;
+        auto cur = *this;
+        ans.emplace(cur);
+        rep(i, 3) {
+            cur = cur.rotate();
+            ans.emplace(cur);
+        }
+        return ans;
+    }
+
+    Mino shift(ll x, ll y)const{
+        Mino ans;
+        repr(p, S) {
+            ll nx = p.first + x, ny = p.second + y;
+            if (nx < 0 || nx >= 4 || ny < 0 || ny >= 4) return {};
+            ans.S.emplace(ny, nx);
+        }
+        return ans;
+    }
+    set<Mino> getShifted()const{
+        set<Mino> ans;
+        rep(y,3)rep(x,3){
+            auto now = shift(x, y);
+            if(now.S.size() != 0) ans.insert(now);
+        }
+        return ans;
+    }
+    void print()const{
+        vector<string> ans(4, "....");
+        repr(p, S) ans[p.second][p.first] = '#';
+        repr(s, ans) cout << s << endl;
+        cout << endl;
+    }
+};
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    vector<Mino> minos(3);
+    rep(i, 3) minos[i].input();
+    vector<set<Mino>> A(3);
+    rep(i,3){
+        for (auto &&mino : minos[i].getRotated()){
+            A[i].merge(mino.getShifted());
+        }
+    }
+    repr(a, A[0]){
+        repr(b, A[1]){
+            repr(c, A[2]){
+                set<P> S;
+                auto aa = a.S;
+                S.merge(aa);
+                auto bb = b.S;
+                S.merge(bb);
+                auto cc = c.S;
+                S.merge(cc);
+                if (S.size() == 16 && aa.size() == 0 && bb.size() == 0 && cc.size() == 0) {
+                    cout << YES << endl;
+                    return 0;
+                }
+            }
+        }
+    }
+    cout << NO << endl;
     return 0;
 }
