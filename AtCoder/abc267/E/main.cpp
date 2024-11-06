@@ -121,17 +121,55 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(N);
+    std::vector<ll> A(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    std::vector<long long> U(M);
-    std::vector<long long> V(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll C(N);
+    rep(i,N){
+        repr(j, to[i]){
+            C[i] += A[j];
+        }
+    }
+    auto f = [&](ll wj, vll C){
+        vector<bool> used(N);
+        queue<ll> q;
+        rep(i,N){
+            if(C[i]<=wj){
+                q.push(i);
+                used[i] = true;
+            }
+        }
+        ll cnt = 0;
+        while(!q.empty()){
+            ll u = q.front();q.pop();
+            cnt++;
+            repr(v, to[u]){
+                if(used[v]) continue;
+                C[v] -= A[u];
+                if(C[v] > wj) continue;
+                used[v] = true;
+                q.push(v);
+            }
+        }
+        return cnt == N;
+    };
+    ll ac = linf, wa = -1;
+    while(ac - wa > 1){
+        ll wj = (ac + wa) / 2;
+        if(f(wj, C)){
+            ac = wj;
+        }else{
+            wa = wj;
+        }
+    }
+    cout << ac << endl;
     return 0;
 }
