@@ -119,11 +119,63 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
+    map<ll,ll> mp;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        ll a;
+        std::cin >> a;
+        mp[a]++;
     }
-    ll ans = 0;
+    set<ll,greater<ll>> qq;
+    {
+        auto it = mp.begin();
+        auto [k ,v] = *it;
+        queue<ll> Q;
+        Q.emplace(k);
+        qq.emplace(k);
+        while(!Q.empty()){
+            auto u = Q.front();Q.pop();
+            for(auto&& d: {2,3}){
+                if(u % d != 0)continue;
+                ll v = u / d;
+                if(qq.count(v))continue;
+                qq.emplace(v);
+                Q.emplace(v);
+            }
+        }
+    }
+    ll ans = linf;
+    repr(u,qq){
+        ll now = 0;
+        bool ok = true;
+        for(auto it = mp.begin();it != mp.end();it++){
+            auto [k, v] = *it;
+            if(k < u || k % u != 0){
+                ok = false;
+                break;
+            }
+            ll q = k / u;
+            ll n = 0;
+            while(q != 1){
+                if(q % 2 == 0){
+                    q /= 2;
+                    ++n;
+                }else if(q % 3 == 0){
+                    q /= 3;
+                    ++n;
+                }else{
+                    ok = false;
+                    break;
+                }
+            }
+            now += v * n;
+        }
+        if(!ok)continue;
+        chmin(ans, now);
+    }
+    if(ans == linf){
+        cout << -1 << endl;
+        return 0;
+    }
     cout << ans << endl;
     return 0;
 }
