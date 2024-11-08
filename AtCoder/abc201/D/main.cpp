@@ -116,9 +116,52 @@ namespace std{
 
 
 // clang-format on
+using P = pair<ll,ll>;
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,H);
+    CIN(ll,W);
+    vs A(H);
+    rep(i,H) cin >> A[i];
+    vector DP(H, vector(W, linf));
+    auto dfs = [&](auto dfs, ll y, ll x) -> ll {
+        if(DP[y][x] != linf) return DP[y][x];
+        ll now = linf;
+        for (auto &&[dy,dx] : {P{0,1},P{1,0}}){
+            auto ny = y + dy, nx = x + dx;
+            if(ny >= H || nx >= W) continue;
+            ll s = A[ny][nx] == '+' ? 1 : -1;
+            ll u = dfs(dfs, ny, nx);
+            auto f = [&](ll yx, ll s){
+                if((yx)%2){
+                    // Aoki
+                    u -= s;
+                    if(now == linf){
+                        now = u;
+                    } else {
+                        chmin(now, u);
+                    }
+                } else {
+                    // Takahashi
+                    u += s;
+                    if(now == linf){
+                        now = u;
+                    } else {
+                        chmax(now, u);
+                    }
+                }
+            };
+            f(y+x, s);
+        }
+        if(now == linf) return 0;
+        return DP[y][x] = now;
+    };
+    ll ans = dfs(dfs, 0, 0);
+    if(ans == 0){
+        cout << "Draw" << endl;
+    } else if(ans > 0){
+        cout << "Takahashi" << endl;
+    } else {
+        cout << "Aoki" << endl;
+    }
     return 0;
 }
