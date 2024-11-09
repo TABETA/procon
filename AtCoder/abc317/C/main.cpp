@@ -121,15 +121,32 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    std::vector<long long> C(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
-        std::cin >> C[i];
+    vector to(N, vector(N, 0ll));
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,w);
+        to[u][v] = w;
+        to[v][u] = w;
     }
+    vll is(N);
+    iota(all(is), 0);
     ll ans = 0;
+    do{
+        ll now = 0;
+        ll p = -1;
+        repr(i,is){
+            if(p == -1){
+                p = i;
+            } else{
+                if(to[p][i] != 0){
+                    now += to[p][i];
+                    p = i;
+                }
+            }
+        }
+        chmax(ans, now);
+    }while(next_permutation(all(is)));
     cout << ans << endl;
     return 0;
 }
