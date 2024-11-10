@@ -127,13 +127,47 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> U(M);
-    std::vector<long long> V(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    using P = pair<ll,ll>;
+    set<P> G;
+    vector used(N, 0);
+    vector visited(N, false);
+    auto dfs = [&](auto dfs, ll pre, ll u) -> ll{
+        visited[u] = true;
+        used[u] = 1;
+        ll ans = 0;
+        repr(v,to[u]){
+            if(v == pre) continue;
+            if(used[v] == 2)continue;
+            if(used[v] == 1){
+                ++ans;
+                continue;
+            }
+            ans += dfs(dfs, u, v);
+        }
+        used[u] = 2;
+        return ans;
+    };
+    mint ans = 1;
+    rep(i,N){
+        if(visited[i])continue;
+        auto l = dfs(dfs, -1, i);
+        if(l == 1){
+            ans *= 2;
+        } else {
+            ans *= 0;
+        }
+    }
+    if(ans.val() == 1){
+        cout << 0 << endl;
+    } else {
+        cout << ans.val() << endl;
+    }
     return 0;
 }
