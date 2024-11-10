@@ -117,8 +117,49 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,T);
+    rep(_,T){
+        CIN(ll,N);
+        CIN(ll,M);
+        vll C(N);
+        rep(i,N) cin >> C[i];
+        vvll to(N);
+        rep(_,M){
+            CIN(ll,u);--u;
+            CIN(ll,v);--v;
+            to[u].emplace_back(v);
+            to[v].emplace_back(u);
+        }
+        using P = pair<ll,ll>;
+        queue<P> Q;
+        vector distance(N, vector(N, linf));
+        ll ans = -1;
+        auto push = [&](ll t, ll a, ll d){
+            if(t == N-1 && a == 0){
+                ans = d;
+                return true;
+            }
+            auto p = P{t,a};
+            if(distance[t][a] != linf) return false;
+            distance[t][a] = d;
+            Q.push(p);
+            return false;
+        };
+        push(0,N-1,0);
+        [&](){
+            while(!Q.empty()){
+                auto p = Q.front();Q.pop();
+                auto [t,a] = p;
+                auto d = distance[t][a];
+                for(auto&& nt: to[t]){
+                    for(auto&& na: to[a]){
+                        if(C[na] == C[nt]) continue;
+                        if(push(nt,na,d+1))return;
+                    }
+                }
+            }
+        }();
+        cout << ans << '\n';
+    }
     return 0;
 }
