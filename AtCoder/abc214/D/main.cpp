@@ -116,18 +116,28 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+tuple<ll,ll,ll> input(){
+    ll a,b,c;
+    cin >> a >> b >> c;
+    return {c,--a,--b};
+}
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> u(N-1);
-    std::vector<long long> v(N-1);
-    std::vector<long long> w(N-1);
+    vector<tuple<ll,ll,ll> > t(N-1);
     for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
-        std::cin >> w[i];
+        t[i] = input();
     }
+    ranges::sort(t);
+    dsu uf(N);
     ll ans = 0;
+    rep(i,N-1){
+        auto [w,u,v] = t[i];
+        ans += w * uf.size(u) * uf.size(v);
+        uf.merge(u,v);
+    }
     cout << ans << endl;
     return 0;
 }
