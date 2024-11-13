@@ -119,17 +119,48 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N-1);
-    std::vector<long long> B(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    vvll to(N);
+    rep(_,N-1){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
+    ll sum = 0;
     std::vector<long long> C(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> C[i];
+        sum += C[i];
     }
+    ll centroid;
+    vector DP(N, 0ll);
+    auto dfs = [&](auto dfs, ll u, ll p = -1) -> ll{
+        ll ans = C[u];
+        bool ok = true;
+        for(auto&& v: to[u]){
+            if(v == p) continue;
+            auto now = dfs(dfs, v, u);
+            if(now > sum / 2) ok = false;
+            ans += now;
+        }
+        if(sum - ans > sum / 2) ok = false;
+        if(ok) centroid = u;
+        return DP[u] = ans;
+    };
+    dfs(dfs, 0);
+    vll distance(N);
+    auto dfs2 = [&](auto dfs2, ll u, ll d, ll p = -1) -> void{
+        distance[u] = d;
+        for(auto&& v: to[u]){
+            if(v == p) continue;
+            dfs2(dfs2, v, d+1, u);
+        }
+    };
+    dfs2(dfs2, centroid, 0);
     ll ans = 0;
+    rep(i,N){
+        ans += distance[i] * C[i];
+    }
     cout << ans << endl;
     return 0;
 }
