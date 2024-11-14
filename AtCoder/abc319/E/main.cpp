@@ -129,13 +129,25 @@ int main() {
         std::cin >> P[i];
         std::cin >> T[i];
     }
+    ll M = 840; // lcm of 2,3,4,5,6,7,8
+    vll DP(M);
+    rep(i,M){
+        ll s = i;
+        rep(j,N-1){
+            if(s % P[j]) s += P[j] - s % P[j];
+            s += T[j];
+        }
+        DP[i] = s-i;
+    }
     long long Q;
     std::cin >> Q;
-    std::vector<long long> q(Q);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> q[i];
+        ll q;
+        std::cin >> q;
+        q += X;
+        ll s = q % M;
+        ll ans = q + DP[s] + Y;
+        cout << ans << '\n';
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
