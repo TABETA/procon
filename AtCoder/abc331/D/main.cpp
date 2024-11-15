@@ -117,8 +117,59 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    CIN(ll,Q);
+    vs P(N);
+    ll b = 0;
+    rep(i,N){
+        cin >> P[i];
+        rep(j,N){
+            if(P[i][j] == 'B'){
+                ++b;
+            }
+        }
+    }
+    vvll A(N+1, vll(N+1, 0));
+    rep(i,N){
+        rep(j,N){
+            A[i+1][j+1] = (P[i][j] == 'B');
+        }
+    }
+    rep(i,N+1){
+        rep(j,N){
+            A[i][j+1] += A[i][j];
+        }
+    }
+    rep(i,N){
+        rep(j,N+1){
+            A[i+1][j] += A[i][j];
+        }
+    }
+    auto f = [&](ll y, ll x){
+        if(y < 0 || x < 0){
+            return 0ll;
+        }
+        ll qy = y / N;
+        ll qx = x / N;
+        ll sum = qy * qx * b;
+        ll ry = y % N;
+        ll rx = x % N;
+        auto g = [&](ll y, ll x){
+            ll now = A[y][x] - A[0][x] - A[y][0] + A[0][0];
+            return now;
+        };
+        sum += g(ry+1, N) * qx;
+        sum += g(N, rx+1) * qy;
+        sum += g(ry+1, rx+1);
+        return sum;
+    };
+    rep(i,Q){
+        CIN(ll,a);--a;
+        CIN(ll,b);--b;
+        CIN(ll,c);
+        CIN(ll,d);
+        ll ans = f(c,d) + f(a,b) - f(a,d) - f(c,b);
+        cout << ans << '\n';
+    }
     return 0;
 }
