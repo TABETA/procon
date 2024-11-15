@@ -122,10 +122,33 @@ using vm = vector<mint>;
 using vvm = vector<vm>;
 
 // clang-format on
+bool canSolve(ll n){
+    while(n % 2 == 0) n /= 2;
+    while(n % 3 == 0) n /= 3;
+    while(n % 5 == 0) n /= 5;
+    return n == 1;
+}
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    ll n = N;
+    if(!canSolve(n)){
+        cout << 0 << endl;
+        return 0;
+    }
+    mint p = mint(1)/5;
+    map<ll,mint> mp;
+    mp[1] = 1;
+    auto dfs = [&](auto dfs, ll r) -> mint{
+        if(mp.count(r)) return mp[r];
+        mint sum;
+        reps(i,2,7){
+            if(r%i != 0)continue;
+            sum += dfs(dfs, r/i) * p;
+        }
+        return mp[r] = sum;
+    };
+    auto ans = dfs(dfs, N);
+    cout << ans.val() << endl;
     return 0;
 }
