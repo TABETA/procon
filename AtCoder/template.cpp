@@ -121,6 +121,10 @@ using namespace atcoder;
 using mint = static_modint<MOD>;
 using vm = vector<mint>;
 using vvm = vector<vm>;
+ostream &operator<<(ostream &os, const mint &v) {
+    os << v.val();
+    return os;
+}
 {% endif %}
 {% if yes_str %}
 const string YES = "{{ yes_str }}";
