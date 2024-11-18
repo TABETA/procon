@@ -120,11 +120,51 @@ using namespace atcoder;
 using mint = static_modint<MOD>;
 using vm = vector<mint>;
 using vvm = vector<vm>;
+ostream &operator<<(ostream &os, const mint &v) {
+    os << v.val();
+    return os;
+}
+
 
 // clang-format on
-int main() {
-    // Failed to predict input format
-    ll ans = 0;
+void solve() {
+    CIN(ll, N);
+    CIN(string,S);
+    string T;
+    int i = 0, j = N-1;
+    for(; i<=j; i++, j--){
+        char c = S[i];
+        T.push_back(c);
+    }
+    auto t = T;
+    reverse(all(t));
+    auto u = T;
+    if(S.size() % 2)u.pop_back();
+    u += t;
+    --i;
+    if(u > S){
+        while(true){
+            if(T[i] != 'A'){
+                T[i] -= 1;
+                break;
+            } else {
+                T[i] = 'Z';
+                --i;
+            } 
+        }
+    }
+    mint ans = 1;
+    mint ex = 1;
+    repd(i,T.size()){
+        ans += (T[i] - 'A') * ex;
+        ex *= 26;
+    }
     cout << ans << endl;
+}
+int main() {
+    CIN(ll,T);
+    rep(_,T){
+        solve();
+    }
     return 0;
 }
