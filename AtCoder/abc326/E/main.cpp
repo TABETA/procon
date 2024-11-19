@@ -115,21 +115,34 @@ namespace std{
 }
 
 constexpr long long MOD = 998244353;
-#include <atcoder/modint>
+#include <atcoder/all>
 using namespace atcoder;
 using mint = static_modint<MOD>;
 using vm = vector<mint>;
 using vvm = vector<vm>;
+ostream &operator<<(ostream &os, const mint &v) {
+    os << v.val();
+    return os;
+}
 
 // clang-format on
+
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
+    std::vector<long long> A(N+1);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        std::cin >> A[i+1];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    mint p = 1/mint{N};
+    vector DP(N+1, mint{0});
+    DP[N] = 0;
+    mint s = 0;
+    for(int i = N; i >= 0; i--){
+        s *= p;
+        DP[i] = A[i] + s;
+        s = DP[i] + s*N;
+    }
+    cout << DP[0] << endl;
     return 0;
 }
