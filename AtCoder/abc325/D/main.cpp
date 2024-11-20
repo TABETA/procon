@@ -116,16 +116,41 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> T(N);
-    std::vector<long long> D(N);
+    map<ll,multiset<ll>> mp;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> T[i];
-        std::cin >> D[i];
+        CIN(ll,t);
+        CIN(ll,d);
+        mp[t].emplace(t+d);
     }
     ll ans = 0;
+    priority_queue<ll,vector<ll>, greater<ll>> Q;
+    auto it = mp.begin();
+    ll i = it->first;
+    for (auto &&s : it->second){
+        Q.push(s);
+    }
+    ++it;
+    while(!Q.empty()){
+        auto q = Q.top();Q.pop();
+        if(i <= q) {
+            ans++;
+            i++;
+        }
+        if(Q.size() == 0 && it != mp.end()){
+            i = it->first;
+        }
+        if(it != mp.end() && it->first <= i){
+            for (auto &&s : it->second){
+                Q.push(s);
+            }
+            ++it;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
