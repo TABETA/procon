@@ -116,9 +116,50 @@ namespace std{
 
 
 // clang-format on
+
+ll permut(ll n){
+    ll ans = 1;
+    rep(i,n){
+        ans *= i+1;
+    }
+    return ans;
+
+}
 int main() {
-    // Failed to predict input format
+    CIN(ll,N);
+    CIN(ll,T);
+    CIN(ll,M);
+    vector isNG(N, vector(N, false));
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        isNG[u][v] = true;
+        isNG[v][u] = true;
+    }
     ll ans = 0;
+    vector<vector<ll>> G;
+    auto ng = [&](ll i, vector<ll>& S){
+        for (auto &&j : S){
+            if(isNG[i][j]) return true;
+        }
+        return false;
+    };
+    auto dfs = [&](auto dfs, ll i) -> void{
+        if(i >= N){
+            if((ll)G.size() == T)++ans;
+            return;
+        }
+        rep(j,G.size()){
+            if(ng(i, G[j])) continue;
+            G[j].emplace_back(i);
+            dfs(dfs,i+1);
+            G[j].pop_back();
+        }
+        G.push_back({i});
+        dfs(dfs,i+1);
+        G.pop_back();
+    };
+    dfs(dfs, 0);
     cout << ans << endl;
     return 0;
 }
