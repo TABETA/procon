@@ -225,7 +225,63 @@ auto solve2(){
         cout << max(0ll, 1+v*2) << '\n';
     }
 }
+auto solve3(){
+    CIN(ll,N);
+    CIN(ll,Q);
+    CIN(string,S);
+    vll A;
+    vll B;
+    vll C;
+    rep(i,N){
+        if(S[i] == '1'){
+            A.emplace_back(i);
+        }
+        if(S[i] == '2'){
+            B.emplace_back(i);
+        }
+        if(S[i] == '/'){
+            C.emplace_back(i);
+        }
+    }
+    rep(_,Q){
+        CIN(ll,L);--L;
+        CIN(ll,R);--R;
+
+        auto f = [&](ll X){
+            if(X == 0) {
+                auto ci = ranges::lower_bound(C, L) - C.begin();
+                if(ci >= (ll)C.size()) return false;
+                return C[ci] <= R;
+            } else {
+                --X;
+                auto al = ranges::lower_bound(A, L) - A.begin();
+                if(al+X >= (ll)A.size()) return false;
+                auto ar = A[al+X];
+                auto ci = ranges::lower_bound(C, ar) - C.begin();
+                if(ci >= (ll)C.size()) return false;
+                auto c = C[ci];
+                if(c > R) return false;
+                auto bl = ranges::lower_bound(B, c) - B.begin();
+                if(bl+X >= (ll)B.size()) return false;
+                auto b = B[bl+X];
+                return b <= R;
+            }
+        };
+        auto binary_search = [&](auto f, ll ac, ll wa) -> ll {
+            while (abs(ac - wa) > 1) {
+                ll wj = (ac + wa) / 2;
+                if (f(wj))
+                    ac = wj;
+                else
+                    wa = wj;
+            }
+            return ac;
+        };
+        auto v = binary_search(f, -1, 1e9);
+        cout << max(0ll, 1+v*2) << '\n';
+    }
+}
 int main() {
-    solve2();
+    solve3();
     return 0;
 }
