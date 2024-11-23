@@ -39,6 +39,10 @@ using namespace std;
 struct Fast {Fast() {std::cin.tie(0); ios::sync_with_stdio(false);}} fast;
 #endif
 
+#ifndef ONLINE_JUDGE
+#define _GLIBCXX_DEBUG
+#endif
+
 /* alias */
 using ull = unsigned long long;
 using ll = long long;
