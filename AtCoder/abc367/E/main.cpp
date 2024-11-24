@@ -116,20 +116,42 @@ namespace std{
 
 
 // clang-format on
+
 int main() {
     long long N;
-    std::cin >> N;
+    cin >> N;
     long long K;
-    std::cin >> K;
-    std::vector<long long> X(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> X[i];
+    cin >> K;
+    ll M = 0;
+    {
+        ll k = K;
+        while(k)k/=2,++M;
     }
-    std::vector<long long> A(N);
+    vector DP(N, vector(M+1, -1ll));
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        ll x;
+        cin >> x;--x;
+        DP[i][0] = x;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector<long long> A(N);
+    for(int i = 0 ; i < N ; i++){
+        cin >> A[i];
+    }
+    for(int k = 0 ; k < M-1 ; k++){
+        rep(i,N){
+            DP[i][k+1] = DP[DP[i][k]][k];
+        }
+    }
+    rep(i,N){
+        ll ans = i;
+        rep(j,M){
+            if(K>>j&1){
+                ans = DP[ans][j];
+            }
+        }
+        cout << A[ans];
+        if(i < N-1) cout << " ";
+        else cout << endl;
+    }
     return 0;
 }
