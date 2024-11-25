@@ -120,9 +120,66 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+using P = pair<int,int>;
+struct Node {
+    Node(){}
+    Node(int a){
+        vals[0] = P{a,1};
+    }
+    Node(const array<P,2>& m):vals(m){}
+    array<P,2> vals;
+    int getSecondLargest(){
+        if(vals[1].first == 0)return 0;
+        else return vals[1].second;
+    }
+};
+
+Node op(Node a, Node b) {
+    map<int,int,greater<int>> mp;
+    for (auto &&i : {a,b})
+    {
+        for (auto &&[k,v] : i.vals)
+        {
+            mp[k] += v;
+        }
+    }
+    Node res;
+    auto it = mp.begin();
+    rep(i,2){
+        if(it == mp.end())break;
+        res.vals[i] = *it;
+        ++it;
+    }
+    return res;
+}
+
+Node e() {
+    return Node{};
+}
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    CIN(ll,Q);
+    segtree<Node, op, e> A(N+1);
+    rep(i,N) {
+        int a;
+        cin >> a;
+        A.set(i, a);
+    }
+    rep(_,Q){
+        CIN(ll,q);
+        if(q == 1){
+            CIN(int,p);--p;
+            CIN(int,x);
+            A.set(p, x);
+        } else {
+            CIN(int,l);--l;
+            CIN(int,r);
+            auto x = A.prod(l, r);
+            auto ans =  x.getSecondLargest();
+            cout << ans << '\n';
+        }
+    }
     return 0;
 }
