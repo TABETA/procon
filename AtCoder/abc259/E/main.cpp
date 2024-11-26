@@ -120,9 +120,40 @@ namespace std{
 
 
 // clang-format on
+using P = pair<ll,ll>;
+P input(){
+    ll a,b;
+    cin >> a >> b;
+    return P{a,b};
+}
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll,N);
+    vector<vector<P>> A(N);
+    map<ll,P> mp;
+    rep(i,N){
+        CIN(ll,m);
+        vector<P> a(m);
+        rep(j,m){
+            a[j] = input();
+            auto [p, e] = a[j];
+            if(mp[p].first < e) {
+                mp[p] = P{e,1};
+            } else if(mp[p].first == e){
+                mp[p].second++;
+            }
+        }
+        A[i] = a;
+    }
+    ll ans = 1;
+    rep(i,N){
+        for (auto &&[p,e] : A[i]){
+            if(mp[p].first == e && mp[p].second == 1){
+                ++ans;
+                break;
+            }
+        }
+    }
+    chmin(ans,N);
     cout << ans << endl;
     return 0;
 }
