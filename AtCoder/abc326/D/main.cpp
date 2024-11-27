@@ -120,7 +120,6 @@ namespace std{
 
 const string YES = "Yes";
 const string NO = "No";
-
 // clang-format on
 int main() {
     long long N;
@@ -129,7 +128,63 @@ int main() {
     std::cin >> R;
     std::string C;
     std::cin >> C;
-    ll ans = 0;
+    string ans = NO;
+    vector G(N, string(N, '.'));
+    vector F(N, string(N, '.'));
+    vector used(N, set<char>{});
+    auto dfs = [&](auto dfs, ll r, ll c, set<char> rem = {'A','B','C'})->void{
+        if(r == N){
+            [&](){
+                rep(i, N){
+                    string s;
+                    rep(j, N){
+                        if(G[j][i] == '.')continue;
+                        s.push_back(G[j][i]);
+                    }
+                    if(s.size() != 3 || s[0] != C[i])return;
+                    ranges::sort(s);
+                    if(s != "ABC")return;
+                }
+                ans = YES;
+                F = G;
+            }();
+            return;
+        }
+        if(c == N || rem.size() == 0){
+            dfs(dfs, r+1, 0);
+        } else {
+            if (rem.count(R[r])) {
+                if(used[c].count(R[r]) == 0){
+                    rem.erase(R[r]);
+                    G[r][c] = R[r];
+                    used[c].insert(R[r]);
+                    dfs(dfs, r, c+1,  rem);
+                    used[c].erase(R[r]);
+                    G[r][c] = '.';
+                    rem.insert(R[r]);
+                }
+            } else {
+                for (auto &&v : rem)
+                {
+                    if(used[c].count(v))continue;
+                    auto tmp = rem;
+                    tmp.erase(v);
+                    G[r][c] = v;
+                    used[c].insert(v);
+                    dfs(dfs, r, c+1, tmp);
+                    used[c].erase(v);
+                    G[r][c] = '.';
+                }
+            }
+            dfs(dfs, r, c+1, rem);
+        }
+    };
+    dfs(dfs, 0, 0);
     cout << ans << endl;
+    if(ans == YES){
+        rep(i, N){
+            cout << F[i] << '\n';
+        }
+    }
     return 0;
 }
