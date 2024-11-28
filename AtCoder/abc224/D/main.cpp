@@ -123,17 +123,45 @@ namespace std{
 int main() {
     long long M;
     std::cin >> M;
-    std::vector<long long> u(M);
-    std::vector<long long> v(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+
+    vvll to(9);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    std::vector<long long> p(8);
+    vll p(8);
     for(int i = 0 ; i < 8 ; i++){
         std::cin >> p[i];
+        --p[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll ans{0,1,2,3,4,5,6,7};
+    queue<vll> Q;
+    Q.emplace(p);
+    map<vll, ll> used;
+    used[p] = 0;
+    auto getRem = [](const vll& p){
+        set<ll> rems = {0,1,2,3,4,5,6,7,8};
+        repr(i,p){
+            rems.erase(i);
+        }
+        return *rems.begin();
+    };
+    while(!Q.empty()){
+        auto p = Q.front();Q.pop();
+        if(used.count(ans))break;
+        auto u = getRem(p);
+        for(auto&& v: to[u]){
+            auto q = p;
+            auto i = find(all(q), v) - q.begin();
+            q[i] = u;
+            if(used.count(q))continue;
+            used[q] = used[p] + 1;
+            Q.emplace(q);
+        }
+    }
+    if(used.count(ans)) cout << used[ans] << endl;
+    else cout << -1 << endl;
     return 0;
 }
