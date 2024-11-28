@@ -130,20 +130,53 @@ ostream &operator<<(ostream &os, const mint &v) {
 }
 
 // clang-format on
+using P = pair<ll,ll>;
+P input(){
+    ll a,b;
+    cin >> a >> b;
+    return P{--a,--b};
+}
 int main() {
-    long long H;
+    int H;
     std::cin >> H;
-    long long W;
+    int W;
     std::cin >> W;
-    long long K;
+    int K;
     std::cin >> K;
-    std::vector<long long> x(2);
-    std::vector<long long> y(2);
+    vector<P> A(2);
     for(int i = 0 ; i < 2 ; i++){
-        std::cin >> x[i];
-        std::cin >> y[i];
+        A[i] = input();
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(2, vector(2, mint{0}));
+    DP[A[0].first == A[1].first][A[0].second == A[1].second] = 1;
+    int dx[2][2];
+    dx[0][0] = H-2;
+    dx[0][1] = 1;
+    dx[1][0] = H-1;
+    dx[1][1] = 0;
+    int dy[2][2];
+    dy[0][0] = W-2;
+    dy[0][1] = 1;
+    dy[1][0] = W-1;
+    dy[1][1] = 0;
+    rep(k,K){
+        vector pre(2, vector(2, mint{0}));
+        swap(DP,pre);
+        rep(j,2){
+            rep(p,2){
+                rep(n,2){
+                    DP[n][j] += pre[p][j] * dx[p][n];
+                }
+            }
+        }
+        rep(i,2){
+            rep(p,2){
+                rep(n,2){
+                    DP[i][n] += pre[i][p] * dy[p][n];
+                }
+            }
+        }
+    }
+    cout << DP[1][1] << endl;
     return 0;
 }
