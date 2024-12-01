@@ -120,45 +120,33 @@ namespace std{
 
 
 // clang-format on
-ll N;
-ll M;
 
 int main() {
+    ll N;
+    ll M;
     cin >> N;
     cin >> M;
-    vector memo(N, vector(M+1, -1ll));
-    auto dfs = [&](auto dfs, ll j, ll u) -> ll{
-        if(memo[j][u] != -1) return memo[j][u];
-        if(j == N-1){
-            memo[j][u] = M;
-        } else {
-            reps(i,u+10,M+1){
-                ll now = dfs(dfs, j+1, i);
-                if(now == -1)break;
-                chmax(memo[j][u], i);
-            }
-        }
-        return memo[j][u];
-    };
-
-    reps(i,1,M+1){
-        dfs(dfs,0,i);
-    }
     vvll ans;
     vll now;
-    auto dfs2 = [&](auto dfs2, ll j, ll u) -> void{
+    auto dfs = [&](auto dfs, ll j, ll u) -> bool{
         now.emplace_back(u);
-        if((ll)now.size() == N){
+        bool ok = false;
+        if(j == N-1){
             ans.emplace_back(now);
+            ok = true;
         } else {
-            reps(i,u+10,memo[j][u]+1){
-                dfs2(dfs2, j+1, i);
+            reps(i,u+10,M+1){
+                auto b = dfs(dfs, j+1, i);
+                ok |= b;
+                if(!b)break;
             }
         }
         now.pop_back();
+        return ok;
     };
     reps(i,1,M+1){
-        dfs2(dfs2, 0,i);
+        auto b = dfs(dfs,0,i);
+        if(!b)break;
     }
     cout << ans.size() << '\n';
     rep(i,ans.size()){
