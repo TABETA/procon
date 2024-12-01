@@ -137,7 +137,38 @@ int main() {
     std::cin >> K;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    auto isKaibun = [&](deque<char> s) -> bool {
+        rep(i, s.size() / 2) {
+            if (s[i] != s[s.size() - 1 - i]) return false;
+        }
+        return true;
+    };
+    vector memo(N+1, map<deque<char>, mint>{});
+    auto dfs = [&](auto dfs, int i, deque<char> s = {}) -> mint{
+        if((ll)s.size() > K){
+            s.pop_front();
+        }
+        if(memo[i].count(s)) return memo[i][s];
+        if((ll)s.size() == K){
+            if(isKaibun(s)) return memo[i][s] = 0;
+        }
+        if(i == N){
+            return memo[i][s] = 1;
+        }
+        auto  getNext = [&](int i) -> string{
+            if(i>=N) return "";
+            if(S[i] == '?') return "AB";
+            else return string(1, S[i]);
+        };
+        mint now = 0;
+        for (auto &&c : getNext(i)){
+            s.push_back(c);
+            now += dfs(dfs, i+1, s);
+            s.pop_back();
+        }
+        return memo[i][s] = now;
+    };
+    auto ans = dfs(dfs, 0);
     cout << ans << endl;
     return 0;
 }
