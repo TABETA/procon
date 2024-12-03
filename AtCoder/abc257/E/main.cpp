@@ -123,11 +123,29 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> C(9);
-    for(int i = 0 ; i < 9 ; i++){
+    vll C(N);
+    using P = pair<ll,ll>;
+    P l = P{linf,linf};
+    for(ll i = 0 ; i < 9 ; i++){
         std::cin >> C[i];
+        chmin(l, {C[i], i});
     }
-    ll ans = 0;
+    ll K = N / l.first;
+    ll rem = N % l.first;
+    string ans = string(K, '1' + l.second);
+    rep(i,K){
+        repd(j,9){
+            auto c = C[j];
+            char v = '1' + j;
+            if(v <= ans[i])break;
+            auto nr = rem + C[ans[i]-'1'] - c;
+            if(nr >= 0){
+                ans[i] = v;
+                rem = nr;
+                break;
+            }
+        }
+    }
     cout << ans << endl;
     return 0;
 }
