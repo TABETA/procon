@@ -128,8 +128,28 @@ int main() {
     std::vector<long long> A(M);
     for(int i = 0 ; i < M ; i++){
         std::cin >> A[i];
+        --A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll S(M+1);
+    S[0] = 0;
+    rep(i,M){
+        ll now = S[i];
+        if(A[i] == now){
+            now = A[i]+1;
+        } else if(A[i]+1 == now){
+            now = A[i];
+        }
+        S[i+1] = now;
+    }
+    vll B(N);
+    iota(all(B), 1);
+    vll ans(M);
+    repd(i,M){
+        ans[i] = B[S[i]];
+        swap(B[A[i]], B[A[i]+1]);
+    }
+    rep(i,M){
+        cout << ans[i] << '\n';
+    }
     return 0;
 }
