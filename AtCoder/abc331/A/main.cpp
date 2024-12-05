@@ -131,7 +131,9 @@ int main() {
     std::cin >> m;
     long long d;
     std::cin >> d;
-    ll ans = 0;
-    cout << ans << endl;
+    ++d;
+    if(d > D) d = 1, ++m;
+    if(m > M) m = 1, ++y;
+    printf("%lld %lld %lld\n", y, m, d);
     return 0;
 }
