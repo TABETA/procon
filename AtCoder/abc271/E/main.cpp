@@ -122,24 +122,37 @@ namespace std{
 // clang-format on
 int main() {
     long long N;
-    std::cin >> N;
+    cin >> N;
     long long M;
-    std::cin >> M;
+    cin >> M;
     long long K;
-    std::cin >> K;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    std::vector<long long> C(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
-        std::cin >> C[i];
+    cin >> K;
+    using P = tuple<ll,ll,ll>;
+    vector A(M, P{});
+    rep(i,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,c);
+        A[i] = P{u,v,c};
     }
-    std::vector<long long> E(K);
+    vector<long long> E(K);
     for(int i = 0 ; i < K ; i++){
-        std::cin >> E[i];
+        cin >> E[i];
+        --E[i];
     }
-    ll ans = 0;
+    map<ll,ll> mp;
+    mp[0] = 0;
+    rep(i,K){
+        auto [s,t,c] = A[E[i]];
+        if(mp.count(s) == 0) continue;
+        auto d = mp[s];
+        ll tot = c + d;
+        if(mp.count(t) == 0 || mp[t] > tot){
+            mp[t] = tot;
+        }
+    }
+    ll ans = mp.count(N-1) ? mp[N-1] :linf;
+    if(ans == linf) ans = -1;
     cout << ans << endl;
     return 0;
 }
