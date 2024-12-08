@@ -137,13 +137,29 @@ int main() {
     std::cin >> M;
     long long K;
     std::cin >> K;
-    std::vector<long long> U(M);
-    std::vector<long long> V(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector dp(N, mint(0));
+    dp[0] = 1;
+    mint sum = 1;
+    rep(i,K){
+        vector pre(N, mint(0));
+        swap(dp, pre);
+        mint now = 0;
+        rep(j,N){
+            dp[j] = sum - pre[j];
+            repr(k, to[j]){
+                dp[j] -= pre[k];
+            }
+            now += dp[j];
+        }
+        sum = now;
+    }
+    cout << dp[0] << endl;
     return 0;
 }
