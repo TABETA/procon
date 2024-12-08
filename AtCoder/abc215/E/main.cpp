@@ -133,9 +133,53 @@ ostream &operator<<(ostream &os, const mint &v) {
 int main() {
     long long N;
     std::cin >> N;
-    std::string S;
-    std::cin >> S;
-    ll ans = 0;
+    vector<int> S(N);
+    {
+        string s;
+        std::cin >> s;
+        rep(i, N) {
+            S[i] = s[i] - 'A' + 1;
+        }
+    }
+    int used = 0;
+    auto isUsed = [&](int v) -> bool {
+        --v;
+        return used & (1 << v);
+    };
+    auto setUsed = [&](int v, bool val) -> void {
+        --v;
+        if(val) {
+            used |= (1 << v);
+        } else {
+            used &= ~(1 << v);
+        }
+    };
+    auto encode = [&](int i, int last, int used) -> int {
+        int ret = i;//10bit
+        ret <<= 4;
+        ret += last;//4bit
+        ret <<= 10;
+        ret += used;//10bit
+        return ret;
+    };
+    unordered_map<int, mint> dp;
+    auto dfs = [&](auto dfs, int i, int last) -> mint{
+        auto key = encode(i, last, used);
+        if(dp.count(key)) return dp[key];
+        mint now = 0;
+        if(i != N) {
+            if(!isUsed(S[i])) {
+                setUsed(S[i], true);
+                now += dfs(dfs, i+1, S[i]) + 1;
+                setUsed(S[i], false);
+            } else if(last == S[i]) {
+                now += dfs(dfs, i+1, last) + 1;
+            }
+            now += dfs(dfs, i+1, last);
+        }
+        return dp[key] = now;
+    };
+    mint ans = dfs(dfs, 0, 0);
     cout << ans << endl;
     return 0;
 }
