@@ -22,6 +22,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <random>
 
 #else
 #include <bits/stdc++.h>
@@ -121,7 +122,126 @@ namespace std{
 const string YES = "Yes";
 const string NO = "No";
 
+
+
 // clang-format on
+using P = pair<ll, ll>;
+struct State2 {
+    const ll H;
+    const ll W;
+    set<P> s;
+    State2(ll H, ll W) : H(H), W(W) {
+        rep(y, H) {
+            rep(x, W) { s.emplace(y, x); }
+        }
+    }
+    State2(ll H, ll W, set<P> s) : H(H), W(W), s(s) {}
+    State2(const State2& s) : H(s.H), W(s.W), s(s.s) {}
+    State2 fill(P HW, int v) {
+        if (s.empty()) return {0,0};
+        auto [y, x] = *s.begin();
+        auto t = s;
+        auto [R, C] = HW;
+        rep(r, R) {
+            rep(c, C) {
+                if (y + r > H) return {0,0};
+                if (x + c > W) return {0,0};
+                if (!t.count(P{y + r, x + c})) return {0,0};
+                t.erase(P{y + r, x + c});
+            }
+        }
+        return {H, W, t};
+    }
+    bool isFilled() { return s.empty(); }
+};
+struct State {
+    const ll H;
+    const ll W;
+    vector<vector<int>> used;
+    State(ll H, ll W) : H(H), W(W), used(H,vector(W, 0)) {}
+    State(ll H, ll W, vector<vector<int>> used) : H(H), W(W), used(used) {}
+    State(const State& other) : H(other.H), W(other.W), used(other.used) {}
+    P top() const {
+        rep(i, H) {
+            rep(j, W) {
+                if (!used[i][j]) {
+                    return {i, j};
+                }
+            }
+        }
+        return {-1, -1};
+    }
+    bool erase(ll y, ll x, int v){
+        if (y >= H) return false;
+        if (x >= W) return false;
+        if(used[y][x]) return false;
+        used[y][x] = v+1;
+        return true;
+    }
+    State fill(P HW, int v) {
+        auto [y, x] = top();
+        if(y==-1) return {0,0};
+        auto t = *this;
+        auto [R, C] = HW;
+        rep(r, R) {
+            rep(c, C) {
+                if (!t.erase(y + r, x + c, v)) return {0,0};
+            }
+        }
+        return t;
+    }
+    bool isFilled() {
+        rep(i, H) {
+            rep(j, W) {
+                if (!used[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+
+
+template<typename T>
+string solve(ll N, ll H, ll W, const vector<P>& D){
+    vector<P> C = D;
+    vll is(N);
+    iota(all(is), 0);
+    auto ans = NO;
+    do {
+        auto dfs = [&](auto dfs, ll n, T s) -> bool {
+            if (s.isFilled()) {
+                return true;
+            }
+            if (n == N) {
+                return false;
+            }
+            auto i = is[n];
+            rep(_, 2) {
+                auto t = s.fill(C[i], i);
+                if (t.H != 0) {
+                    if (dfs(dfs, n + 1, t)) {
+                        return true;
+                    }
+                }
+                swap(C[i].first, C[i].second);
+            }
+            return false;
+        };
+        if (dfs(dfs, 0ll, {H, W})) {
+            return YES;
+        }
+    } while (next_permutation(all(is)));
+    return NO;
+}
+// min_valからmax_valまでの範囲で乱数を生成する関数
+int generate_random(int min_val, int max_val) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(min_val, max_val);
+    return dis(gen);
+}
 int main() {
     long long N;
     std::cin >> N;
@@ -129,13 +249,31 @@ int main() {
     std::cin >> H;
     long long W;
     std::cin >> W;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+
+    vector<P> C(N);
+    for (int i = 0; i < N; i++) {
+        CIN(ll, h);
+        CIN(ll, w);
+        C[i] = P{h, w};
     }
-    ll ans = 0;
-    cout << ans << endl;
+#if 1
+    cout << solve<State>(N, H, W, C) << endl;
+#else
+    while (true)
+    {
+        ll N = generate_random(1, 7);
+        ll H = generate_random(1, 10);
+        ll W = generate_random(1, 10);
+        vector<P> C(N);
+        for (int i = 0; i < N; i++) {
+            C[i] = P{generate_random(1, 10), generate_random(1, 10)};
+        }
+        if(solve<State>(N, H, W, C) != solve<State2>(N, H, W, C)){
+            printf("N: %lld, H: %lld, W: %lld\n", N, H, W);
+            print(C);
+            break;
+        }
+    }
+#endif
     return 0;
 }
