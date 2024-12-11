@@ -121,8 +121,46 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, N);
+    CIN(ll, M);
+    vll used(N, false);
+    used[0] = true;
+    auto out = [&](ll v){
+        cout << v + 1 << endl;
+    };
+    vll V;
+    auto getNext = [&]()->bool{
+        auto c = cin.peek();
+        if(c == 'O' || c == '-'){
+            return false;
+        }
+        CIN(ll, K);
+        V.resize(K);
+        rep(i,K){
+            cin >> V[i];
+            if(V[i] == N) {
+                cout << N << endl;
+                CIN(string, _);
+                return false;
+            }
+            --V[i];
+        }
+        return true;
+    };
+    auto dfs = [&](auto dfs, ll u) -> bool{
+        if(u != 0){
+            out(u);
+        }
+        if(!getNext()) return true;
+        rep(i,V.size()){
+            if(used[V[i]])continue;
+            used[V[i]] = true;
+            if(dfs(dfs, V[i])) return true;
+            out(u);
+            getNext();
+        }
+        return false;
+    };
+    dfs(dfs, 0);
     return 0;
 }
