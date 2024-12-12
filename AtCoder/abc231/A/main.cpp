@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long long D;
     std::cin >> D;
-    ll ans = 0;
-    cout << ans << endl;
+    double ans = D/100.0;
+    cout << fixed << setprecision(15) << ans << endl;
     return 0;
 }
