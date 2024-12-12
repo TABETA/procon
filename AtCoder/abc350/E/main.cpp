@@ -122,14 +122,26 @@ namespace std{
 // clang-format on
 int main() {
     long long N;
-    std::cin >> N;
+    cin >> N;
     long long A;
-    std::cin >> A;
+    cin >> A;
     long long X;
-    std::cin >> X;
+    cin >> X;
     long long Y;
-    std::cin >> Y;
-    ll ans = 0;
-    cout << ans << endl;
+    cin >> Y;
+    map<ll, double> memo;
+    auto f = [&](auto f, ll n) -> double{
+        if(memo.count(n)) return memo[n];
+        if(n == 0) return 0;
+        double x = f(f, n/A) + X;
+        double sum = 0;
+        for(int B = 2; B <= 6; ++B){
+            sum += f(f, n/B);
+        }
+        double y = (sum + Y*6)/5.0;
+        return memo[n] = min(x,y);
+    };
+    auto ans = f(f, N);
+    cout << fixed << setprecision(15) << ans << endl;
     return 0;
 }
