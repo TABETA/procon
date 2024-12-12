@@ -124,24 +124,49 @@ const string NO = "No";
 // clang-format on
 int main() {
     long long N;
-    std::cin >> N;
-    std::vector<long long> a(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+    cin >> N;
+    map<ll, ll> mp;
+    ll id = 1;
+    vll A(N);
+    vector t(2,vector<ll>(N));
+    {
+        set<ll> used;
+        for(ll i = 0 ; i < N ; i++){
+            CIN(ll,v);
+            if(mp.count(v)){
+                A[i] = mp[v];
+            } else {
+                A[i] = mp[v] = id++;
+            }
+            used.insert(A[i]);
+            t[0][i] = used.size();
+        }
+    }   
+    vll B(N);
+    vll m(N);
+    ll prem = 0;
+    {
+        set<ll> used;
+        for(ll i = 0 ; i < N ; i++){
+            CIN(ll,v);
+            if(mp.count(v)){
+                B[i] = mp[v];
+            } else {
+                B[i] = linf;
+            }
+            used.insert(B[i]);
+            t[1][i] = used.size();
+            m[i] = max(prem,B[i]);
+            prem = m[i];
+        }
     }
-    std::vector<long long> b(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> b[i];
-    }
+
     long long Q;
-    std::cin >> Q;
-    std::vector<long long> x(Q);
-    std::vector<long long> y(Q);
+    cin >> Q;
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> x[i];
-        std::cin >> y[i];
+        CIN(ll,x);--x;
+        CIN(ll,y);--y;
+        cout << (t[0][x] == t[1][y] && t[0][x] == m[y] ? YES : NO) << '\n';
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
