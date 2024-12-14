@@ -118,11 +118,105 @@ namespace std{
     };
 }
 
-
 // clang-format on
+using P = pair<ll, ll>;
+auto getNext(P cur, P next) {
+    P diff = P{next.first - cur.first, next.second - cur.second};
+    static map<P, char> dir = {
+        {P{0, 1}, 'R'},
+        {P{0, -1}, 'L'},
+        {P{1, 0}, 'D'},
+        {P{-1, 0}, 'U'},
+    };
+    vector<vector<P>> ret;
+    auto f = [](P b) {
+        auto [by, bx] = b;
+        vector<P> ps;
+        rep(i, 2) {
+            rep(j, 2) { ps.emplace_back(by + i, bx + j); }
+        }
+        return ps;
+    };
+    switch (dir[diff]) {
+        case 'U':
+            ret.push_back(f(P{next.first - 1, next.second}));
+            ret.push_back(f(P{next.first - 1, next.second - 1}));
+            break;
+        case 'D':
+            ret.push_back(f(P{next.first, next.second}));
+            ret.push_back(f(P{next.first, next.second - 1}));
+            break;
+        case 'R':
+            ret.push_back(f(P{next.first, next.second}));
+            ret.push_back(f(P{next.first - 1, next.second}));
+            break;
+        case 'L':
+            ret.push_back(f(P{next.first, next.second - 1}));
+            ret.push_back(f(P{next.first - 1, next.second - 1}));
+            break;
+    }
+    return ret;
+};
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, H);
+    CIN(ll, W);
+    auto next_adjacents = [&](ll r, ll c) {
+        vector<P> ret;
+        for (auto&& q : {
+                 P{r - 1, c},
+                 P{r + 1, c},
+                 P{r, c - 1},
+                 P{r, c + 1},
+             }) {
+            auto [y, x] = q;
+            if (y < 0 || y >= H || x < 0 || x >= W) continue;
+            ret.push_back(q);
+        }
+        return ret;
+    };
+    using TS = vs;
+    TS S(H);
+    rep(i, H) {
+        cin >> S[i];
+    }
+    vvll D = vvll(H, vll(W, linf));
+    struct T {
+        ll cost;
+        P cur;
+    };
+    auto dijkstra = [&]() {
+        deque<T> q;
+        D[0][0] = 0;
+        q.emplace_back(0, P{0, 0});
+        while (!q.empty()) {
+            auto [d, cur] = q.front();
+            q.pop_front();
+            auto [y, x] = cur;
+            if (D[y][x] < d) continue;
+            if (y == H - 1 && x == W - 1) {
+                cout << D[y][x] << endl;
+                return;
+            }
+            for (auto&& [ny, nx] : next_adjacents(y, x)) {
+                if (S[ny][nx] == '#') {
+                    auto nd = d + 1;
+                    for (auto&& np : getNext(P{y, x}, P{ny, nx})) {
+                        for (auto&& [ny, nx] : np) {
+                            if (ny < 0 || ny >= H || nx < 0 || nx >= W)
+                                continue;
+                            if (chmin(D[ny][nx], nd)) {
+                                q.emplace_back(nd, P{ny, nx});
+                            }
+                        }
+                    }
+                } else {
+                    if (chmin(D[ny][nx], d)) {
+                        q.emplace_front(d, P{ny, nx});
+                    }
+                }
+            }
+        }
+    };
+    dijkstra();
     return 0;
 }
