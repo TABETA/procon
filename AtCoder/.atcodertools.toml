@@ -1,7 +1,7 @@
 [codestyle.java]
 indent_type = 'space'
 indent_width = 4
-workspace_dir='/mnt/g/Git/procon/AtCoder'
+workspace_dir='/home/r-abe/proj/procon/AtCoder'
 lang='cpp'
 template_file='/usr/local/lib/python3.10/dist-packages/atcodertools/tools/templates/default_template.java'
 code_generator_toml='/usr/local/lib/python3.10/dist-packages/atcodertools/codegen/code_generators/universal_generator/java.toml'
@@ -10,10 +10,10 @@ code_generator_toml='/usr/local/lib/python3.10/dist-packages/atcodertools/codege
 [codestyle]
 indent_type = 'space'
 indent_width = 4
-workspace_dir='/mnt/g/Git/procon/AtCoder'
+workspace_dir='/home/r-abe/proj/procon/AtCoder'
 lang='cpp'
-template_file='/mnt/g/Git/procon/AtCoder/template.cpp'
-code_generator_toml='/mnt/g/Git/procon/AtCoder/cpp_code_generator.toml'
+template_file='/home/r-abe/proj/procon/AtCoder/template.cpp'
+code_generator_toml='/home/r-abe/proj/procon/AtCoder/cpp_code_generator.toml'
 
 [etc]
 download_without_login=false
