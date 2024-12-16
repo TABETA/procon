@@ -127,13 +127,47 @@ int main() {
     std::cin >> M;
     std::vector<long long> X(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> X[i];
+        std::cin >> X[i];--X[i];
     }
     std::vector<long long> A(M);
     for(int i = 0 ; i < M ; i++){
         std::cin >> A[i];
     }
+    using P = pair<ll,ll>;
+    vector<P> B(M);
+    for(int i = 0 ; i < M ; i++){
+        B[i] = P{X[i], A[i]};
+    }
+    ranges::sort(B);
+    B.emplace_back(N, 1);
+    ll i = B[0].first;
+    ll carry = B[0].second;
+    if(carry == 0){
+        std::cout << -1 << std::endl;
+        return 0;
+    }
+    --carry;
     ll ans = 0;
+    reps(m,1,M+1){
+        auto [j, cur] = B[m];
+        ll n = (j-i);
+        ans += n*(2*carry - n + 1)/2;
+        carry -= n-1;
+        if(carry < 0){
+            std::cout << -1 << std::endl;
+            return 0;
+        }
+        if(cur == 0 && carry <= 0){
+            std::cout << -1 << std::endl;
+            return 0;
+        }
+        carry += cur - 1;
+        i = j;
+    }
+    if(carry != 0){
+        std::cout << -1 << std::endl;
+        return 0;
+    }
     cout << ans << endl;
     return 0;
 }
