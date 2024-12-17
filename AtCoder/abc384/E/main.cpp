@@ -121,8 +121,54 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
+    CIN(ll,H);
+    CIN(ll,W);
+    CIN(ll,X);
+    CIN(ll,sy);--sy;
+    CIN(ll,sx);--sx;
+    vvll S(H, vll(W));
+    rep(i,H){
+        rep(j,W){
+            cin >> S[i][j];
+        }
+    }
     ll ans = 0;
+    using P = pair<ll,ll>;
+    auto next_adjacents = [&](ll r, ll c) {
+        vector<P> ret;
+        for (auto &&q : {
+            P{r - 1, c},
+            P{r + 1, c},
+            P{r, c - 1},
+            P{r, c + 1},
+        })
+        {
+            auto [y,x] = q;
+            if (y < 0 || y >= H || x < 0 || x >= W) continue;
+            if(S[y][x] == 0) continue;
+            ret.push_back(q);
+        }
+        return ret;
+    };
+
+    using T = tuple<ll,P>;
+    priority_queue<T, vector<T>, greater<T>> Q;
+    auto push = [&](ll t, ll y, ll x){
+        ans += t;
+        for (auto &&[r,c] : next_adjacents(y,x)){
+            Q.emplace(S[r][c], P{r,c});
+            S[r][c] = 0;
+        }
+    };
+    push(S[sy][sx], sy,sx);
+    S[sy][sx] = 0;
+    while(!Q.empty()){
+        auto [t, from] = Q.top(); Q.pop();
+        if(t  > ans) break;
+        ll x = gcd(ans,X);
+        if(t * X/x - ans/x >= 0) break;
+        push(t, from.first, from.second);
+    }
     cout << ans << endl;
     return 0;
 }
