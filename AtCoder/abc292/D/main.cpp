@@ -122,18 +122,45 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> u(M);
-    std::vector<long long> v(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+    dsu d(N);
+    vll edges(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        if(!d.same(u,v)){
+            d.merge(u,v);
+            auto c = d.leader(u);
+            if(c == u) {
+                edges[u] += edges[v] + 1;
+                edges[v] = 0;
+            } else if(c == v) {
+                edges[v] += edges[u] + 1;
+                edges[u] = 0;
+            } else {
+                edges[c] += edges[u] + edges[v] + 1;
+                edges[v] = 0;
+                edges[u] = 0;
+            }
+        } else {
+            auto c = d.leader(u);
+            edges[c]++;
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    for (auto &&g : d.groups())
+    {
+        auto c = d.leader(g[0]);
+        if(edges[c] != (ll)g.size()){
+            cout << NO << endl;
+            return 0;
+        }
+    }
+    cout << YES << endl;
     return 0;
 }
