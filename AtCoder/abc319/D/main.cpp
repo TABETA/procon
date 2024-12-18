@@ -118,11 +118,38 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll, N);
+    CIN(ll, M);
+    vll L(N);
+    rep(i, N) { cin >> L[i]; }
+    vll A(N + 1);
+    rep(i, N) { A[i + 1] += A[i] + L[i]; }
+    auto binary_search = [&](auto f, ll ac, ll wa) -> ll {
+        while (abs(ac - wa) > 1) {
+            ll wj = (ac + wa) / 2;
+            if (f(wj))
+                ac = wj;
+            else
+                wa = wj;
+        }
+        return ac;
+    };
+    auto f = [&](ll wj) {
+        ll m = 0;
+        for(ll i = 0, j = 1; i < N; i = j, j = i + 1) {
+            while (j < N) {
+                ll nj = j+1;
+                if(A[nj] - A[i] + (nj-i-1) > wj) break;
+                ++j;
+            }
+            if(A[j] - A[i] + (j-i-1) > wj) return false;
+            ++m;
+        }
+        return m <= M;
+    };
+    auto ans = binary_search(f, 2e18, 0);
     cout << ans << endl;
     return 0;
 }
