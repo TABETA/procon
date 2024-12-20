@@ -133,7 +133,17 @@ ostream &operator<<(ostream &os, const mint &v) {
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
+    mint ans = 0;
+    auto f = [&](mint l, mint r){
+        mint n = (r-l+1);
+        return n*(1 + n)/2;
+    };
+    ll n = 10;
+    while(n <= N){
+        ans += f(n/10, n-1);
+        n *= 10;
+    }
+    ans += f(n/10, N);
     cout << ans << endl;
     return 0;
 }
