@@ -120,16 +120,29 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> X(N);
-    std::vector<long long> Y(N);
+    dsu uf(N);
+    using P = pair<ll,ll>;
+    map<P, ll> mp;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> X[i];
-        std::cin >> Y[i];
+        ll x, y;
+        std::cin >> x >> y;
+        --x, --y;
+        ll dx[] = {-1, -1, 0, 0, 1, 1};
+        ll dy[] = {-1, 0, -1, 1, 0, 1};
+        rep(j, 6){
+            ll nx = x + dx[j];
+            ll ny = y + dy[j];
+            if(mp.count(P(nx, ny))){
+                uf.merge(i, mp[P(nx, ny)]);
+            }
+        }
+        mp[P(x, y)] = i;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    cout << uf.groups().size() << endl;
     return 0;
 }
