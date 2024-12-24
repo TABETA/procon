@@ -118,18 +118,29 @@ namespace std{
     };
 }
 
-
 // clang-format on
+struct T{
+    ll nom;
+    ll denom;
+    bool operator>(const T& rhs) const {
+        return nom * rhs.denom > denom * rhs.nom;
+    }
+};
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    map<T, set<ll>, greater<T>> mp;
+    for (int i = 0; i < N; i++) {
+        ll a, b;
+        std::cin >> a >> b;
+        mp[T{a, a+b}].emplace(i + 1);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    for (auto&& [k, v] : mp) {
+        for (auto&& i : v) {
+            cout << i;
+            cout << ' ';
+        }
+    }
+    cout << endl;
     return 0;
 }
