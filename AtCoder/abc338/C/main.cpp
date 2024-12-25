@@ -136,6 +136,21 @@ int main() {
         std::cin >> B[i];
     }
     ll ans = 0;
+    [&](){
+        rep(a,1e6+1){
+            ll b = linf;
+            rep(i,N){
+                if(Q[i] < 0){
+                    return;
+                }
+                if(B[i] != 0){
+                    chmin(b, Q[i]/B[i]);
+                }
+                Q[i] -= A[i];
+            }
+            chmax(ans, a+b);
+        }
+    }();
     cout << ans << endl;
     return 0;
 }
