@@ -123,11 +123,28 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
+    vs A(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
+    int dx[] = {0, 1, 0, -1, 1, 1, -1, -1};
+    int dy[] = {1, 0, -1, 0, 1, -1, 1, -1};
     ll ans = 0;
+    rep(y,N)rep(x,N){
+        rep(k,8){
+            string now = "";
+            auto cx = x;
+            auto cy = y;
+            rep(l,N){
+                int nx = (cx + dx[k] + N)%N;
+                int ny = (cy + dy[k] + N)%N;
+                now += A[ny][nx];
+                cx = nx;
+                cy = ny;
+            }
+            chmax(ans, stoll(now));
+        }
+    }
     cout << ans << endl;
     return 0;
 }
