@@ -122,24 +122,42 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+double calculate_angle(const std::complex<double>& vec1, const std::complex<double>& vec2) {
+    // ベクトルの積（複素数としての積を利用）
+    std::complex<double> product = vec1 * std::conj(vec2);
+    // atan2を用いて角度を算出
+    double angle = std::atan2(product.imag(), product.real());
+    // ラジアンから度に変換
+    return angle * (180.0 / M_PI);
+}
 int main() {
-    long long A_x;
-    std::cin >> A_x;
-    long long A_y;
-    std::cin >> A_y;
-    long long B_x;
-    std::cin >> B_x;
-    long long B_y;
-    std::cin >> B_y;
-    long long C_x;
-    std::cin >> C_x;
-    long long C_y;
-    std::cin >> C_y;
-    long long D_x;
-    std::cin >> D_x;
-    long long D_y;
-    std::cin >> D_y;
-    ll ans = 0;
-    cout << ans << endl;
+    using P = pair<ll,ll>;
+    ll N = 4;
+    vector<P> vec(N);
+    rep(i,N){
+        ll x,y;
+        cin >> x >> y;
+        vec[i] = {x,y};
+    }
+    auto toVec = [&](P p1, P p2) {
+        return complex<double>{p2.first - p1.first, p2.second - p1.second};
+    };
+    rep(i,N){
+        auto p = vec[(i-1 + N )%N];
+        auto c = vec[i];
+        auto n = vec[(i+1 + N )%N];
+        auto v1 = toVec(p, c);
+        auto v2 = toVec(n, c);
+        double degree = calculate_angle(v1, v2);
+        while(degree < 0){
+            degree += 360;
+        }
+        if(degree >= 180){
+            cout << NO << endl;
+            return 0;
+        }
+
+    }
+    cout << YES << endl;
     return 0;
 }
