@@ -129,7 +129,20 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
+    ll sum = 0;
+    ll now = 0;
+    ll ans = -linf;
+    rep(i,M){
+        sum += A[i] * (i+1);
+        now += A[i];
+    }
+    chmax(ans, sum);
+    reps(i,M,N){
+        sum -= now;
+        sum += A[i] * M;
+        now += A[i] - A[i-M];
+        chmax(ans, sum);
+    }
     cout << ans << endl;
     return 0;
 }
