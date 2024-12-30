@@ -118,11 +118,26 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    map<ll, ll> mp;
+    CIN(ll, Q);
+    rep(i, Q) {
+        CIN(ll, q);
+        switch (q) {
+            case 1: {
+                CIN(ll, x);
+                mp[x]++;
+            } break;
+            case 2: {
+                CIN(ll, x);
+                CIN(ll, c);
+                if ((mp[x] -= c) <= 0) mp.erase(x);
+            } break;
+            case 3:
+                cout << (mp.rbegin()->first - mp.begin()->first) << endl;
+                break;
+        }
+    }
     return 0;
 }
