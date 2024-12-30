@@ -127,7 +127,13 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
+    ll ans = (1 + N) * N / 2;
+    auto f = [&](ll x) {
+        return (x + N/x*x) * (N/x) / 2;
+    };
+    ans -= f(A);
+    ans -= f(B);
+    ans += f(lcm(A,B));
     cout << ans << endl;
     return 0;
 }
