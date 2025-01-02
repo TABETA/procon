@@ -125,11 +125,21 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> P(N);
+    multiset<ll> hi;
+    multiset<ll> lo;
+    auto add = [&](ll x) {
+        hi.insert(x);
+        if ((ll)hi.size() > K) {
+            auto p = *hi.begin();
+            lo.insert(p);
+            hi.erase(hi.find(p));
+        }
+        if ((ll)hi.size() >= K) cout << *hi.begin() << '\n';
+    };
     for(int i = 0 ; i < N ; i++){
-        std::cin >> P[i];
+        ll p;
+        std::cin >> p;
+        add(p);
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
