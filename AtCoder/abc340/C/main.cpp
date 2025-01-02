@@ -123,7 +123,21 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
+    map<ll,ll> mp;
+    mp[N] = 1;
     ll ans = 0;
+    auto push = [&](ll x, ll n){
+        if(x <= 1) return;
+        mp[x] += n;
+    };
+    while(mp.size() > 0){
+        auto [k, v] = *mp.rbegin();
+        mp.erase(k);
+        ans += k * v;
+        auto q = k / 2;
+        push(q, v);
+        push(q + k % 2, v);
+    }
     cout << ans << endl;
     return 0;
 }
