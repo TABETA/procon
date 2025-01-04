@@ -130,6 +130,24 @@ int main() {
         std::cin >> S[i];
     }
     ll ans = 0;
+    auto dfs = [&](auto dfs, ll i, map<char, ll> mp) -> void{
+        if(i >= N){
+            ll now = 0;
+            for (auto &&[k,v] : mp){
+                if(v == K){
+                    now++;
+                }
+            }
+            chmax(ans, now);
+            return;
+        }
+        dfs(dfs, i+1, mp);
+        for (auto &&c : S[i]){
+            mp[c]++;
+        }
+        dfs(dfs, i+1, mp);
+    };
+    dfs(dfs, 0, {});
     cout << ans << endl;
     return 0;
 }
