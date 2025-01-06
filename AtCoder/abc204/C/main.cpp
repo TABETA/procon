@@ -125,13 +125,27 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
     }
     ll ans = 0;
+    rep(i,N){
+        ll now = 0;
+        vector used(N, false);
+        auto dfs = [&](auto dfs, ll u) -> void{
+            ++now;
+            used[u] = true;
+            for(auto&& v: to[u]){
+                if(used[v]) continue;
+                dfs(dfs, v);
+            }
+        };
+        dfs(dfs, i);
+        ans += now;
+    }
     cout << ans << endl;
     return 0;
 }
