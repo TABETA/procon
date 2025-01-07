@@ -123,7 +123,18 @@ namespace std{
 int main() {
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    vll S;
+    reps(i,1,1ll<<10ll){
+        string now;
+        rep(j,10){
+            if((i>>j)&1){
+                now.push_back('0'+j);
+            }
+        }
+        ranges::sort(now, greater<char>());
+        S.push_back(stoll(now));
+    }
+    ranges::sort(S);
+    cout << S[K] << endl;
     return 0;
 }
