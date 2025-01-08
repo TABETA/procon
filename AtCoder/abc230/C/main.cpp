@@ -118,7 +118,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long N;
@@ -135,7 +134,24 @@ int main() {
     std::cin >> R;
     long long S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    reps(i, P, Q + 1) {
+        reps(j, R, S + 1) {
+            char c = '.';
+            if (i-A == j-B){
+                ll k = i - A;
+                if (max(1 - A, 1 - B) <= k && k <= min(N - A, N - B)) {
+                    c = '#';
+                }
+            }
+            if(i-A == -(j-B)){
+                ll k = i - A;
+                if (max(1 - A, B - N) <= k && k <= min(N - A, B - 1)) {
+                    c = '#';
+                }
+            }
+            cout << c;
+        }
+        cout << endl;
+    }
     return 0;
 }
