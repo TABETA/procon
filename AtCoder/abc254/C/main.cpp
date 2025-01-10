@@ -127,11 +127,23 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> a(N);
+    std::vector<long long> A(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto B = A;
+    ranges::sort(B);
+    rep(i,K){
+        vll now;
+        for(ll j = i; j < N; j+=K){
+            now.push_back(A[j]);
+        }
+        ranges::sort(now);
+        ll k = 0;
+        for(ll j = i; j < N; j+=K){
+            A[j] = now[k++];
+        }
+    }
+    cout << (A==B?YES:NO) << endl;
     return 0;
 }
