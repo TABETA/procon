@@ -125,7 +125,7 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
+    ll ans = max(B-A+1,0ll);
     cout << ans << endl;
     return 0;
 }
