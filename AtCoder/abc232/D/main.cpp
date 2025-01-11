@@ -121,8 +121,32 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll, H);
+    CIN(ll, W);
+    vs S(H);
+    rep(i, H) cin >> S[i];
+    using P = pair<ll,ll>;
+    queue<P> Q;
+    Q.emplace(0,0);
+    ll ans = 1;
+    vvll D(H, vll(W,linf));
+    D[0][0] = 1;
+    while(!Q.empty()){
+        auto [y,x] = Q.front();Q.pop();
+        ll dx[] = {0, 1};
+        ll dy[] = {1, 0};
+        ll nd = D[y][x]+1;
+        rep(i,2){
+            ll nx = x + dx[i];
+            ll ny = y + dy[i];
+            if(ny < 0 || ny >= H || nx < 0 || nx >= W)continue;
+            if(S[ny][nx] == '#')continue;
+            if(D[ny][nx] <= nd)continue;
+            D[ny][nx] = nd;
+            chmax(ans, D[ny][nx]);
+            Q.emplace(ny,nx);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
