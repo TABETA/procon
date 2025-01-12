@@ -121,8 +121,31 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
+    CIN(ll,N);
+    CIN(ll,X);
+    vvll A(N);
+    rep(i,N){
+        CIN(ll, L);
+        A[i] = vll(L);
+        rep(j,L){
+            cin >> A[i][j];
+        }
+    }
     ll ans = 0;
+    auto dfs = [&](auto dfs, ll i) -> void{
+        if(i == N){
+            if(X == 1)++ans;
+            return;
+        }
+        rep(j,A[i].size()){
+            if(X % A[i][j] == 0){
+                X /= A[i][j];
+                dfs(dfs, i+1);
+                X *= A[i][j];
+            }
+        }
+    };
+    dfs(dfs, 0);
     cout << ans << endl;
     return 0;
 }
