@@ -123,7 +123,12 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    map<ll, ll> memo;
+    auto f = [&](auto f, ll x)->ll {
+        if(memo.count(x)) return memo[x];
+        if(x == 0) return 1;
+        return memo[x] = f(f, x/2) + f(f, x/3);
+    };
+    cout << f(f, N) << endl;
     return 0;
 }
