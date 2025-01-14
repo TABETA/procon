@@ -123,13 +123,24 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    map<ll,vll> to;
+    rep(_,N){
+        CIN(ll,u);
+        CIN(ll,v);
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
+    ll ans = 1;
+    set<ll> used;
+    auto dfs = [&](auto dfs, ll u) -> void{
+        if(used.count(u)) return;
+        chmax(ans, u);
+        used.emplace(u);
+        for(auto&& v: to[u]){
+            dfs(dfs, v);
+        }
+    };
+    dfs(dfs, 1);
     cout << ans << endl;
     return 0;
 }
