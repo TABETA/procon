@@ -127,13 +127,35 @@ int main() {
     std::cin >> W;
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
+    set<ll> X;
+    set<ll> Y;
+    using P = pair<ll,ll>;
+    vector<P> G(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+        ll y, x;
+        std::cin >> y;
+        std::cin >> x;
+        G[i] = {y, x};
+        Y.emplace(y);
+        X.emplace(x);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    map<ll,ll> y;
+    {
+        ll i = 0;
+        for (auto &&j : Y){
+            y[j] = ++i;
+        }
+    }
+    map<ll,ll> x;
+    {
+        ll i = 0;
+        for (auto &&j : X){
+            x[j] = ++i;
+        }
+    }
+    rep(i,N){
+        auto [r, c] = G[i];
+        printf("%lld %lld\n", y[r], x[c]);
+    }
     return 0;
 }
