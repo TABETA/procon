@@ -130,6 +130,35 @@ int main() {
         std::cin >> w[i];
     }
     ll ans = 0;
+    vvll G(3, vll(3, 0));
+    auto dfs = [&](auto dfs, ll i, ll j, ll rem) -> void{
+        if(j == 3){
+            if(rem == 0){
+                if(i == 2) {
+                    rep(l,3){
+                        ll sum = 0;
+                        rep(k,3){
+                            sum += G[k][l];
+                        }
+                        if(sum != w[l]) return;
+                    }
+                    ++ans;
+                    return;
+                } else {
+                    dfs(dfs, i+1, 0, h[i+1]);
+                }
+            } else {
+                return;
+            }
+        } else if(rem == 0){
+            return;
+        }
+        reps(k, 1, rem+1){
+            G[i][j] = k;
+            dfs(dfs, i, j+1, rem-k);
+        }
+    };
+    dfs(dfs, 0, 0, h[0]);
     cout << ans << endl;
     return 0;
 }
