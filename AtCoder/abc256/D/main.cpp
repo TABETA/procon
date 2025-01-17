@@ -123,13 +123,23 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> L(N);
-    std::vector<long long> R(N);
+    using P = pair<ll,ll>;
+    set<P> st;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> L[i];
-        std::cin >> R[i];
+        ll l, r;
+        std::cin >> l;
+        std::cin >> r;
+        st.insert(P(l,r));
     }
-    ll ans = 0;
-    cout << ans << endl;
+    P now = {st.begin()->first, st.begin()->first};
+    for (auto &&[l, r] : st){
+        if(now.second >= l){
+            chmax(now.second, r);
+        } else {
+            cout << now.first << " " << now.second << endl;
+            now = {l, r};
+        }
+    }
+    cout << now.first << " " << now.second << endl;
     return 0;
 }
