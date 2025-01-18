@@ -123,8 +123,32 @@ const string NO = "No";
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll, N);
+    vll A(N);
+    rep(i, N) { cin >> A[i]; }
+    CIN(ll, M);
+    set<ll> B;
+    rep(i, M) { ll b; cin >> b; B.emplace(b); }
+    CIN(ll, X);
+    string ans = NO;
+    queue<ll> Q;
+    Q.emplace(0);
+    set<ll> used;
+    while(!Q.empty()){
+        auto u = Q.front();Q.pop();
+        if(u == X){
+            ans = YES;
+            break;
+        }
+        rep(i, N) {
+            auto v = (u + A[i]);
+            if(v > X)continue;
+            if(B.count(v))continue;
+            if(used.count(v))continue;
+            used.emplace(v);
+            Q.emplace(v);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
