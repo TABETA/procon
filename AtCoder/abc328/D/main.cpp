@@ -123,7 +123,16 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    string ans = "";
+    string now = "";
+    for (auto &&c : S){
+        ans += c;
+        while(ans.size() >= 3 && ans.substr(ans.size()-3) == "ABC"){
+            ans.pop_back();
+            ans.pop_back();
+            ans.pop_back();
+        }
+    }
     cout << ans << endl;
     return 0;
 }
