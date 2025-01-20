@@ -124,10 +124,23 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<std::string> S(N);
+    unordered_map<ll, unordered_set<ll>> Y;
+    unordered_map<ll, unordered_set<ll>> X;
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
+        rep(j,N){
+            if(S[i][j] == 'o'){
+                Y[i].emplace(j);
+                X[j].emplace(i);
+            }
+        }
     }
     ll ans = 0;
+    for (auto &&[y, xs] : Y){
+        for (auto &&x : xs){
+            ans += (xs.size()-1)*(X[x].size()-1);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
