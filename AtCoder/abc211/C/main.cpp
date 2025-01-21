@@ -133,7 +133,24 @@ ostream &operator<<(ostream &os, const mint &v) {
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    map<ll, map<ll,mint> > mp;
+    string T = "chokudai";
+
+    auto dfs = [&](auto dfs, ll i, ll j) -> mint{
+        if(mp.count(i) && mp[i].count(j)) return mp[i][j];
+        if(i == S.size()){
+            if(j == T.size()){
+                return mp[i][j] = 1;
+            } else {
+                return mp[i][j] = 0;
+            }
+        }
+        mint res = dfs(dfs, i + 1, j);
+        if(S[i] == T[j]){
+            res += dfs(dfs, i + 1, j + 1);
+        }
+        return mp[i][j] = res;
+    };
+    cout << dfs(dfs, 0, 0) << endl;
     return 0;
 }
