@@ -121,8 +121,31 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, N);
+    map<ll,ll> A;
+    rep(i, N) {
+        ll a;
+        cin >> a;
+        A[i] = a;
+    }
+    CIN(ll, Q);
+    ll B = 0;
+    rep(_,Q){
+        CIN(ll, q);
+        if(q == 1){
+            CIN(ll, x);
+            B = x;
+            A.clear();
+        }
+        if(q == 2){
+            CIN(ll, i);--i;
+            CIN(ll, x);
+            A[i] += x;
+        }
+        if(q == 3){
+            CIN(ll, i);--i;
+            cout << A[i] + B << '\n';
+        }
+    }
     return 0;
 }
