@@ -132,6 +132,7 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+using P = pair<ll,ll>;
 int main() {
     long long H;
     std::cin >> H;
@@ -141,7 +142,43 @@ int main() {
     for(int i = 0 ; i < H ; i++){
         std::cin >> S[i];
     }
-    ll ans = 0;
+    auto ans = NO;
+    string T = "snuke";
+    map<char, ll> mp;
+    rep(i,T.size()){
+        mp[T[i]] = i;
+    }
+    auto next_adjacents = [&](P p) {
+      auto [r, c] = p;
+      vector<P> ret;
+      for (auto &&q : {
+          P{r - 1, c},
+          P{r + 1, c},
+          P{r, c - 1},
+          P{r, c + 1},
+      })
+      {
+          auto [y,x] = q;
+          if (y < 0 || y >= H || x < 0 || x >= W) continue;
+          if((mp[S[r][c]] + 1)%T.size() != mp[S[y][x]]) continue;
+          ret.push_back(q);
+      }
+      return ret;
+    };
+    vector used(H, vector(W, false));
+    auto dfs = [&](auto dfs, P u) -> void{
+        auto [r, c] = u;
+        if(used[r][c]) return;
+        used[r][c] = true;
+        if(r == H-1 && c == W-1){
+            ans = YES;
+            return;
+        }
+        for(auto&& v: next_adjacents(u)){
+            dfs(dfs, v);
+        }
+    };
+    dfs(dfs, P{0, 0});
     cout << ans << endl;
     return 0;
 }
