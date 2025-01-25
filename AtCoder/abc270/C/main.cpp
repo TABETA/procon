@@ -127,13 +127,32 @@ int main() {
     std::cin >> X;
     long long Y;
     std::cin >> Y;
-    std::vector<long long> U(N-1);
-    std::vector<long long> V(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    vvll to(N);
+    rep(_,N-1){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
+    vll ans;
+    vector used(N, false);
+    auto dfs = [&](auto dfs, ll u) -> bool{
+        used[u] = true;
+        if(u == Y-1){
+            ans.emplace_back(u+1);
+            return true;
+        }
+        for(auto&& v: to[u]){
+            if(used[v]) continue;
+            if(dfs(dfs, v)){
+                ans.emplace_back(u+1);
+                return true;
+            }
+        }
+        return false;
+    };
+    dfs(dfs, X-1);
+    reverse(all(ans));
     cout << ans << endl;
     return 0;
 }
