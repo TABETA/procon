@@ -120,9 +120,40 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, Q);
+    deque<ll> A;
+    rep(_,Q){
+        CIN(ll,x);
+        if(x == 1) {
+            A.push_back(0);
+        }
+        if(x == 2){
+            CIN(ll,T);
+            if(A.size()){
+                A[A.size()-1] += T;
+            }
+        }
+        if(x == 3){
+            CIN(ll,H);
+            [&](){
+                ll sum = 0;
+                repd(i,A.size()){
+                    sum += A[i];
+                    if(sum >= H){
+                        cout << i+1 << '\n';
+                        while(i>=0){
+                            A.pop_front();
+                            --i;
+                        }
+                        return;
+                    }
+                }
+                cout << 0 << '\n';
+            }();
+        }
+    }
     return 0;
 }
