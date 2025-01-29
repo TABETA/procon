@@ -120,9 +120,34 @@ namespace std{
 
 
 // clang-format on
+using P = pair<ll,ll>;
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll, Q);
+    deque<P> A;
+    rep(_,Q){
+        CIN(ll, n);
+        if(n == 1){
+            CIN(ll, x);
+            CIN(ll, C);
+            A.emplace_back(x,C);
+        }
+        if(n == 2){
+            CIN(ll, C);
+            ll ans = 0;
+            while(C){
+                auto [x, c] = A.front();
+                if(c <= C){
+                    ans += x * c;
+                    C -= c;
+                    A.pop_front();
+                } else {
+                    ans += x * C;
+                    A[0].second -= C;
+                    C -= C;
+                }
+            }
+            cout << ans << '\n';
+        }
+    }
     return 0;
 }
