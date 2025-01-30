@@ -124,6 +124,12 @@ int main() {
     long long R;
     std::cin >> R;
     ll ans = 0;
+    for(double x = 1.5; x < R; x += 1.0){
+        ll y = sqrt(R*R - x*x) + 0.5;
+        ans += y;
+    }
+    ans *= 4;
+    ans += 1;
     cout << ans << endl;
     return 0;
 }
