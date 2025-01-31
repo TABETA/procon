@@ -131,7 +131,27 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll is(N);
+    iota(all(is), 0);
+    do{
+        if([&](){
+            rep(_,N-1){
+                auto i = is[_];
+                auto j = is[_+1];
+                ll cnt = 0;
+                rep(k,N){
+                    if(S[i][k] != S[j][k]){
+                        cnt++;
+                    }
+                }
+                if(cnt != 1) return false;
+            }
+            return true;
+        }()){
+            cout << YES << endl;
+            return 0;
+        }
+    }while(next_permutation(all(is)));
+    cout << NO << endl;
     return 0;
 }
