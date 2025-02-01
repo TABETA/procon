@@ -118,7 +118,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long N;
@@ -128,12 +127,46 @@ int main() {
     std::vector<long long> V(N);
     std::vector<long long> A(N);
     std::vector<long long> C(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> V[i];
+    for (int i = 0; i < N; i++) {
+        std::cin >> V[i];--V[i];
         std::cin >> A[i];
         std::cin >> C[i];
     }
-    ll ans = 0;
+    vector DP(3, vector(X+1, 0ll));
+    rep(i,3){
+        DP[i][0] = 0;
+    }
+    rep(i,N){
+        vector pre(X+1, 0ll);
+        swap(DP[V[i]], pre);
+        rep(j,X){
+            chmax(DP[V[i]][j], pre[j]);
+            if(ll nc = j + C[i]; nc <= X){
+                chmax(DP[V[i]][nc], pre[j] + A[i]);
+            }
+        }
+    }
+    auto f = [&](ll r){
+        auto x = X;
+        rep(i,3){
+            auto it = lower_bound(all(DP[i]), r); 
+            if(it == DP[i].end()) return false;
+            auto c =  it - DP[i].begin();
+            x -= c;
+        }
+        return x >= 0;
+    };
+    auto bs = [&](auto f, ll ac, ll wa) -> ll {
+        while (abs(ac - wa) > 1) {
+            ll wj = (ac + wa) / 2;
+            if (f(wj))
+                ac = wj;
+            else
+                wa = wj;
+        }
+        return ac;
+    };
+    auto ans = bs(f, 0, 2e5*5e3+1);
     cout << ans << endl;
     return 0;
 }
