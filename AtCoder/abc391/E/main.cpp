@@ -120,47 +120,30 @@ namespace std{
 
 
 // clang-format on
-ll N;
-auto dfs(const vs& S, ll i, ll k) -> ll{
-    if(i == N){
-        return 1;
-    }
-    vll nows;
-    rep(j,3){
-        ll nk = 3*k+j;
-        if(S[i][k] != S[i+1][nk])continue;
-        nows.emplace_back(dfs(S, i+1, nk));
-    }
-    ranges::sort(nows);
-    ll now = 0;
-    if(nows.size() == 2){
-        now = nows[0];
-    }else if(nows.size() == 3){
-        now = nows[0] + nows[1];
-    }
-    return now;
-};
 int main() {
-    cin >> N;
-    ll n = N;
-    vs S(n+1);
-    cin >> S[n];
-    while(n >= 0){
-        string t;
-        for(ll i = 0; i < (ll)S[n].size(); i+=3){
-            ll c = 0;
-            rep(j, 3){
-                c += S[n][i+j] - '0';
-            }
-            if(c > 1){
-                t += '1';
-            } else {
-                t += '0';
-            }
-        }
-        S[--n] = t;
+    ll N;cin >> N;
+    string S;
+    cin >> S;
+    vector DP(S.size(), vector(2, 0ll));
+    rep(i, S.size()){
+        ll a = S[i] - '0';
+        DP[i][0] = a == 0;
+        DP[i][1] = a == 1;
     }
-    ll ans = dfs(S, 0, 0);
-    cout << ans << endl;
+    while(DP.size() > 1){
+        vector pre(DP.size()/3, vector(2, linf));
+        swap(DP, pre);
+        rep(i,DP.size()){
+            chmin(DP[i][0], pre[3*i][0] + pre[3*i+1][0] + pre[3*i+2][1]);
+            chmin(DP[i][0], pre[3*i][0] + pre[3*i+1][1] + pre[3*i+2][0]);
+            chmin(DP[i][0], pre[3*i][1] + pre[3*i+1][0] + pre[3*i+2][0]);
+            chmin(DP[i][0], pre[3*i][0] + pre[3*i+1][0] + pre[3*i+2][0]);
+            chmin(DP[i][1], pre[3*i][1] + pre[3*i+1][1] + pre[3*i+2][0]);
+            chmin(DP[i][1], pre[3*i][1] + pre[3*i+1][0] + pre[3*i+2][1]);
+            chmin(DP[i][1], pre[3*i][0] + pre[3*i+1][1] + pre[3*i+2][1]);
+            chmin(DP[i][1], pre[3*i][1] + pre[3*i+1][1] + pre[3*i+2][1]);
+        }
+    }
+    cout << max(DP[0][0], DP[0][1]) << endl;
     return 0;
 }
