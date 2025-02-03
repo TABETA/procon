@@ -125,7 +125,23 @@ int main() {
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    vll A;
+    ll now = 0;
+    for(ll i = 0; i < N; ++i){
+        now += (S[i]-'0')*(i+1);
+        A.push_back(now);
+    }
+    string ans;
+    ll carry = 0;
+    repd(i,A.size()){
+        ans += (A[i]+carry) % 10 + '0';
+        carry = (A[i]+carry) / 10;
+    }
+    while(carry){
+        ans += carry % 10 + '0';
+        carry /= 10;
+    }
+    reverse(all(ans));
     cout << ans << endl;
     return 0;
 }
