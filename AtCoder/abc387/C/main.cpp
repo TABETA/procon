@@ -120,12 +120,43 @@ namespace std{
 
 
 // clang-format on
+ll pw(ll x, ll p){
+    ll res = 1;
+    rep(i,p){
+        res *= x;
+    }
+    return res;
+}
+auto f(string s)->ll{
+    ll res = 0;
+    ll n = s.size();
+    reps(i,1,n){
+        reps(h,1,10){
+            res += pw(h, i-1);
+        }
+    }
+    reps(h,1,s[0]-'0'){
+        res += pw(h, n-1);
+    }
+    ll h = s[0]-'0';
+    bool added = false;
+    reps(i,1,n){
+        if(h <= s[i]-'0'){
+            res += pw(h, n-i);
+            added = true;
+            break;
+        } 
+        res += pw(h, n-1-i) * (s[i]-'0');
+    }
+    if(!added)  res++;
+    return res;
+};
 int main() {
-    long long L;
+    ll L;
     std::cin >> L;
-    long long R;
+    string R;
     std::cin >> R;
-    ll ans = 0;
+    ll ans = f(R) - f(to_string(L-1));
     cout << ans << endl;
     return 0;
 }
