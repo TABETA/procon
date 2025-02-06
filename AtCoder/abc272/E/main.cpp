@@ -125,11 +125,30 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+    vvll D(M);
+    for(int i = 1 ; i <= N ; i++){
+        ll a; std::cin >> a;
+        a += i;
+        ll l = (a >= 0) ? 0 : ceil((double)(0-a)/i);
+        ll r = (a >= N) ? 0 : ceil((double)(N-a)/i);
+        chmin(r, M);
+        reps(j,l,r){
+            D[j].emplace_back(a+i*j);
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    rep(i,M){
+        vector e(D[i].size(), true);
+        for (auto &&j : D[i]) {
+            if(D[i].size() > j) e[j] = false;
+        }
+        auto ans = [&]()->ll{
+            rep(j,e.size()){
+                if(e[j]) return j;
+            }
+            return e.size();
+        }();
+        cout << ans << '\n';
+    }
+
     return 0;
 }
