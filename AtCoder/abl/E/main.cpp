@@ -130,20 +130,38 @@ ostream &operator<<(ostream &os, const mint &v) {
 }
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+struct S{
+    mint x;
+    ll l;
+    S(mint x = 0, ll l = 0) : x(x), l(l) {}
+    S operator+(const S& b) const { return S((x * mint(10).pow(b.l) + b.x), l + b.l); }
+};
+using F = ll;
+F id(){ return 0; }
+S e(){ return S{}; }
+
+S op(S a, S b){ return a+b; }
+S mapping(F f, S x){
+    if(f == id()) return x;
+    return S{(mint{10}.pow(x.l)-1)/9 * f, x.l};
+}
+F composition(F f, F g){ return f == id() ? g : f; }
+
 int main() {
     long long N;
     std::cin >> N;
     long long Q;
     std::cin >> Q;
-    std::vector<long long> L(Q);
-    std::vector<long long> R(Q);
-    std::vector<long long> D(Q);
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(vector<S>(N, S{1, 1}));
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> L[i];
-        std::cin >> R[i];
-        std::cin >> D[i];
+        ll l, r, d;
+        std::cin >> l >> r >> d;
+        --l;
+        seg.apply(l, r, d);
+        auto ans = seg.all_prod();
+        cout << ans.x << '\n';
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
