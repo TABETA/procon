@@ -120,6 +120,20 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+using S = ll;
+using F = ll;
+
+const S INF = linf;
+const F ID = linf;
+
+S op(S a, S b){ return std::min(a, b); }
+S e(){ return INF; }
+S mapping(F f, S x){ return (f == ID ? x : f); }
+F composition(F f, F g){ return (f == ID ? g : f); }
+F id(){ return ID; }
+
 int main() {
     long long H;
     std::cin >> H;
@@ -127,15 +141,25 @@ int main() {
     std::cin >> W;
     long long N;
     std::cin >> N;
-    std::vector<long long> R(N);
-    std::vector<long long> C(N);
-    std::vector<long long> L(N);
+    using P = tuple<ll, ll, ll, ll>;
+    set<P, greater<P>> A;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> R[i];
-        std::cin >> C[i];
-        std::cin >> L[i];
+        CIN(ll, r);
+        CIN(ll, c);
+        CIN(ll, l);
+        A.emplace(r, c, l, i);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    lazy_segtree<S, op, e, F, mapping, composition, id> seg(W+2);
+    rep(i, W+2) seg.set(i, H);
+    vll ans(N);
+    for(auto it = A.begin(); it != A.end(); ++it){
+        auto [r, c, l, i] = *it;
+        ll j = seg.prod(c, c+l);
+        ans[i] = j;
+        seg.apply(c, c+l, j-1);
+    }
+    for (auto &&i : ans) {
+        cout << i << '\n';
+    }
     return 0;
 }
