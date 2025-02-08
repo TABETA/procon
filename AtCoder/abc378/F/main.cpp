@@ -120,16 +120,57 @@ namespace std{
 
 
 // clang-format on
+auto nCr(ll n, ll r)->ll{
+    ll denominator = 1;
+    ll numerator = 1;
+    while(r){
+        denominator *= n--;
+        numerator *= r--;
+        ll g = gcd(denominator, numerator);
+        denominator /= g;
+        numerator /= g;
+    }
+    return denominator/numerator;
+}
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> u(N-1);
-    std::vector<long long> v(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> u[i];
-        std::cin >> v[i];
+    map<ll,vll> D;
+    vvll to(N);
+    rep(_,N-1){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
+    }
+    rep(i,N){
+        D[to[i].size()].emplace_back(i);
     }
     ll ans = 0;
+    vector u3(N, false);
+    for (auto &&i : D[3]){
+        vll ns;
+        vector used(N, false);
+        auto dfs = [&](auto dfs, ll u) -> void{
+            if(used[u]) return;
+            used[u] = true;
+            for(auto&& v: to[u]){
+                if(used[v]) continue;
+                if(to[v].size() == 3) {
+                    u3[v] = true;
+                    dfs(dfs, v);
+                } else if(to[v].size() == 2) {
+                    used[v] = true;
+                    ns.emplace_back(v);
+                }
+            }
+        };
+        if(u3[i]) continue;
+        u3[i] = true;
+        dfs(dfs, i);
+        ll cnt = ns.size();
+        ans += nCr(cnt, 2);
+    }
     cout << ans << endl;
     return 0;
 }
