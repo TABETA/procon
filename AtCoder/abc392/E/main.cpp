@@ -123,54 +123,37 @@ namespace std{
 #include <atcoder/all>
 using namespace atcoder;
 int main() {
-    using P = pair<ll,ll>;
     CIN(ll, N);
     CIN(ll, M);
-    map<P,vector<tuple<ll,ll,ll>>> to;
     vector<tuple<ll,ll,ll>> dup;
     dsu uf(N);
     rep(_,M){
         CIN(ll,u);--u;
         CIN(ll,v);--v;
-        if(u == v) {
+        if(u > v) swap(u,v);
+        if(uf.same(u,v)){
             dup.emplace_back(_,u,v);
         } else {
-            if(u > v) swap(u,v);
-            to[P{u,v}].emplace_back(_,u,v);
             uf.merge(u,v);
         }
     }
     auto G = uf.groups();
-    const ll n = G.size();
-    if(n == 1){
-        cout << 0 << endl;
-        return 0;
+    ll n = G.size();
+    set<ll> L;
+    for (auto &&g : G){
+        L.emplace(uf.leader(g[0]));
     }
-    for (auto &&[k,vec] : to){
-        if(vec.size() > 1){
-            for (auto &&v : vec){
-                dup.emplace_back(v);
-            }
-        }
+    vector<tuple<ll,ll,ll>> ans;
+    for (auto &&[i,u,v] : dup){
+        if((ll)ans.size() >= n-1) break;
+        auto g1 = uf.leader(u);
+        L.erase(g1);
+        auto g2 = *L.begin();
+        L.erase(g2);
+        ans.emplace_back(i+1,v+1,g2+1);
+        L.emplace(uf.merge(g1,g2));
     }
-    dsu uf2(n);
-    map<ll,ll> L;
-    rep(i,n){
-        L[uf.leader(G[i][0])] = i;
-    }
-    vector<tuple<ll,ll,ll>> ans(n-1);
-    ll i = 0;
-    for (auto &&[j, u, v] : dup){
-        auto gi = L[uf.leader(u)];
-        rep(gj,n){
-            if(gi == gj) continue;
-            if(uf2.same(gi,gj)) continue;
-            uf2.merge(gi,gj);
-            if(i < n-1) ans[i++] = {j+1,v+1,G[gj][0]+1};
-            break;
-        }
-    }
-    cout << ans.size() << endl;
+    cout << ans.size() << '\n';
     rep(i,ans.size()){
         auto [j,u,v] = ans[i];
         cout << j << " " << u << " " << v << '\n';
