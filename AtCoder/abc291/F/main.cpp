@@ -125,11 +125,31 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<std::string> S(N);
+    vvll to(N);
+    vvll from(N);
+    vs S(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll d1(N, linf);
+    d1[0] = 0;
+    rep(i,N) rep(j,M) if(S[i][j] == '1') chmin(d1[i+j+1], d1[i]+1);
+    vll d2(N, linf);
+    d2[N-1] = 0;
+    repd(i,N) rep(j,M) if(S[i][j] == '1') chmin(d2[i], d2[i+j+1]+1);
+    reps(i,1,N-1){
+        ll ans = linf;
+        for(ll j = max<ll>(0, i-M); j < i; ++j){
+            reps(k,i+1,i+M){
+                if(k >= N) break;
+                if(k-j > M) break;
+                if(S[j][k-j-1] == '0') continue;
+                ll now = d1[j] + d2[k]+1;
+                chmin(ans, now);
+
+            }
+        }
+        cout << (ans == linf ? -1 : ans) << ' ';
+    }
     return 0;
 }
