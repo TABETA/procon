@@ -120,18 +120,108 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+
+auto solve(const ll N, const ll M, const vll& U, const vll& V){
+    scc_graph G(N);
+    vvll from(N);
+    for(int i = 0 ; i < M ; i++){
+        from[V[i]].emplace_back(U[i]);
+        G.add_edge(U[i], V[i]);
+    }
+    vector<vector<int>> scc = G.scc();
+    set<ll> used;
+    rep(i,scc.size()){
+        if(scc[i].size() > 1){
+            for (auto &&j : scc[i]){
+                auto dfs = [&](auto dfs, ll u) -> void{
+                    if(used.count(u))return;
+                    used.emplace(u);
+                    for(auto&& v: from[u]){
+                        dfs(dfs, v);
+                    }
+                };
+                dfs(dfs, j);
+            }
+        }
+    }
+    return used.size();
+}
+auto solve2(const ll N, const ll M, const vll& U, const vll& V){
+    vvll to(N);
+    rep(i,M){
+        to[U[i]].emplace_back(V[i]);
+    }
+    vll ans;
+    rep(i,N){
+        vector<bool> used(N, false);
+        auto dfs = [&](auto dfs, ll u) -> bool{
+            if(used[u]) return true;
+            used[u] = true;
+            for(auto&& v: to[u]){
+                if(dfs(dfs, v)) return true;
+            }
+            used[u] = false;
+            return false;
+        };
+        if(dfs(dfs, i)){
+            ans.emplace_back(i);
+        }
+    }
+    return ans;
+}
+
+auto rand_between = [](ll min, ll max) -> ll {
+    return min + rand() % (max - min);
+};
 int main() {
+#if 1
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> U(M);
-    std::vector<long long> V(M);
+    vll U(M);
+    vll V(M);
     for(int i = 0 ; i < M ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+        std::cin >> U[i];--U[i];
+        std::cin >> V[i];--V[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto ans1 = solve(N, M, U, V);
+    cout << ans1 << endl;
+#else
+    while(true){
+        ll N = 20;
+        ll M = rand_between(10, 20);
+        using P = pair<ll,ll>;
+        set<P> S;
+        while((ll)S.size() < M){
+            auto u = rand_between(1, N-1);
+            auto v = rand_between(1, N-1);
+            if(u == v) continue;
+            S.emplace(u, v);
+        }
+        vll U(M);
+        vll V(M);
+        ll i = 0;
+        for (auto &&[u,v] : S){
+            U[i] = u;
+            V[i] = v;
+            ++i;
+        }
+        auto ans1 = solve(N, M, U, V);
+        auto ans2 = solve2(N, M, U, V);
+        if(ans1 != ans2.size()){
+            cout << "NG" << endl;
+            cout << N << " " << M << endl;
+            rep(i,M){
+                cout << U[i] << " " << V[i] << endl;
+            }
+            cout << "ans1: " << ans1 << endl;
+            cout << "ans2: " << ans2 << endl;
+            break;
+        }
+    }
+#endif
     return 0;
 }
