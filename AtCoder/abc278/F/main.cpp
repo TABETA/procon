@@ -123,11 +123,41 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<std::string> S(N);
+    using T = map<char, map<char,ll>>;
+    T S;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> S[i];
+        string s;
+        std::cin >> s;
+        S[s.front()][s.back()]++;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    using P = tuple<ll,char,map<char, map<char,ll>>>;
+    map<P, ll> memo;
+    auto dfs = [&](auto dfs, ll u, char last, T S) -> ll{
+        if(memo.count({u,last,S})) return memo[{u,last,S}];
+        ll winner = u^1;
+        if(S.count(last)) {
+            for (auto &&i : S[last]){
+                auto v = S;
+                if(--v[last][i.first] == 0) v[last].erase(i.first);
+                if(v[last].empty()) v.erase(last);
+                if(u == dfs(dfs, u^1, i.first, v)){
+                    winner = u;
+                }
+            }
+        }
+        return memo[{u,last,S}] = winner;
+    };
+    ll ans = 1;
+    for (auto &&[h,t] : S){
+        for (auto &&i : t){
+            auto v = S;
+            if(--v[h][i.first] == 0) v[h].erase(i.first);
+            if(v[h].empty()) v.erase(h);
+            if(0 == dfs(dfs, 1, i.first, v)){
+                ans = 0;
+            }
+        }
+    }
+    cout << (ans == 0 ? "First" : "Second") << endl;
     return 0;
 }
