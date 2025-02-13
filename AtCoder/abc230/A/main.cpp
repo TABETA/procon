@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    ll ans = N + (N >= 42);
+    printf("AGC%03lld\n", ans);
     return 0;
 }
