@@ -139,7 +139,21 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll S(N+1);
+    rep(i,N){
+        S[i+1] = S[i] + A[i];
+    }
+    mint sum = 1;
+    vector DP(N+1, mint(0));
+    DP[0] = mint(1);
+    map<ll,mint> mp;
+    mp[0] = mint(1);
+    reps(i,1,N+1){
+        mint now = mp[S[i] - K];
+        DP[i] = sum - now;
+        sum += DP[i];
+        mp[S[i]] += DP[i];
+    }
+    cout << DP[N] << endl;
     return 0;
 }
