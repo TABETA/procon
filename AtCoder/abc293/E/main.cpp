@@ -120,14 +120,31 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+using mint = modint;
+ostream &operator<<(ostream &os, const mint &v) {
+    os << v.val();
+    return os;
+}
 int main() {
-    long long A;
-    std::cin >> A;
-    long long X;
-    std::cin >> X;
-    long long M;
-    std::cin >> M;
-    ll ans = 0;
+    CIN(ll,A);
+    CIN(ll,X);
+    CIN(ll,M);
+    mint::set_mod(M);
+    auto f = [&](auto f, ll x)->mint{
+        if(x == 0) return mint(1);
+        auto r = f(f, x/2);
+        r = r * r;
+        return x%2 ? r * A : r;
+    };
+    auto g = [&](auto g, ll x)->mint{
+        if(x == 0) return mint(0);
+        auto r = g(g, x/2);
+        r = r + r * f(f, x/2);
+        return  x%2 ? 1 + r * A : r;
+    };    
+    auto ans = g(g, X);
     cout << ans << endl;
     return 0;
 }
