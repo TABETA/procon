@@ -129,13 +129,25 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    std::vector<long long> R(Q);
-    std::vector<long long> X(Q);
+    using P = pair<ll,ll>;
+    vector<vector<P>> G(N);
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> R[i];
-        std::cin >> X[i];
+        ll r, x;
+        std::cin >> r;--r;
+        std::cin >> x;
+        G[r].emplace_back(i, x);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll DP(N+1, linf);
+    vll ans(Q);
+    rep(i, N){
+        auto it = lower_bound(all(DP), A[i]);
+        *it = A[i];
+        for (auto &&[id, x] : G[i]){
+            ans[id] = upper_bound(all(DP), x) - DP.begin();
+        }
+    }
+    for (auto &&a : ans){
+        cout << a << '\n';
+    }
     return 0;
 }
