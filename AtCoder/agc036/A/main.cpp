@@ -120,10 +120,20 @@ namespace std{
 
 
 // clang-format on
+
+// 3点で構成される三角形の面積を求める
+double triangle_area(double x1, double y1, double x2, double y2, double x3, double y3) {
+    return abs((x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3)) / 2.0;
+}
+
 int main() {
     long long S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    ll x2 = 1e9;
+    ll y2 = 1;
+
+	ll x=(x2-S%x2)%x2;
+	ll y=(S+x)/x2;
+    printf("%d %d %lld %lld %lld %lld\n", 0,0, x2, y2, x, y);
     return 0;
 }
