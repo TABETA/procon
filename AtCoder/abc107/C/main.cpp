@@ -126,10 +126,30 @@ int main() {
     long long K;
     std::cin >> K;
     std::vector<long long> x(N);
+    deque<ll> L;
+    deque<ll> R;
+    R.emplace_back(0);
     for(int i = 0 ; i < N ; i++){
         std::cin >> x[i];
+        if(x[i] >= 0){
+            R.emplace_back(x[i]);
+        }else{
+            L.emplace_front(-x[i]);
+        }
     }
-    ll ans = 0;
+    L.emplace_front(0);
+    ll ans = linf;
+    rep(_,2){
+        ll rem = max<ll>(0, K - (R.size()-1));
+        reps(i,rem,L.size()){
+            if(i == K){
+                chmin(ans, L[i]);
+                break;
+            }
+            chmin(ans, L[i]*2 + R[K-i]);
+        }
+        swap(L,R);
+    }
     cout << ans << endl;
     return 0;
 }
