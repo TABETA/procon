@@ -125,19 +125,22 @@ int main() {
     std::cin >> H;
     long long W;
     std::cin >> W;
-    std::vector<std::vector<long long>> c(9+1, std::vector<long long>(9+1));
-    for(int i = 0 ; i < 9+1 ; i++){
-        for(int j = 0 ; j < 9+1 ; j++){
+    ll N = 10;
+    vector c(N,vector(N, linf));
+    for(int i = 0 ; i < N ; i++){
+        for(int j = 0 ; j < N ; j++){
             std::cin >> c[i][j];
         }
     }
-    std::vector<std::vector<long long>> A(H, std::vector<long long>(W));
+    rep(k,N)rep(i,N)rep(j,N) chmin(c[i][j], c[i][k] + c[k][j]);
+    ll ans = 0;
     for(int i = 0 ; i < H ; i++){
         for(int j = 0 ; j < W ; j++){
-            std::cin >> A[i][j];
+            CIN(ll,a);
+            if(a == -1)continue;
+            ans += c[a][1];
         }
     }
-    ll ans = 0;
     cout << ans << endl;
     return 0;
 }
