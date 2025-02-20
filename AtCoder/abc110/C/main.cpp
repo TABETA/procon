@@ -122,12 +122,36 @@ const string YES = "Yes";
 const string NO = "No";
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     std::string S;
     std::cin >> S;
+    vector kv(26, vector<ll>{});
+    ll N = S.size();
+    rep(i,N) {
+        kv[S[i] - 'a'].emplace_back(i);
+    }
     std::string T;
     std::cin >> T;
-    ll ans = 0;
-    cout << ans << endl;
+    set<string> used;
+    rep(i,N){
+        if(S[i] != T[i]){
+            auto s = string{S[i]} + T[i];
+            ranges::sort(s);
+            if(used.count(s)){
+                cout << NO << endl;
+                return 0;
+            }
+            used.insert(s);
+            rep(_,2){
+                for (auto &&j : kv[s[_]-'a']){
+                    S[j] = s[_^1];
+                }
+            }
+            swap(kv[s[0]-'a'], kv[s[1]-'a']);
+        }
+    }
+    cout << (S == T ? YES:NO) << endl;
     return 0;
 }
