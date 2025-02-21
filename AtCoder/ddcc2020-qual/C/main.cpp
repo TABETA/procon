@@ -121,8 +121,50 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,H);
+    CIN(ll,W);
+    CIN(ll,K);
+    vs S(H);
+    vvll T(H, vll(W));
+    vector<set<ll>> rows(H);
+    rep(i,H){
+        cin >> S[i];
+        rep(j,W){
+            if(S[i][j] == '#'){
+                rows[i].insert(j);
+            }
+        }
+    }
+    ll id = 1;
+    ll py = 0;
+    rep(cy,H){
+        ll px = 0;
+        bool f = false;
+        for (auto &&cx : rows[cy]){
+            reps(y,py,cy+1){
+                reps(x,px,cx+1){
+                    T[y][x] = id;
+                }
+            }
+            ++id;
+            px = cx+1;
+            f = true;
+        }
+        if(f){
+            reps(y,py,cy+1){
+                reps(x,px,W){
+                    T[y][x] = id-1;
+                }
+            }
+            py = cy+1;
+        }
+    }
+    rep(i,H){
+        rep(j,W){
+            if(T[i][j] == 0) T[i][j] = T[i-1][j];
+            cout << T[i][j] << ' ';
+        }
+        cout << '\n';
+    }
     return 0;
 }
