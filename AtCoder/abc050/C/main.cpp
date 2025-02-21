@@ -130,14 +130,34 @@ ostream &operator<<(ostream &os, const mint &v) {
 }
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+using mint = modint1000000007;
 int main() {
     long long N;
     std::cin >> N;
+    map<ll,ll> mp;
     std::vector<long long> A(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        mp[A[i]]++;
     }
-    ll ans = 0;
+    mint ans = 1;
+    ll s = N % 2 ? 0 : 1;
+    for(ll i = s; i < N; i += 2){
+        if(i == 0){
+            if(mp[i] != 1){
+                cout << 0 << endl;
+                return 0;
+            }
+        } else {
+            if(mp[i] != 2){
+                cout << 0 << endl;
+                return 0;
+            }
+            ans *= 2;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
