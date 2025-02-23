@@ -125,13 +125,31 @@ int main() {
     std::cin >> N;
     long long H;
     std::cin >> H;
-    std::vector<long long> a(N);
-    std::vector<long long> b(N);
+    std::vector<long long> A(N);
+    std::vector<long long> B(N);
+    ll a = 0;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
+        std::cin >> A[i];
+        std::cin >> B[i];
+        chmax(a,A[i]);
     }
+    vll C;
+    rep(i,N){
+        if(a < B[i]){
+            C.push_back(B[i]);
+        }
+    }
+    sort(all(C),greater<ll>());
     ll ans = 0;
+    rep(i,C.size()){
+        H -= C[i];
+        ans++;
+        if(H <= 0){
+            cout << ans << endl;
+            return 0;
+        }
+    }
+    ans += (H + a - 1) / a;
     cout << ans << endl;
     return 0;
 }
