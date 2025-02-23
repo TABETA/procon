@@ -123,13 +123,29 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
+    N -= 2;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(N);
+    CIN(ll,L);
+    CIN(ll,R);
+    vll A(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        cin >> A[i];
     }
-    ll ans = 0;
+    ranges::sort(A);
+    ll ans = linf;
+    rep(i,N){
+        ll j = i + M-1;
+        if(j >= N) break;
+        ll now = 0;
+        if(A[i] < L){
+            now += L - A[i];
+        }
+        if(A[j] > R){
+            now += A[j] - R;
+        }
+        chmin(ans, now);
+    }
     cout << ans << endl;
     return 0;
 }
