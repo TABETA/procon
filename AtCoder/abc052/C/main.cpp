@@ -130,10 +130,38 @@ ostream &operator<<(ostream &os, const mint &v) {
 }
 
 // clang-format on
+
+vector<ll> enumeratePrimeNumbers(const ll N) {
+  vector<bool> is_prime(N + 1, true);
+  vector<ll> P;
+  for (ll i = 2; i <= N; i++) {
+      if (is_prime[i]) {
+          for (ll j = 2 * i; j <= N; j += i) {
+              is_prime[j] = false;
+          }
+          P.emplace_back(i);
+      }
+  }
+  return P;
+}
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
+    auto P = enumeratePrimeNumbers(N);
+    map<ll,ll> mp;
+    reps(i,1,N+1){
+        repr(p,P){
+            ll j = i;
+            while(j % p == 0){
+                mp[p]++;
+                j /= p;
+            }
+        }
+    }
+    mint ans = 1;
+    for (auto &&[k,v] : mp){
+        ans *= v+1;
+    }
     cout << ans << endl;
     return 0;
 }
