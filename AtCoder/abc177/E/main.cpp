@@ -120,6 +120,20 @@ namespace std{
 
 
 // clang-format on
+vector<ll> prime_factorize(ll N) {
+    vector<ll> res;
+    for (ll a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        ll ex = 0;
+        while (N % a == 0) {
+            ++ex;
+            N /= a;
+        }
+        res.push_back(a);
+    }
+    if (N != 1) res.push_back(N);
+    return res;
+}
 int main() {
     long long N;
     std::cin >> N;
@@ -127,7 +141,35 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    auto is_setwise = [&](){
+        ll pre = A[0];
+        for(int i = 0 ; i < N ; i++){
+            pre = gcd(pre, A[i]);
+            if(pre == 1){
+                return true;
+            }
+        }
+        return false;
+    }();
+    auto is_pairwise = [&](){
+        set<ll> s;
+        for(int i = 0 ; i < N ; i++){
+            auto p = prime_factorize(A[i]);
+            for(auto&& v : p){
+                if(s.count(v)){
+                    return false;
+                }
+                s.insert(v);
+            }
+        }
+        return true;
+    }();
+    if(is_pairwise){
+        cout << "pairwise coprime" << endl;
+    } else if(is_setwise){
+        cout << "setwise coprime" << endl;
+    } else {
+        cout << "not coprime" << endl;
+    }
     return 0;
 }
