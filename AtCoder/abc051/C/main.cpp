@@ -121,15 +121,65 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long sx;
-    std::cin >> sx;
-    long long sy;
-    std::cin >> sy;
-    long long tx;
-    std::cin >> tx;
-    long long ty;
-    std::cin >> ty;
-    ll ans = 0;
+    CIN(ll,SX);
+    CIN(ll,SY);
+    CIN(ll,TX);
+    CIN(ll,TY);
+    ll H = TY - SY+4;
+    ll W = TX - SX+4;
+    TX = TX - SX + 1;
+    TY = TY - SY + 1;
+    SX = 1;
+    SY = 1;
+    string ans = "";
+    using P = pair<ll,ll>;
+    using PP = pair<P,P>;
+    vector used(H, vector(W, false));
+    
+    for(auto pp: vector<PP>{PP{{SY,SX},{TY,TX}},PP{{TY,TX},{SY,SX}},PP{{SY,SX},{TY,TX}},PP{{TY,TX},{SY,SX}}}){
+        auto [s, t] = pp;
+        auto [sy, sx] = s;
+        auto [ty, tx] = t;
+        queue<P> Q;
+        Q.push(s);
+        vector distance(H, vector(W, pair<ll, P>{linf, P{}} ));
+        distance[sy][sx] = {0, P{0,0}};
+        while(!Q.empty()){
+            auto [cy, cx] = Q.front();Q.pop();
+            if(cy == ty && cx == tx){
+                string now;
+                while(cy != sy || cx != sx){
+                    auto [d, pre] = distance[cy][cx];
+                    if(cy != ty || cx != tx){
+                        used[cy][cx] = true;
+                    }
+                    auto [py, px] = pre;
+                    if(cy < py)now += 'D';
+                    if(cy > py)now += 'U';
+                    if(cx < px)now += 'L';
+                    if(cx > px)now += 'R';
+                    cy = py;
+                    cx = px;
+                }
+                reverse(all(now));
+                ans += now;
+                break;
+            }
+            auto [cc, pre] = distance[cy][cx];
+            ll dx[] = {0, 1, 0, -1};
+            ll dy[] = {1, 0, -1, 0};
+            rep(i,4){
+                auto nx = cx + dx[i];
+                auto ny = cy + dy[i];
+                auto nc = cc + 1;
+                if(nx < 0 || nx >= W || ny < 0 || ny >= H)continue;
+                if(used[ny][nx])continue;
+                if(distance[ny][nx].first <= nc)continue;
+                distance[ny][nx] = {nc, P{cy, cx}};
+                Q.emplace(ny, nx);
+            }
+        }
+    }
     cout << ans << endl;
     return 0;
 }
