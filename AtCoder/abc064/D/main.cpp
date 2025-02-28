@@ -125,7 +125,31 @@ int main() {
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    ll pre = 0;
+    {
+        repd(i, N) {
+            if (S[i] == '(') {
+                --pre;
+            } else {
+                ++pre;
+            }
+            chmax(pre, 0ll);
+        }
+    }
+    ll post = 0;
+    {
+        post = 0;
+        rep(i, N) {
+            if (S[i] == ')') {
+                --post;
+            } else {
+                ++post;
+            }
+            chmax(post, 0ll);
+        }
+    
+    }
+    string ans = string(pre, '(') + S + string(post, ')');
     cout << ans << endl;
     return 0;
 }
