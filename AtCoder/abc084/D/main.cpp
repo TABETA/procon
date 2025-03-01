@@ -120,16 +120,36 @@ namespace std{
 
 
 // clang-format on
+set<ll> enumeratePrimeNumbers(const ll N) {
+  vector<bool> is_prime(N + 1, true);
+  set<ll> P;
+  for (ll i = 2; i <= N; i++) {
+      if (is_prime[i]) {
+          for (ll j = 2 * i; j <= N; j += i) {
+              is_prime[j] = false;
+          }
+          P.emplace(i);
+      }
+  }
+  return P;
+}
 int main() {
-    long long Q;
-    std::cin >> Q;
-    std::vector<long long> l(Q);
-    std::vector<long long> r(Q);
-    for(int i = 0 ; i < Q ; i++){
-        std::cin >> l[i];
-        std::cin >> r[i];
+    long long _;
+    std::cin >> _;
+    auto P = enumeratePrimeNumbers(100000);
+    vll Q;
+    for(auto p : P){
+        if(P.count((p+1)/2)){
+            Q.emplace_back(p);
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    for(int i = 0 ; i < _ ; i++){
+        CIN(ll,l);
+        CIN(ll,r);
+        auto l1 = lower_bound(all(Q),l) - Q.begin();
+        auto r1 = upper_bound(all(Q),r) - Q.begin();
+        ll ans = r1-l1;
+        cout << ans << '\n';
+    }
     return 0;
 }
