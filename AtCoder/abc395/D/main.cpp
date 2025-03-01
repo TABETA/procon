@@ -141,24 +141,25 @@ int main() {
             OP[_] = {op,a,-1};
         }
     }
-    vll nestOfPegion(N+1);
+    vll pegion(N+1);
     vll nest(N+1);
-    map<ll,set<ll>> pegionsInNest;
+    vll tsen(N+1);
     rep(i, N+1){
         nest[i] = i;
-        nestOfPegion[i] = i;
-        pegionsInNest[i].emplace(i);
+        tsen[i] = i;
+        pegion[i] = i;
     }
     rep(_,Q){
         auto [op, a, b] = OP[_];
         if(op == 1){
-            nestOfPegion[a] = b;
+            pegion[a] = tsen[b];
         }
         if(op == 2){
-            swap(nest[b], nest[a]);
+            swap(nest[tsen[b]], nest[tsen[a]]);
+            swap(tsen[a], tsen[b]);
         }
         if(op == 3){
-            cout << nest[nestOfPegion[a]] << '\n';
+            cout << nest[pegion[a]] << '\n';
         }
     }
     return 0;
