@@ -125,7 +125,20 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    ll ans = 0;
+    ll z = 0;
+    ll h = 0;
+    reps(a,1,N+1){
+        if (a % K == 0){
+            z++;
+        }
+        if(a % K == K / 2){
+            h++;
+        }
+    }
+    ll ans = z*z*z;
+    if(K % 2 == 0){
+        ans += h*h*h;
+    }
     cout << ans << endl;
     return 0;
 }
