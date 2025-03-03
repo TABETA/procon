@@ -124,10 +124,16 @@ int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
+    map<ll,ll> mp;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        mp[A[i]+i]++;
     }
     ll ans = 0;
+    rep(i,N){
+        ll a = i - A[i];
+        ans += mp[a];
+    }
     cout << ans << endl;
     return 0;
 }
