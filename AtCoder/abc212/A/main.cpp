@@ -125,7 +125,8 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
-    cout << ans << endl;
+    if(0 < A && B == 0) cout << "Gold" << endl;
+    if(0 == A && 0 < B) cout << "Silver" << endl;
+    if(0 < A && 0 < B) cout << "Alloy" << endl;
     return 0;
 }
