@@ -127,7 +127,42 @@ int main() {
     std::cin >> K;
     std::string S;
     std::cin >> S;
+    using P = pair<ll,ll>;
+    list<P> T;
+    char pre = S[0];
+    ll cnt = 1;
+    reps(i,1,N) {
+        if(pre == S[i]){
+            ++cnt;
+        } else {
+            T.emplace_back(pre, cnt);
+            pre = S[i];
+            cnt = 1;
+        }
+    }
+    T.emplace_back(pre, cnt);
+    while(K>0){
+        --K;
+        if(T.size() >= 3){
+            auto i = T.begin();
+            auto j = next(i);
+            auto k = next(j);
+            i->second += j->second + k->second;
+            T.erase(j);
+            T.erase(k);
+        } else if(T.size() == 2) {
+            auto i = T.begin();
+            auto j = next(i);
+            i->second += j->second;
+            T.erase(j);
+        } else {
+            break;
+        }
+    }
     ll ans = 0;
+    for (auto &&t : T){
+        ans += t.second-1;
+    }
     cout << ans << endl;
     return 0;
 }
