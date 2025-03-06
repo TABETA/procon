@@ -123,7 +123,10 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    double ans = -1;
+    rep(i,N){
+        ans += (double)N/(N-i);
+    }
+    cout << fixed << setprecision(15) << ans << endl;
     return 0;
 }
