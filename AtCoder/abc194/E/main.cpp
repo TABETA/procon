@@ -125,11 +125,23 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
+    set<ll> rem;
+    map<ll,ll> mp;
+    rep(i,M+1){
+        rem.insert(i);
+    }
     std::vector<long long> A(N);
+    ll ans = linf;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        mp[A[i]]++;
+        rem.erase(A[i]);
+        if(i>=M-1){
+            chmin(ans, *rem.begin());
+            mp[A[i-M+1]]--;
+            if(mp[A[i-M+1]] == 0) rem.insert(A[i-M+1]);
+        }
     }
-    ll ans = 0;
     cout << ans << endl;
     return 0;
 }
