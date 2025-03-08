@@ -121,8 +121,43 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
+    ll H, W, N, M;
+    cin >> H >> W >> N >> M;
+    vs G(H, string(W, '.'));
+    using P = pair<ll,ll>;
+    vector<P> L(N);
+    rep(i, N) {
+        CIN(ll, A);
+        CIN(ll, B);
+        L[i] = {A - 1, B - 1};
+    }
+    rep(i, M) {
+        CIN(ll, C);
+        CIN(ll, D);
+        G[C - 1][D - 1] = '#';
+    }
+    rep(i,N){
+        auto [y,x] = L[i];
+        G[y][x] = 'L';
+        ll dx[] = {1,0,-1,0};
+        ll dy[] = {0,1,0,-1};
+        rep(j,4){
+            ll ny = y;
+            ll nx = x;
+            while(true){
+                ny += dy[j];
+                nx += dx[j];
+                if(ny < 0 || nx < 0 || ny >= H || nx >= W || G[ny][nx] == '#') break;
+                G[ny][nx] = 'L';
+            }
+        }
+    }
     ll ans = 0;
+    rep(y,H){
+        repr(x,G[y]){
+            if(x == 'L') ans++;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
