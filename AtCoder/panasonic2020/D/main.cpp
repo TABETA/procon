@@ -123,7 +123,18 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    string ans = "a";
+    auto dfs = [&](auto dfs, ll u, ll i, ll j) -> void{
+        if(u == N){
+            cout << ans << endl;
+            return;
+        }
+        rep(d,j+2){
+            ans += 'a' + d;
+            dfs(dfs, u+1, d, max(j,d));
+            ans.pop_back();
+        }
+    };
+    dfs(dfs, 1, 0, 0);
     return 0;
 }
