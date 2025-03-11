@@ -129,7 +129,46 @@ int main() {
     for(int i = 0 ; i < H ; i++){
         std::cin >> S[i];
     }
+    vvll h(H, vll(W, -linf));
+    rep(i,H){
+        ll pj = 0;
+        rep(j,W){
+            while(j < W && S[i][j] == '.'){
+                ++j;
+            }
+            reps(jj, pj, j){
+                h[i][jj] = j-pj;
+            }
+            while(j < W && S[i][j] == '#'){
+                ++j;
+            }
+            pj = j;
+            --j;
+        }
+    }
+    vvll v(H, vll(W, -linf));
+    rep(i,W){
+        ll pj = 0;
+        rep(j,H){
+            while(j < H && S[j][i] == '.'){
+                ++j;
+            }
+            reps(jj, pj, j){
+                v[jj][i] = j-pj;
+            }
+            while(j < H && S[j][i] == '#'){
+                ++j;
+            }
+            pj = j;
+            --j;
+        }
+    }
     ll ans = 0;
+    rep(i,H){
+        rep(j,W){
+            chmax(ans, h[i][j]+v[i][j]-1);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
