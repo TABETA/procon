@@ -126,20 +126,43 @@ int main() {
     long long M;
     std::cin >> M;
     long long X;
-    std::cin >> X;
+    std::cin >> X;--X;
     long long Y;
-    std::cin >> Y;
-    std::vector<long long> A(M);
-    std::vector<long long> B(M);
-    std::vector<long long> T(M);
-    std::vector<long long> K(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
-        std::cin >> T[i];
-        std::cin >> K[i];
+    std::cin >> Y;--Y;
+    using T = tuple<ll,ll,ll>;
+    vector<vector<T>> to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        CIN(ll,t);
+        CIN(ll,k);
+        to[u].emplace_back(v,t,k);
+        to[v].emplace_back(u,t,k);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll cost(N, linf);
+    using P = pair<ll,ll>;
+    priority_queue<P, vector<P>, greater<P>> q;
+    q.emplace(0,X);
+    cost[X] = 0;
+    while(!q.empty()){
+        auto [c, from] = q.top(); q.pop();
+        if(cost[from] != c) continue;
+        for (auto &&[v, t, k] : to[from]){
+            auto nc = cost[from];
+            if(nc % k != 0){
+                nc += k - nc % k;
+            }
+            nc += t;
+            if(cost[v] > nc){
+                cost[v] = nc;
+                q.emplace(nc, v);
+            }
+        }
+    }
+    if(cost[Y] == linf){
+        cout << -1 << endl;
+        return 0;
+    }
+    cout << cost[Y] << endl;
     return 0;
 }
