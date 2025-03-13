@@ -121,8 +121,36 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    ll N , Q;
+    cin >> N >> Q;
+    using P = pair<ll,ll>;
+    deque<P> A(N);
+    rep(i,N){
+        A[i] = {i+1,0};
+    }
+    rep(_,Q){
+        ll x;
+        cin >> x;
+        if(x == 1){
+            CIN(char,c);
+            auto [x, y] = A.front();
+            if(c == 'L'){
+                A.emplace_front(x-1,y);
+            }
+            if(c == 'R'){
+                A.emplace_front(x+1,y);
+            }
+            if(c == 'U'){
+                A.emplace_front(x,y+1);
+            }
+            if(c == 'D'){
+                A.emplace_front(x,y-1);
+            }
+        } else {
+            CIN(ll,p);
+            auto [x, y] = A[p-1];
+            cout << x << " " << y << endl;
+        }
+    }
     return 0;
 }
