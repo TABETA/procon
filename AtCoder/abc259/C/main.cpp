@@ -127,7 +127,39 @@ int main() {
     std::cin >> S;
     std::string T;
     std::cin >> T;
-    ll ans = 0;
-    cout << ans << endl;
+    using P = pair<char,ll>;
+    auto f = [&](const string &S){
+        vector<P> s;
+        char pre = ' ';
+        ll cnt = 1;
+        rep(i, S.size()){
+            if(S[i] == pre){
+                cnt++;
+            } else {
+                if(pre != ' '){
+                    s.push_back({pre,cnt});
+                }
+                pre = S[i];
+                cnt = 1;
+            }
+            pre = S[i];
+        }
+        s.push_back({pre,cnt});
+        return s;
+    };
+    auto s = f(S);
+    auto t = f(T);
+    [&](){
+        if(s.size() == t.size()){
+            rep(i, s.size()){
+                if(s[i].first != t[i].first)return;
+                if(s[i].second > t[i].second)return;
+                if(s[i].second == 1 && t[i].second > 1)return;
+            }
+            cout << YES << endl;
+            exit(0);
+        }
+    }();
+    cout << NO << endl;
     return 0;
 }
