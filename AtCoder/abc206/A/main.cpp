@@ -123,7 +123,13 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    ll n = N*1.08;
+    if(n > 206){
+        cout << ":(" << endl;
+    } else if(n == 206){
+        cout << "so-so" << endl;
+    } else {
+        cout << "Yay!" << endl;
+    }
     return 0;
 }
