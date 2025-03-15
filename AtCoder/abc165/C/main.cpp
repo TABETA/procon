@@ -127,17 +127,34 @@ int main() {
     std::cin >> M;
     long long Q;
     std::cin >> Q;
-    std::vector<long long> a(Q);
-    std::vector<long long> b(Q);
-    std::vector<long long> c(Q);
-    std::vector<long long> d(Q);
+    vector<tuple<ll,ll,ll,ll>> V;
     for(int i = 0 ; i < Q ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
-        std::cin >> c[i];
-        std::cin >> d[i];
+        ll a,b,c,d;
+        std::cin >> a;
+        std::cin >> b;
+        std::cin >> c;
+        std::cin >> d;
+        V.emplace_back(a,b,c,d);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll A;
+    A.emplace_back(1);
+    auto dfs = [&](auto dfs, ll a) -> ll{
+        ll now = 0;
+        if(a == N+1){
+            for(auto&& [a,b,c,d]: V){
+                if(A[b] - A[a] == c){
+                    now += d;
+                }
+            }
+        } else {
+            reps(i,A[a-1],M+1){
+                A.emplace_back(i);
+                chmax(now, dfs(dfs, a+1));
+                A.pop_back();
+            }
+        }
+        return now;
+    };
+    cout << dfs(dfs, 1) << endl;
     return 0;
 }
