@@ -121,8 +121,48 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
+    ll H, W, K;
+    cin >> H >> W >> K;
+    ll b = 0;
+    vs S(H);
+    rep(i, H) {
+        cin >> S[i];
+        rep(j, W) {
+            if(S[i][j] == '#') ++b;
+        }
+    }
     ll ans = 0;
+    rep(i, 1<<H) {
+        auto T = S;
+        ll now = b;
+        rep(r,H){
+            if(i>>r&1){
+                rep(c,W){
+                    if(T[r][c] == '#'){
+                        T[r][c] = '.';
+                        --now;
+                    }
+                }
+            }
+        }
+        rep(j, 1<<W) {
+            auto U = T;
+            ll nownow = now;
+            rep(c,W){
+                if(j>>c&1){
+                    rep(r,H){
+                        if(U[r][c] == '#'){
+                            U[r][c] = '.';
+                            --nownow;
+                        }
+                    }
+                }
+            }
+            if(nownow == K){
+                ++ans;
+            }
+        }
+    }
     cout << ans << endl;
     return 0;
 }
