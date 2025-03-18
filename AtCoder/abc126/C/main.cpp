@@ -125,7 +125,18 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    using ld = long double;
+    vector<ld> memo(K+1, 0);
+    auto dfs = [&](auto dfs, ll u, ld p) -> ld{
+        if(u >= K){
+            return p;
+        }
+        return dfs(dfs, u*2, p/2);
+    };
+    ld ans = 0;
+    rep(i,N){
+        ans += dfs(dfs, i+1, 1.0/N);
+    }
+    cout << fixed << setprecision(15) << ans << endl;
     return 0;
 }
