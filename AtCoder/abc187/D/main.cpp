@@ -123,13 +123,22 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    std::vector<long long> B(N);
+    using P = pair<ll,ll>;
+    std::vector<P> A(N);
+    ll a = 0;
+    ll b = 0;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+        std::cin >> A[i].first >> A[i].second;
+        a += A[i].first;
     }
+    ranges::sort(A, [](P a, P b) { return 2 * a.first + a.second > 2* b.first + b.second; });
     ll ans = 0;
+    for(int i = 0 ; i < N ; i++){
+        a -= A[i].first;
+        b += A[i].first + A[i].second;
+        ++ans;
+        if(b > a)break;
+    }
     cout << ans << endl;
     return 0;
 }
