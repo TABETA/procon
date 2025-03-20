@@ -127,13 +127,30 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> C[i];
     }
-    std::vector<long long> A(N-1);
-    std::vector<long long> B(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> A[i];
-        std::cin >> B[i];
+    vvll to(N);
+    rep(_,N-1){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    set<ll> ans;
+    queue<ll> Q;
+    Q.emplace(0);
+    unordered_map<ll, ll> used;
+    auto dfs = [&](auto dfs, ll u, ll pre = -1) -> void{
+        if(used[C[u]]++ == 0){
+            ans.emplace(u);
+        }
+        for(auto&& v: to[u]){
+            if(v == pre) continue;
+            dfs(dfs, v, u);
+        }
+        used[C[u]]--;
+    };
+    dfs(dfs, 0);
+    repr(i,ans){
+        cout << i+1 << '\n';
+    }
     return 0;
 }
