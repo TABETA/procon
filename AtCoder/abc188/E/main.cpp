@@ -120,9 +120,65 @@ namespace std{
 
 
 // clang-format on
+
+void solve(){
+    CIN(ll,N);
+    CIN(ll,M);
+    vll A(N);
+    rep(i,N){
+        cin >> A[i];
+    }
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+    }
+    ll ans = -linf;
+    vector used(N, false);
+    ll buy = linf;
+    auto dfs = [&](auto dfs, ll u) -> void{
+        used[u] = true;
+        if(buy != linf){
+            chmax(ans, A[u] - buy);
+        }
+        auto _ = buy;
+        swap(buy, _);
+        chmin(buy, A[u]);
+        for(auto&& v: to[u]){
+            if(used[v]) continue;
+            dfs(dfs, v);
+        }
+        swap(buy, _);
+    };
+    rep(i,N){
+        if(used[i]) continue;
+        dfs(dfs, i);
+    }
+    cout << ans << endl;
+}
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    CIN(ll,N);
+    CIN(ll,M);
+    vll A(N);
+    rep(i,N){
+        cin >> A[i];
+    }
+    vvll to(N);
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+    }
+    ll ans = -linf;
+    vll DP(N, linf);
+    rep(i,N){
+        chmax(ans, A[i] - DP[i]);
+        for(auto&& j: to[i]){
+            chmin(DP[j], DP[i]);
+            chmin(DP[j], A[i]);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
