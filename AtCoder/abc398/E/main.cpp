@@ -121,8 +121,55 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    vector<set<ll>> to(N);
+    rep(_,N-1){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace(v);
+        to[v].emplace(u);
+    }
+    vector<set<ll>> colors(2);
+    auto dfs = [&](auto dfs, ll u, ll pre, ll col) -> void{
+        colors[col].insert(u);
+        for(auto&& v: to[u]){
+            if(v == pre) continue;
+            dfs(dfs, v, u, col^1);
+        }
+    };
+    dfs(dfs, 0, -1, 0);
+    using P = pair<ll,ll>;
+    set<P> cand;
+    for(auto&& u: colors[0]){
+        for(auto&& v: colors[1]){
+            if(to[u].count(v)) continue;
+            if(u > v) {
+                cand.insert({v,u});
+            } else {
+                cand.insert({u,v});
+            }
+        }
+    }
+    bool myturn = true;
+    if(cand.size()%2){
+        cout << "First" << endl;
+    } else {
+        cout << "Second" << endl;
+        myturn = false;
+    }
+    while(!cand.empty()){
+        if(myturn){
+            auto [u,v] = *cand.begin();
+            cout << u+1 << " " << v+1 << endl;
+            cand.erase({u,v});
+        } else {
+            CIN(ll,u);
+            CIN(ll,v);
+            if(u == -1 && v == -1) break;
+            if(u > v) swap(u,v);
+            cand.erase({u-1,v-1});
+        }
+        myturn = !myturn;
+    }
     return 0;
 }
