@@ -137,7 +137,24 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
+    map<ll,mint> memo;
+    vll mp(3);
+    auto dfs = [&](auto dfs, ll u) -> mint{
+        if(memo.count(u)) return memo[u];
+        mint now = 0;
+        if(u == N){
+            now = 1;
+        } else {
+            rep(i,3){
+                if(mp[i] != A[u]) continue;
+                mp[i]++;
+                now += dfs(dfs, u+1);
+                mp[i]--;
+            }
+        }
+        return memo[u] = now;
+    };
+    auto ans = dfs(dfs, 0);
     cout << ans << endl;
     return 0;
 }
