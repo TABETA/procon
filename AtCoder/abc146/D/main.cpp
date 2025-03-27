@@ -121,15 +121,40 @@ namespace std{
 
 // clang-format on
 int main() {
+    using P = pair<ll,ll>;
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N-1);
-    std::vector<long long> b(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> a[i];
-        std::cin >> b[i];
+    vector<vector<P>> to(N);
+    vector E(N-1, ll{});
+    rep(_,N-1){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v,_);
+        to[v].emplace_back(u,_);
+        E[_] = -1;
     }
-    ll ans = 0;
-    cout << ans << endl;
+
+
+    ll K = 0;
+    queue<P> Q;
+    Q.emplace(0, -1);
+    vector used(N-1, false);
+    while(!Q.empty()){
+        auto [u, pre] = Q.front();Q.pop();
+        ll k = 0;
+        for(auto&& [v, i]: to[u]){
+            if(used[i])continue;
+            used[i] = true;
+            if(k == pre) ++k;
+            E[i] = k;
+            chmax(K,k+1);
+            Q.emplace(v, k);
+            ++k;
+        }
+    }
+    cout << K << '\n';
+    repr(e,E){
+        cout << e+1 << '\n';
+    }
     return 0;
 }
