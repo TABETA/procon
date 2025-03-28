@@ -129,7 +129,10 @@ int main() {
     std::cin >> B;
     long long C;
     std::cin >> C;
-    ll ans = 0;
-    cout << ans << endl;
+    if (A*A + B*B < C*C) {
+        cout << YES << endl;
+    } else {
+        cout << NO << endl;
+    }
     return 0;
 }
