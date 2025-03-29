@@ -129,11 +129,37 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> H[i];
     }
-    std::vector<long long> W(M);
-    for(int i = 0 ; i < M ; i++){
-        std::cin >> W[i];
+    sort(all(H));
+    vll F(N);
+    for(int i = 1; i < N; i++){
+        F[i] = F[i-1];
+        if(i%2){
+            F[i] += abs(H[i] - H[i-1]);
+        }
     }
-    ll ans = 0;
+    vll B(N);
+    for(int i = N-2; i >= 0; --i){
+        B[i] = B[i+1];
+        if(i%2){
+            B[i] += abs(H[i] - H[i+1]);
+        }
+    }
+    ll ans = linf;
+    for(int i = 0 ; i < M ; i++){
+        ll w;
+        std::cin >> w;
+        auto j = ranges::upper_bound(H, w) - H.begin();
+        ll v;
+        if(j%2){
+            v = abs(H[j-1] - w);
+        } else {
+            v = abs(H[j] - w);
+        }
+        ll now = v;
+        now += j-1>=0 ? F[j-1]: 0;
+        now += j < N ? B[j] : 0;
+        chmin(ans, now);
+    }
     cout << ans << endl;
     return 0;
 }
