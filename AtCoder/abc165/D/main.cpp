@@ -127,7 +127,13 @@ int main() {
     std::cin >> B;
     long long N;
     std::cin >> N;
-    ll ans = 0;
+    auto f = [&](ll x) {
+        ll a = A * x / B;
+        ll b = x / B;
+        b = A * b;
+        return a - b;
+    };
+    ll ans = f(min(B-1, N));
     cout << ans << endl;
     return 0;
 }
