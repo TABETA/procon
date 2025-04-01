@@ -120,6 +120,13 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+using mint = modint;
+ostream &operator<<(ostream &os, const mint &v) {
+    os << v.val();
+    return os;
+}
 int main() {
     long long N;
     std::cin >> N;
@@ -127,7 +134,41 @@ int main() {
     std::cin >> X;
     long long M;
     std::cin >> M;
+    mint::set_mod(M);
+    mint a = X;
+    map<ll, ll> memo;
+    vector<ll> A;
+    ll t = 0;
+    ll r = 0;
+    rep(i,M){
+        if(memo.count(a.val())){
+            t = i - memo[a.val()];
+            r = memo[a.val()];
+            break;
+        }
+        memo[a.val()] = i;
+        A.emplace_back(a.val());
+        a *= a;
+    }
     ll ans = 0;
+    rep(i,r){
+        ans += A[i];
+    }
+    ll single = 0;
+    reps(i,r,A.size()){
+        single += A[i];
+    }
+    if(t == 0) {
+        auto q = (N-r);
+        ans += single * q;
+    
+    } else {
+        auto q = (N-r)/t;
+        ans += single * q;
+        rep(i,(N-r)%t){
+            ans += A[r+i];
+        }
+    }
     cout << ans << endl;
     return 0;
 }
