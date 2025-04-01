@@ -121,15 +121,16 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long W;
+    ll W;
     std::cin >> W;
-    long long H;
+    ll H;
     std::cin >> H;
-    long long x;
-    std::cin >> x;
-    long long y;
-    std::cin >> y;
-    ll ans = 0;
-    cout << ans << endl;
+    ll w;
+    std::cin >> w;
+    ll h;
+    std::cin >> h;
+    double a = (H*W)/2.;
+    bool ans = w*2 == W && h*2 == H;
+    cout << fixed << setprecision(15) << a << " " << ans << endl;
     return 0;
 }
