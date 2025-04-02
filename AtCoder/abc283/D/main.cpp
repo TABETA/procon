@@ -125,7 +125,27 @@ const string NO = "No";
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    map<char, ll> tot;
+    vector<map<char, ll>> mps{};
+    mps.push_back(map<char, ll>{});
+    rep(i,S.size()){
+        auto c = S[i];
+        if(c == '('){
+            mps.push_back(map<char, ll>{});
+        } else  if(c == ')'){
+            for (auto &&[k,v] : mps.back()){
+                tot[k] -= v;
+            }
+            mps.pop_back();
+        } else {
+            tot[c]++;
+            mps.back()[c]++;
+            if(tot[c] > 1){
+                cout << NO << endl;
+                return 0;
+            }
+        }
+    }
+    cout << YES << endl;
     return 0;
 }
