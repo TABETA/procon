@@ -127,13 +127,36 @@ int main() {
     std::cin >> W;
     long long M;
     std::cin >> M;
-    std::vector<long long> h(M);
-    std::vector<long long> w(M);
+    map<ll,ll> Y;
+    map<ll,ll> X;
+    using P = pair<ll,ll>;
+    set<P> ps;
     for(int i = 0 ; i < M ; i++){
-        std::cin >> h[i];
-        std::cin >> w[i];
+        CIN(ll,h);
+        CIN(ll,w);
+        Y[h]++;
+        X[w]++;
+        ps.insert({h,w});
     }
-    ll ans = 0;
-    cout << ans << endl;
+    map<ll,set<ll>> yy;
+    map<ll,set<ll>> xx;
+    for(auto &&[h,v] : Y){
+        yy[v].insert(h);
+    }
+    for(auto &&[w,v] : X){
+        xx[v].insert(w);
+    }
+    auto [v1, ys] = *yy.rbegin();
+    auto [v2, xs] = *xx.rbegin();
+    ll ans = v1 + v2;
+    for (auto &&y : ys){
+        for (auto &&x : xs){
+            if(!ps.count({y,x})){
+                cout << ans << endl;
+                return 0;
+            }
+        }
+    }
+    cout << ans-1 << endl;
     return 0;
 }
