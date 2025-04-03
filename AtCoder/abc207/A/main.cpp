@@ -121,13 +121,12 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long A;
-    std::cin >> A;
-    long long B;
-    std::cin >> B;
-    long long C;
-    std::cin >> C;
-    ll ans = 0;
+    vll A(3);
+    rep(i, 3) {
+        cin >> A[i];
+    }
+    sort(all(A));
+    ll ans = A[1] + A[2];
     cout << ans << endl;
     return 0;
 }
