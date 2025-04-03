@@ -130,14 +130,94 @@ ostream &operator<<(ostream &os, const mint &v) {
 }
 
 // clang-format on
+struct modinv {
+  int n; vector<mint> d;
+  modinv(): n(2), d({0,1}) {}
+  mint operator()(int i) {
+    while (n <= i) d.push_back(-d[mint::mod()%n]*(mint::mod()/n)), ++n;
+    return d[i];
+  }
+  mint operator[](int i) const { return d[i];}
+} invs;
+struct modfact {
+  int n; vector<mint> d;
+  modfact(): n(2), d({1,1}) {}
+  mint operator()(int i) {
+    while (n <= i) d.push_back(d.back()*n), ++n;
+    return d[i];
+  }
+  mint operator[](int i) const { return d[i];}
+} facts;
+struct modfactinv {
+  int n; vector<mint> d;
+  modfactinv(): n(2), d({1,1}) {}
+  mint operator()(int i) {
+    while (n <= i) d.push_back(d.back()*invs(n)), ++n;
+    return d[i];
+  }
+  mint operator[](int i) const { return d[i];}
+} ifacts;
+mint comb(int n, int k) {
+  if (n < k || k < 0) return 0;
+  return facts(n)*ifacts(k)*ifacts(n-k);
+}
+
+mint solve1(ll N, const vll& A){
+    mint ans = 0;
+    rep(i,N){
+        rep(j,i){
+            ans += A[i] ^ A[j];
+        }
+    }
+    return ans;
+}
+
+mint solve(ll N, const vll& A){
+    mint ans = 0;
+    rep(b,60){
+        ull m = 1ll<<b;
+        ll zero = 0;
+        ll one = 0;
+        rep(i,N){
+            if(A[i] & m){
+                one++;
+            } else {
+                zero++;
+            }
+        }
+        if(one == 0 || zero == 0) continue;
+        mint now = (mint)m * one * zero;
+        ans += now;
+    }
+    return ans;
+}
+auto rand_between = [](ll min, ll max) -> ll {
+    return min + rand() % (max - min);
+};
 int main() {
+    // while(true){
+    //     long long N = rand_between(2,30);
+    //     std::vector<long long> A(N);
+    //     for(int i = 0 ; i < N ; i++){
+    //         A[i] = rand_between(1000000007,(1ll<<60ll)-1);
+    //     }
+    //     auto ans1 = solve1(N,A);
+    //     auto ans2 = solve(N,A);
+    //     if(ans1 != ans2){
+    //         cout << "NG" << endl;
+    //         cout << ans1 << endl;
+    //         cout << ans2 << endl;
+    //         cout << A << endl;
+    //         return 0;
+    //     }
+    // }
+    // return 0;
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    cout << solve(N,A) << endl;
     return 0;
 }
