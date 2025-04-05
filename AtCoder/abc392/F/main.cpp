@@ -227,7 +227,8 @@ class Treap {
 
     int size() { return getSize(root); }
 };
-int main() {
+
+void solveByTreap(){
     long long N;
     std::cin >> N;
     std::vector<long long> P(N);
@@ -238,5 +239,41 @@ int main() {
     }
     t.print();
     cout << endl;
+}
+#include <atcoder/all>
+using namespace atcoder;
+void solve(){
+    long long N;
+    std::cin >> N;
+    std::vector<long long> P(N);
+    fenwick_tree<long long> t(N+1);
+    vll ans(N);
+    for (int i = 0; i < N; i++) {
+        std::cin >> P[i];
+        P[i]--;
+        t.add(i, 1);
+    }
+    repd(i,N){
+        auto f = [&](int wj){
+            return t.sum(0,wj) <= P[i];
+        };
+        auto binary_search = [&](auto f, ll ac, ll wa) -> ll {
+            while (abs(ac - wa) > 1) {
+                ll wj = (ac + wa) / 2;
+                if (f(wj))
+                    ac = wj;
+                else
+                    wa = wj;
+            }
+            return ac;
+        };
+        ll j = binary_search(f, 0, N+1);
+        ans[j] = i+1;
+        t.add(j, -1);
+    }
+    cout << ans << endl;
+}
+int main() {
+    solve();
     return 0;
 }
