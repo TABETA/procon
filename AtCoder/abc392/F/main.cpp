@@ -118,16 +118,125 @@ namespace std{
     };
 }
 
-
 // clang-format on
+class Treap {
+   private:
+    struct Node {
+        int val, size, priority;
+        Node *left, *right;
+        Node(int v)
+            : val(v),
+              size(1),
+              priority(rand()),
+              left(nullptr),
+              right(nullptr) {}
+    };
+
+    Node* root;
+
+    int getSize(Node* t) { return t ? t->size : 0; }
+
+    void update(Node* t) {
+        if (t) t->size = 1 + getSize(t->left) + getSize(t->right);
+    }
+
+    void split(Node* t, int k, Node*& l, Node*& r) {
+        if (!t) {
+            l = r = nullptr;
+        } else if (getSize(t->left) >= k) {
+            split(t->left, k, l, t->left);
+            r = t;
+            update(r);
+        } else {
+            split(t->right, k - getSize(t->left) - 1, t->right, r);
+            l = t;
+            update(l);
+        }
+    }
+
+    Node* merge(Node* l, Node* r) {
+        if (!l || !r) return l ? l : r;
+        if (l->priority > r->priority) {
+            l->right = merge(l->right, r);
+            update(l);
+            return l;
+        } else {
+            r->left = merge(l, r->left);
+            update(r);
+            return r;
+        }
+    }
+
+    void insert(Node*& t, int pos, int val) {
+        Node *l, *r;
+        split(t, pos, l, r);
+        Node* newNode = new Node(val);
+        t = merge(merge(l, newNode), r);
+    }
+
+    void erase(Node*& t, int pos) {
+        Node *l, *r, *m;
+        split(t, pos, l, r);
+        split(r, 1, m, r);
+        delete m;
+        t = merge(l, r);
+    }
+
+    int get(Node* t, int pos) {
+        if (!t) throw out_of_range("Index out of range");
+        int leftSize = getSize(t->left);
+        if (pos < leftSize)
+            return get(t->left, pos);
+        else if (pos == leftSize)
+            return t->val;
+        else
+            return get(t->right, pos - leftSize - 1);
+    }
+
+    void print(Node* t) {
+        if (!t) return;
+        print(t->left);
+        cout << t->val << " ";
+        print(t->right);
+    }
+
+    void clear(Node* t) {
+        if (!t) return;
+        clear(t->left);
+        clear(t->right);
+        delete t;
+    }
+
+   public:
+    Treap() : root(nullptr) {
+        srand(time(nullptr));  // 乱数初期化（必要に応じて一度だけ）
+    }
+
+    ~Treap() { clear(root); }
+
+    void insert(int pos, int val) { insert(root, pos, val); }
+
+    void erase(int pos) { erase(root, pos); }
+
+    int get(int pos) { return get(root, pos); }
+
+    void print() {
+        print(root);
+        cout << endl;
+    }
+
+    int size() { return getSize(root); }
+};
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> P(N);
-    for(int i = 0 ; i < N ; i++){
+    Treap t;
+    for (int i = 0; i < N; i++) {
         std::cin >> P[i];
+        t.insert(P[i] - 1, i + 1);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    t.print();
+    cout << endl;
     return 0;
 }
