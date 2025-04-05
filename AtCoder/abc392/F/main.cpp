@@ -242,7 +242,7 @@ void solveByTreap(){
 }
 #include <atcoder/all>
 using namespace atcoder;
-void solve(){
+void solveByBIT(){
     long long N;
     std::cin >> N;
     std::vector<long long> P(N);
@@ -273,7 +273,30 @@ void solve(){
     }
     cout << ans << endl;
 }
+int op(int a, int b) { return a + b ;}
+int e() { return 0; }
+void solveByST(){
+    long long N;
+    std::cin >> N;
+    std::vector<long long> P(N);
+    segtree<int, op, e> t(vector<int>(N,1));
+    vll ans(N);
+    for (int i = 0; i < N; i++) {
+        std::cin >> P[i];
+        P[i];
+    }
+    auto getKth = [&](int k){
+        auto f = [&](int x){ return x < k; };
+        return t.max_right(0, f);
+    };
+    repd(i,N){
+        ll j = getKth(P[i]);
+        ans[j] = i+1;
+        t.set(j, 0);
+    }
+    cout << ans << endl;
+}
 int main() {
-    solve();
+    solveByST();
     return 0;
 }
