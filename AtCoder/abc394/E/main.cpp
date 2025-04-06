@@ -121,8 +121,51 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    ll N;
+    cin >> N;
+    vs S(N);
+    vector<vector<pair<ll,char>>> to(N);
+    using P = pair<ll,ll>;
+    queue<P> Q;
+    vvll ans(N, vll(N, linf));
+    rep(i,N){
+        ans[i][i] = 0;
+        Q.emplace(i,i);
+    }
+    rep(i, N) {
+        cin >> S[i];
+        rep(j,N){
+            if(S[i][j] == '-') continue;
+            to[i].emplace_back(j, S[i][j]);
+            chmin(ans[i][j], 1ll);
+            Q.emplace(i,j);
+        }
+    }
+    set<P> used;
+    while(!Q.empty()){
+        auto p = Q.front();Q.pop();
+        auto [u,v] = p;
+        ll dist = ans[u][v];
+        rep(t,N){
+            if(S[t][u] == '-') continue;
+            rep(w,N){
+                if(S[v][w] == '-') continue;
+                if(S[t][u] != S[v][w]) continue;
+                if(used.count({t,w})) continue;
+                ll nd = dist+2;
+                if(chmin(ans[t][w], nd)){
+                    Q.emplace(t,w);
+                }
+            }
+        }
+    }
+    rep(i, N){
+        rep(j,N){
+            if(ans[i][j] == linf) cout << -1;
+            else cout << ans[i][j];
+            if(j != N-1) cout << " ";
+        }
+        cout << endl;
+    }
     return 0;
 }
