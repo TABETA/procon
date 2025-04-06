@@ -120,15 +120,19 @@ namespace std{
 
 
 // clang-format on
+ll solve(ll N){
+    ll ans = 0;
+    for(ll a = 2; a <= 4; a *= 2){
+        ll b = sqrtl(N / a);
+        ans += b;
+    }
+    return ans;
+}
+
 int main() {
     ll N;
     cin >> N;
-    ll ans = 0;
-    for(ll a = 2; a <= N; a *= 2){
-        ll b = sqrt(N / a);
-        ans += b;
-        if(a*b*b )
-    }
-    cout << ans << endl;
+    auto ans1 = solve(N);
+    cout << ans1 << endl;
     return 0;
 }
