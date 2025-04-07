@@ -28,7 +28,7 @@
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "C/C++: g++ アクティブなファイルのビルド"
+      "preLaunchTask": "C/C++: g++ アクティブなファイルのデバッグビルド"
     }
   ]
 }

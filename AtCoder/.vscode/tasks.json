@@ -12,6 +12,34 @@
 				"-std=c++2b",
 				"-Wall",
 				"${file}",
+				"-I",
+				"${aclib}",
+				"-o",
+				"${fileDirname}/${fileBasenameNoExtension}"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "コンパイラ: /usr/bin/g++"
+		},
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++ アクティブなファイルのデバッグビルド",
+			"command": "/usr/bin/g++",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g3",
+				"-O0",
+				"-std=c++2b",
+				"-Wall",
+				"${file}",
 				"-D_DEBUG",
 				"-I",
 				"${aclib}",
