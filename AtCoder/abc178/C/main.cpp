@@ -133,7 +133,19 @@ ostream &operator<<(ostream &os, const mint &v) {
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    vector DP(4, mint(0));
+    DP[0] = 1;
+    DP[1] = 1;
+    DP[2] = 0;
+    DP[3] = 8;
+    rep(i,N-1){
+        vector pre(4, mint(0));
+        swap(pre, DP);
+        DP[0] = pre[0] * 9 + pre[3];
+        DP[1] = pre[1] * 9 + pre[3];
+        DP[2] = pre[0] + pre[1] + pre[2] * 10;
+        DP[3] = pre[3] * 8;
+    }
+    cout << DP[2] << endl;
     return 0;
 }
