@@ -121,8 +121,43 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    ll X, N;
+    cin >> N >> X;
+    vll U(N);
+    vll D(N);
+    ll tot = 0;
+    rep(i, N) {
+        cin >> U[i] >> D[i];
+        tot += U[i]+D[i];
+    }
+    auto f = [&](ll h){
+        ll r = linf;
+        ll l = 0;
+        rep(i,N){
+            ll nr  = U[i];
+            ll nl = h - D[i];
+            chmin(nr, h);
+            chmax(nl, 0ll);
+            chmin(nr, r + X);
+            chmax(nl, l - X);
+            r = nr;
+            l = nl;
+            if(r < l) return false;
+        }
+        return true;
+    };
+    auto binary_search = [&](auto f, ll ac, ll wa) -> ll {
+        while (abs(ac - wa) > 1) {
+            ll wj = (ac + wa) / 2;
+            if (f(wj))
+                ac = wj;
+            else
+                wa = wj;
+        }
+        return ac;
+    };
+    ll h = binary_search(f, 0, 3e9);
+    ll ans = tot - h*N;
     cout << ans << endl;
     return 0;
 }
