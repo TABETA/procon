@@ -123,7 +123,7 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    ranges::sort(S);
+    cout << S << endl;
     return 0;
 }
