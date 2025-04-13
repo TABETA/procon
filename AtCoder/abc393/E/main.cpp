@@ -126,10 +126,29 @@ int main() {
     long long K;
     std::cin >> K;
     std::vector<long long> A(N);
+    vll mp(1200001);
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        mp[A[i]]++;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll B(1200001);
+    reps(i,1,1200001){
+        ll cnt = 0;
+        for(int j = i ; j < 1200001 ; j += i){
+            cnt += mp[j];
+        }
+        B[i] = cnt;
+    }
+    vll ans(1200001);
+    reps(i,1,1200001){
+        if(B[i] < K) continue;
+        for(int j = i ; j < 1200001 ; j += i){
+            ans[j] = i;
+        }
+    }
+    for(int i = 0 ; i < N ; i++){
+        cout << ans[A[i]] << endl;
+    }
+
     return 0;
 }
