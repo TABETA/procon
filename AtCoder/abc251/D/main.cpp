@@ -123,7 +123,14 @@ namespace std{
 int main() {
     long long W;
     std::cin >> W;
-    ll ans = 0;
+    vll ans;
+    reps(i,1,100){
+        ans.push_back(i);
+        ans.push_back(i*100);
+        ans.push_back(i*10000);
+    }
+    ans.push_back(1000000);
+    cout << ans.size() << endl;
     cout << ans << endl;
     return 0;
 }
