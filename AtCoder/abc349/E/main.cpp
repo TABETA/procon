@@ -120,14 +120,86 @@ namespace std{
 
 
 // clang-format on
-int main() {
-    std::vector<std::vector<long long>> A(3, std::vector<long long>(3));
-    for(int i = 0 ; i < 3 ; i++){
-        for(int j = 0 ; j < 3 ; j++){
-            std::cin >> A[i][j];
+template<typename T>
+vector<vector<T>> rotate90(const vector<vector<T>>& arr) {
+    int N = arr.size();
+    vector<vector<T>> rotated(N, vector<T>(N));
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            rotated[j][N - 1 - i] = arr[i][j];
         }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    return rotated;
+}
+
+int main() {
+    using P = pair<ll,ll>;
+    vvll A(3,vll(3));
+    for(int i = 0 ; i < 3 ; i++){
+        for(int j = 0 ; j < 3 ; j++){
+            ll a;
+            cin >> a;
+            A[i][j] = a;
+        }
+    }
+    auto pss = {
+        vector<P>{P{0,0},P{0,1},P{0,2}},
+        vector<P>{P{1,0},P{1,1},P{1,2}},
+        vector<P>{P{2,0},P{2,1},P{2,2}},
+        vector<P>{P{0,0},P{1,0},P{2,0}},
+        vector<P>{P{0,1},P{1,1},P{2,1}},
+        vector<P>{P{0,2},P{1,2},P{2,2}},
+        vector<P>{P{0,0},P{1,1},P{2,2}},
+        vector<P>{P{2,0},P{1,1},P{0,2}},
+    };
+    map<vvll, ll> memo;
+    auto dfs = [&](auto dfs, vvll used, ll me) -> ll {
+        if(memo.count(used)) return memo[used];
+        ll you = me^1;
+        ll ans = [&](){
+            for (auto &&ps : pss){
+                ll mine = 0;
+                ll yours = 0;
+                for (auto &&[y,x] : ps){
+                    if(used[y][x] == me) {
+                        mine++;
+                    } else if(used[y][x] == you){
+                        yours++;
+                    }
+                }
+                if(mine == 3) return me;
+                if(yours == 3) return you;
+            }
+            bool hasAns = false;
+            for(int i = 0 ; i < 3 ; i++){
+                for(int j = 0 ; j < 3 ; j++){
+                    if(used[i][j] != -1) continue;
+                    hasAns = true;
+                    auto temp = used;
+                    temp[i][j] = me;
+                    if(me == dfs(dfs, temp, you)) {
+                        return me;
+                    }
+                }
+            }
+            if(hasAns) return you;
+
+            ll myScore = 0;
+            ll yourScore = 0;
+            for(int i = 0 ; i < 3 ; i++){
+                for(int j = 0 ; j < 3 ; j++){
+                    if(used[i][j] == me) myScore += A[i][j];
+                    else yourScore += A[i][j];
+                    
+                }
+            }
+            return myScore > yourScore ? me : you;
+        }();
+        return memo[used] = ans;
+    };
+    vvll used(3,vll(3,-1));
+    auto ans = dfs(dfs,used,0);
+    if(ans == 0) cout << "Takahashi" << endl;
+    else cout << "Aoki" << endl;
     return 0;
 }
