@@ -123,19 +123,47 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    long long A_x;
-    std::cin >> A_x;
     long long A_y;
     std::cin >> A_y;
-    long long B_x;
-    std::cin >> B_x;
+    long long A_x;
+    std::cin >> A_x;
     long long B_y;
     std::cin >> B_y;
+    long long B_x;
+    std::cin >> B_x;
     std::vector<std::string> S(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    --A_x;--A_y;--B_x;--B_y;
+    using P = pair<ll,ll>;
+    queue<P> Q;
+    Q.emplace(A_y, A_x);
+    vvll d(N, vll(N,linf));
+    vvll vis(N, vll(N, 0));
+    d[A_y][A_x] = 0;
+    vis[A_y][A_x] = 3;
+    while(!Q.empty()){
+        auto [y,x] = Q.front();Q.pop();
+        vis[y][x] = 3;
+        ll dx[] = {1, -1, 1, -1};
+        ll dy[] = {1, -1, -1, 1}; 
+        rep(i,4){
+            for(ll j = 1; ; ++j){
+                ll nx = x + dx[i]*j;
+                ll ny = y + dy[i]*j;
+                if(nx < 0 || nx >= N || ny < 0 || ny >= N)break;
+                if(S[ny][nx] == '#')break;
+                ll b = i < 2 ? 1 : 2;
+                if(vis[ny][nx] & b)break;
+                if(d[ny][nx] <= d[y][x] + 1)continue;
+                d[ny][nx] = d[y][x] + 1;
+                vis[ny][nx] |= b;
+                Q.emplace(ny,nx);
+            }
+        }
+    }
+    if(d[B_y][B_x] == linf) cout << -1 << endl;
+    else cout << d[B_y][B_x] << endl;
     return 0;
 }
