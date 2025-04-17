@@ -121,8 +121,39 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    ll N, M;
+    cin >> N >> M;
+    vector<vector<tuple<ll,ll,ll,ll,ll>>> to(N);
+    rep(_,M){
+        ll l,d,k,c;
+        cin >> l >> d >> k >> c;
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[v].emplace_back(u,l,d,k,c);
+    }
+    using P = pair<ll,ll>;
+    priority_queue<P> Q;
+    Q.emplace(linf, N-1);
+    vector dist(N, -1ll);
+    dist[N-1] = linf;
+    while(!Q.empty()){
+        auto [t, u] = Q.top();Q.pop();
+        if(dist[u] != t) continue;
+        for(auto&& [v,l,d,K,c]: to[u]){
+            ll k = min((t-c-l)/d,K-1);
+            ll nt = l + k*d;
+            if(k < 0) continue;
+            if(chmax(dist[v], nt)){
+                Q.emplace(dist[v], v);
+            }
+        }
+    }
+    rep(i,N-1){
+        if(dist[i] == -1)
+            cout << "Unreachable" << endl;
+        else
+            cout << dist[i] << endl;
+    }
+
     return 0;
 }
