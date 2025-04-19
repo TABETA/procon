@@ -271,6 +271,8 @@
   "binary_search": {
     "prefix": "binary_search",
     "body": [
+      "auto f = [&](ll wj){",
+      "};",
       "auto binary_search = [&](auto f, ll ac, ll wa) -> ll {",
       "    while (abs(ac - wa) > 1) {",
       "        ll wj = (ac + wa) / 2;",
