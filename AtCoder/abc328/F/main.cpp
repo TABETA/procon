@@ -118,22 +118,71 @@ namespace std{
     };
 }
 
-
 // clang-format on
+class UnionFind {
+   public:
+    UnionFind() = default;
+
+    /// @brief Union-Find 木を構築します。
+    /// @param n 要素数
+    explicit UnionFind(size_t n) : p(n, -1), dif(n) {}
+
+    /// @brief 頂点 i の root のインデックスを返します。
+    /// @param i 調べる頂点のインデックス
+    /// @return 頂点 i の root のインデックス
+    ll root(ll a) {
+        if (p[a] < 0) return a;
+        ll b = p[a];
+        p[a] = root(b);
+        dif[a] += dif[b];
+        return p[a];
+    }
+
+    /// @brief a のグループと b のグループを統合します。
+    /// @param a 一方のインデックス
+    /// @param b 他方のインデックス
+    bool merge(ll a, ll b, ll w) {
+        root(a);
+        root(b);
+        w = w + dif[a] - dif[b];
+        a = root(a);
+        b = root(b);
+        if (a == b) return w == 0;
+        // union by size (小さいほうが子になる）
+        if (-p[a] < -p[b]) {
+            std::swap(a, b);
+            w = -w;
+        }
+        p[a] += p[b];
+        p[b] = a; dif[b] = w;
+        return true;
+    }
+   private:
+    // p[i] は i の 親,
+    // ただし root の場合は (-1 * そのグループに属する要素数)
+    std::vector<ll> p;
+    vll dif;
+};
 int main() {
     long long N;
     std::cin >> N;
     long long Q;
     std::cin >> Q;
+    UnionFind uf(N);
     std::vector<long long> a(Q);
     std::vector<long long> b(Q);
     std::vector<long long> d(Q);
-    for(int i = 0 ; i < Q ; i++){
+    set<ll> ans;
+    for (int i = 0; i < Q; i++) {
         std::cin >> a[i];
+        a[i]--;
         std::cin >> b[i];
+        b[i]--;
         std::cin >> d[i];
+        if(uf.merge(a[i], b[i], d[i])){
+            ans.emplace(i);
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    repr(a, ans) { cout << a + 1 << " "; }
     return 0;
 }
