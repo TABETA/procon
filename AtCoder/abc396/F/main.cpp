@@ -120,16 +120,36 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
 int main() {
     long long N;
     std::cin >> N;
     long long M;
     std::cin >> M;
-    std::vector<long long> A(N);
+    using P = pair<ll,ll>;
+    deque<P> A(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        ll a;
+        std::cin >> a;
+        A[i] = P(a,i);
     }
+    ranges::sort(A);
+    fenwick_tree<ll> ft(N);
     ll ans = 0;
-    cout << ans << endl;
+    for(int i = 0 ; i < N ; i++){
+        auto [a, b] = A[i];
+        ans += ft.sum(b,N);
+        ft.add(b,1);
+    }
+    repd(x,M){
+        cout << ans << '\n';
+        while(A.size() && A.back().first == x){
+            auto [a, i] = A.back();
+            A.pop_back();
+            ans += ft.sum(0,i);
+            ans -= ft.sum(i+1,N);
+        }
+    }
     return 0;
 }
