@@ -120,14 +120,33 @@ namespace std{
 
 
 // clang-format on
+ll c2 (ll n) {
+    return n * (n - 1) / 2;
+}
 int main() {
     long long N;
     std::cin >> N;
     std::vector<long long> A(N);
+    vll cnt(N);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+        std::cin >> A[i];--A[i];
+        cnt[A[i]]++;
     }
+    ll same = 0;
+    rep(i,N) same += c2(cnt[i]);
+    auto del = [&](ll x){
+        same -= c2(cnt[x]);
+        cnt[x]--;
+        same += c2(cnt[x]);
+    };
     ll ans = 0;
+    rep(i,N){
+        ll l = i, r= N-1-i;
+        if(l >= r) break;
+        ans += c2(r-l+1) - same;
+        del(A[l]);
+        del(A[r]);
+    }
     cout << ans << endl;
     return 0;
 }
