@@ -130,6 +130,7 @@ ostream &operator<<(ostream &os, const mint &v) {
 }
 
 // clang-format on
+using P = pair<ll,ll>;
 int main() {
     long long N;
     std::cin >> N;
@@ -140,14 +141,70 @@ int main() {
     std::vector<long long> A(M);
     for(int i = 0 ; i < M ; i++){
         std::cin >> A[i];
+        --A[i];
     }
-    std::vector<long long> U(N-1);
-    std::vector<long long> V(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> U[i];
-        std::cin >> V[i];
+    vvll to(N);
+    vector<P> edges(N-1);
+    rep(i,N-1){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        if(u > v) swap(u, v);
+        edges[i] = {u, v};
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
-    cout << ans << endl;
+    map<P,ll> mp;
+    ll tot = 0;
+    rep(i,M-1){
+        auto bfs = [&](ll s, ll t){
+            using T = pair<ll,vll>;
+            queue<T> Q;
+            Q.emplace(s, vll{s});
+            vector used(N, false);
+            while(!Q.empty()){
+                auto [u, path] = Q.front();Q.pop();
+                if(u == t){
+                    return path;
+                }
+                for(auto&& v: to[u]){
+                    if(used[v])continue;
+                    used[v] = true;
+                    auto np = path;
+                    np.emplace_back(v);
+                    Q.emplace(v, np);
+                }
+            }
+            return vll{};
+        };
+        auto path = bfs(A[i], A[i+1]);
+        rep(j,path.size()-1){
+            auto u = path[j];
+            auto v = path[j+1];
+            if(u > v) swap(u, v);
+            mp[{u, v}]++;
+        }
+        tot += path.size()-1;
+    }
+    const ll r2 = K+tot;
+    if(r2 < 0 || r2 % 2 == 1 || r2 > tot*2){
+        cout << 0 << endl;
+        return 0;
+    }
+    const ll r = r2/2;
+    map<P,mint> memo;
+    auto dfs = [&](auto dfs, ll u, ll now) -> mint{
+        if(memo.count({u, now})) return memo[{u, now}];
+        if(u == N-1){
+            return memo[{u, now}] = (now == r);
+        }
+        mint ans = 0;
+        ll n = now + mp[edges[u]];
+        if(n <= r){
+            ans += dfs(dfs, u+1, n);
+        }
+        ans += dfs(dfs, u+1, now);
+        return memo[{u, now}] = ans;
+    };
+    cout << dfs(dfs, 0, 0) << endl;
     return 0;
 }
