@@ -123,11 +123,28 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
+    std::vector<long long> A(N+1);
+
+    rep(i,N){
+        std::cin >> A[i+1];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vll a(N+1);
+    rep(i,N+1){
+        ll now = 0;
+        reps(j,1,i){
+            // 休日が-1とi+1にある場合
+            ll x = j;
+            ll y = i-j;
+            now += A[min(x,y)];
+        }
+        a[i] = now;
+    }
+    vll dp(N+1);
+    reps(i,1,N+1){
+        rep(j,i){
+            chmax(dp[i], dp[j] + a[i-j]);
+        }
+    }
+    cout << dp[N] << endl;
     return 0;
 }
