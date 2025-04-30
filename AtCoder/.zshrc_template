@@ -1,16 +1,23 @@
 export LANG=ja_JP.UTF-8
 
-export HOME=/home/r-abe
-export PROJ=${HOME}/proj
+# プライベート設定を最初に読み込む（存在する場合）
+# ここで USER_HOME, PROJECT_ROOT, JDK_PATH などの変数が設定される
+[[ -f ~/.zshrc_private ]] && source ~/.zshrc_private
+
+# プライベート設定で定義された変数を使用
+export HOME="${USER_HOME}"
+export PROJ="${PROJECT_ROOT}"
 export PATH=${PROJ}/procon:$PATH
 export PATH=${PROJ}/procon/sh:$PATH
 export aclib=${PROJ}/procon/AtCoder/ac-library
-export JDK_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+export JDK_HOME="${JDK_PATH}"
 export PATH="$JDK_HOME:$PATH"
+export PATH=${HOME}/.local/bin:$PATH
 
 plugins=(zsh-completions)
 autoload -U compinit && compinit
 
+# 履歴設定
 HISTFILE=~/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
@@ -67,9 +74,12 @@ setopt auto_param_slash
 setopt correct
 DIRSTACKSIZE=100
 
+# AtCoder関連の設定
+# プレースホルダー: 実際の値は.zshrc_privateで設定
 at_home="${PROJ}/procon/AtCoder"
 at_config="${at_home}/.atcodertools.toml"
 
+# AtCoder関連関数
 atcoder-tools_gen_and_cd(){
     contest_name=$1
     config=$2
@@ -124,7 +134,8 @@ colored_status_text() {
 }
 ats() {
   TMP_FILE=$(mktemp)
-  atcoder-tools submit -u $1 --config $at_config 2>&1 | tee $TMP_FILE
+  # ユーザー名はプライベート設定から取得
+  atcoder-tools submit -u ${ATCODER_USERNAME} --config $at_config 2>&1 | tee $TMP_FILE
   URL=$(sed -r "s/\x1B\[[0-9;]*[mG]//g" $TMP_FILE | grep -oP '(?<=Done! ).*')
 
   if [ -n "$URL" ]; then
@@ -184,16 +195,15 @@ nopen() {
 
   # 親フォルダを取得し、1文字進めたフォルダ名を作成
   parent_dir=$(basename "$(dirname "$input_path")")
-  case $parent_dir in
-    A) new_parent_dir="B" ;;
-    B) new_parent_dir="C" ;;
-    C) new_parent_dir="D" ;;
-    D) new_parent_dir="E" ;;
-    E) new_parent_dir="F" ;;
-    F) new_parent_dir="G" ;;
-    *) echo "無効な入力です。AからFのいずれかを入力してください。"
-       return 1 ;;
-  esac
+
+  # アルファベット一文字のみで、A〜Xの範囲内かどうかをチェック
+  if [[ ! "$parent_dir" =~ ^[A-X]$ ]]; then
+    echo "無効な入力です。AからXのいずれかを入力してください。"
+    return 1
+  fi
+
+  # ASCIIコードを1進める
+  new_parent_dir=$(printf "\\$(printf '%03o' "$(($(printf '%d' "'$parent_dir") + 1))")")
 
   # 新しいファイルパスを構築
   target_path="$(dirname "$(dirname "$input_path")")/$new_parent_dir/main.cpp"

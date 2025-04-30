@@ -1,0 +1,17 @@
+# このファイルは.zshrc_privateのテンプレートです
+# このファイルを.zshrc_privateとしてコピーし、実際の値を設定してください
+
+# 基本パス設定（実際の値に置き換えてください）
+export USER_HOME="/home/your_username"
+export PROJECT_ROOT="/home/your_username/proj"
+export JDK_PATH="/path/to/your/jdk/bin"
+
+# AtCoderアカウント情報
+export ATCODER_USERNAME="your_username"
+
+# その他の秘密情報
+# export API_KEY="your_api_key"
+# export GITHUB_TOKEN="your_github_token"
+
+# 環境固有の設定
+# 別のマシンでは異なる設定が必要な場合は、ここに追加

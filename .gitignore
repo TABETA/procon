@@ -86,3 +86,4 @@ bld/
 !?*.[Cc]ache/
 
 main
+.zshrc_private
