@@ -124,6 +124,10 @@ int main() {
     long long N;
     std::cin >> N;
     ll ans = 0;
+    while(N>0){
+        N-=100;
+        ++ans;
+    }
     cout << ans << endl;
     return 0;
 }
