@@ -123,7 +123,6 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    printf("%04lld\n", N);
     return 0;
 }
