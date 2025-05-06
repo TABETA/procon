@@ -131,21 +131,33 @@ int main() {
     }
     using ld = long double;
     vector memo(N+1, vector(N+1, vector(N+1, -1.0)));
-    auto dfs = [&](auto dfs, ll a, ll b, ll c) -> ld{
+    auto dfs = [&](auto dfs, vll mp) -> ld{
+        ll a = mp[0];
+        ll b = mp[1];
+        ll c = mp[2];
         if(memo[a][b][c] != -1.0){
             return memo[a][b][c];
         }
-        ll n = a + b + c;
+        ll n = 0;
+        repr(i, mp){
+            n += i;
+        }
         if(n == 0){
             return 0;
         }
         ld p = 1.0 - (N-n) / (ld)N; 
         ld now = 1/p;
-        if(a>0)now += dfs(dfs,a-1,b,c)*a/N/p;
-        if(b>0)now += dfs(dfs,a+1,b-1,c)*b/N/p;
-        if(c>0)now += dfs(dfs,a,b+1,c-1)*c/N/p;
+        rep(i, 3){
+            if(mp[i]==0)continue;
+            ld q = (ld)mp[i]/N/p;
+            mp[i]--;
+            if(i>0)mp[i-1]++;
+            now += dfs(dfs,mp)*q;
+            if(i>0)mp[i-1]--;
+            mp[i]++;
+        }
         return memo[a][b][c] = now;
     };
-    cout << fixed << setprecision(15) << dfs(dfs, mp[0], mp[1], mp[2]) << endl;
+    cout << fixed << setprecision(15) << dfs(dfs, mp) << endl;
     return 0;
 }
