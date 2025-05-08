@@ -39,10 +39,6 @@ using namespace std;
 struct Fast {Fast() {std::cin.tie(0); ios::sync_with_stdio(false);}} fast;
 #endif
 
-#ifndef ONLINE_JUDGE
-#define _GLIBCXX_DEBUG
-#endif
-
 /* alias */
 using ull = unsigned long long;
 using ll = long long;
@@ -64,6 +60,7 @@ const ll linf = 1001001001001001001ll;
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
 #define YesNo(bool) if(bool){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
+#define sb(var,l,r) {var[l].pb(r); var[r].pb(l);}
 
 /* REP macro */
 #define reps(i, a, n) for (ll i = (a); i < (ll)(n); ++i)
@@ -124,10 +121,6 @@ using namespace atcoder;
 using mint = static_modint<MOD>;
 using vm = vector<mint>;
 using vvm = vector<vm>;
-ostream &operator<<(ostream &os, const mint &v) {
-    os << v.val();
-    return os;
-}
 
 // clang-format on
 int main() {
@@ -135,11 +128,23 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<long long> a(N);
+    vector DP(K+1, mint{});
+    DP[0] = 1;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        ll a;
+        std::cin >> a;
+        mint sum  = 0;
+        for(ll k = K; k >= max(0ll,K-a); --k){
+            sum += DP[k];
+        }
+        mint pre = 0;
+        repd(j,K+1) {
+            pre = DP[j];
+            DP[j] = sum;
+            sum -= pre;
+            if(j-a-1 >= 0) sum += DP[j-a-1];
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    cout << DP[K].val() << endl;
     return 0;
 }
