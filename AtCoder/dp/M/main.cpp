@@ -139,7 +139,21 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    vector dp(K+1, mint{});
+    dp[0] = 1;
+    rep(i,N){
+        vector pre(K+1, mint{});
+        swap(dp, pre);
+        rep(j,K){
+            pre[j+1] += pre[j];
+        }
+        rep(j,K+1){
+            dp[j] = pre[j];
+            if(j-a[i]-1 >= 0) {
+                dp[j] -= pre[j-a[i]-1];
+            }
+        }
+    }
+    cout << dp[K] << endl;
     return 0;
 }
