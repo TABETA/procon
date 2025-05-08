@@ -123,7 +123,8 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    repd(i, N+1) {
+        cout << i << endl;
+    }
     return 0;
 }
