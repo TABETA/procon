@@ -39,10 +39,6 @@ using namespace std;
 struct Fast {Fast() {std::cin.tie(0); ios::sync_with_stdio(false);}} fast;
 #endif
 
-#ifndef ONLINE_JUDGE
-#define _GLIBCXX_DEBUG
-#endif
-
 /* alias */
 using ull = unsigned long long;
 using ll = long long;
@@ -64,6 +60,7 @@ const ll linf = 1001001001001001001ll;
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
 #define YesNo(bool) if(bool){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
+#define sb(var,l,r) {var[l].pb(r); var[r].pb(l);}
 
 /* REP macro */
 #define reps(i, a, n) for (ll i = (a); i < (ll)(n); ++i)
@@ -123,11 +120,21 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
+    deque<ll> a(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
     }
-    ll ans = 0;
+    vll A(N+1);
+    rep(i,N) A[i+1] = A[i] + a[i];
+    vector memo(N+1, vector(N+1, linf));
+    auto dfs = [&](auto dfs, ll l, ll r) -> ll {
+        if(l==r) return 0;
+        if (memo[l][r] != linf) return memo[l][r];
+        ll res = linf;
+        reps(m,l,r) chmin(res, dfs(dfs, l, m) + dfs(dfs, m+1, r));
+        return memo[l][r] = res + A[r] - A[l-1];
+    };
+    ll ans = dfs(dfs, 1, N);
     cout << ans << endl;
     return 0;
 }
