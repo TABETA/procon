@@ -123,11 +123,23 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> a(N);
+    std::vector<long long> a(N+1);
     for(int i = 0 ; i < N ; i++){
-        std::cin >> a[i];
+        std::cin >> a[i+1];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    rep(i,N){
+        a[i+1] += a[i];
+    }
+    vvll memo(N+1, vll(N+1, linf));
+    auto dfs = [&](auto dfs,ll l, ll r) -> ll{
+        if(l == r) return 0;
+        if(memo[l][r] != linf) return memo[l][r];
+        ll res = linf;
+        reps(m,l,r){
+            chmin(res, dfs(dfs,l,m) + dfs(dfs,m+1,r));
+        }
+        return memo[l][r] = res + a[r] - a[l-1];
+    };
+    cout << dfs(dfs, 1, N) << endl;
     return 0;
 }
