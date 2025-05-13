@@ -139,7 +139,27 @@ int main() {
             std::cin >> a[i][j];
         }
     }
-    ll ans = 0;
+    uint used = 0;
+    unordered_map<ull, mint> memo;
+    auto dfs = [&](auto dfs, uint i) -> mint{
+        if(i == N){
+            return 1;
+        }
+        ull key = ((ull)i<<32ull) + used;
+        if(memo.count(key)){
+            return memo[key];
+        }
+        mint res = 0;
+        rep(j,N){
+            if(a[i][j] == 0) continue;
+            if(used & (1<<j)) continue;
+            used |= 1<<j;
+            res += dfs(dfs, i+1);
+            used &= ~(1<<j);
+        }
+        return memo[key] = res;
+    };
+    mint ans = dfs(dfs, 0);
     cout << ans << endl;
     return 0;
 }
