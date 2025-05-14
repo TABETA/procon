@@ -133,13 +133,26 @@ ostream &operator<<(ostream &os, const mint &v) {
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> x(N-1);
-    std::vector<long long> y(N-1);
-    for(int i = 0 ; i < N-1 ; i++){
-        std::cin >> x[i];
-        std::cin >> y[i];
+    vvll to(N);
+    ll M = N - 1;
+    rep(_,M){
+        CIN(ll,u);--u;
+        CIN(ll,v);--v;
+        to[u].emplace_back(v);
+        to[v].emplace_back(u);
     }
-    ll ans = 0;
+    vector dp(N, vector(2, mint{}));
+    auto dfs = [&](auto dfs, ll u, ll pre) -> void {
+        dp[u][0] = dp[u][1] = 1;
+        for(auto&& v: to[u]){
+            if(v == pre) continue;
+            dfs(dfs, v, u);
+            dp[u][0]*= dp[v][0]+dp[v][1];
+            dp[u][1]*= dp[v][0];
+        }
+    };
+    dfs(dfs, 0, -1);
+    auto ans = dp[0][0] + dp[0][1];
     cout << ans << endl;
     return 0;
 }
