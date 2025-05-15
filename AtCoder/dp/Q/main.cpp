@@ -120,6 +120,16 @@ namespace std{
 
 
 // clang-format on
+#include <atcoder/all>
+using namespace atcoder;
+using S = ll;
+S op(S a, S b) {
+    return max(a, b);
+}
+
+S e() {
+    return (S)(0);
+}
 int main() {
     long long N;
     std::cin >> N;
@@ -131,7 +141,14 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
     }
-    ll ans = 0;
+    segtree<S, op, e> dp(N+1);
+    rep(i,N){
+        ll n = dp.prod(0, h[i]) + a[i];
+        if(dp.get(h[i]) < n){
+            dp.set(h[i], n);
+        }
+    }
+    ll ans = dp.all_prod();
     cout << ans << endl;
     return 0;
 }
