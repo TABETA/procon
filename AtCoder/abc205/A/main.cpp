@@ -125,7 +125,7 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
-    cout << ans << endl;
+    double ans = (double)B/100*A;
+    cout << fixed << setprecision(15) << ans << endl;
     return 0;
 }
