@@ -130,18 +130,69 @@ ostream &operator<<(ostream &os, const mint &v) {
 }
 
 // clang-format on
+
+using Vec = vector<mint>;
+using Matrix = vector<Vec>;
+
+Matrix mat_mul(const Matrix& a, const Matrix& b) {
+    int I = a.size();
+    int J = b[0].size();
+    int K = b.size();
+    Matrix c(I, Vec(J, 0));
+
+    for (int i = 0; i < I; ++i) {
+        for (int j = 0; j < J; ++j) {
+            for (int k = 0; k < K; ++k) {
+                c[i][j] = c[i][j] + a[i][k] * b[k][j];
+            }
+        }
+    }
+
+    return c;
+}
+
+// 行列の累乗
+Matrix mat_pow(Matrix x, long long n) {
+    int size = x.size();
+    Matrix y(size, Vec(size, 0));
+    
+    // 単位行列で初期化
+    for (int i = 0; i < size; ++i) {
+        y[i][i] = 1;
+    }
+
+    while (n > 0) {
+        if (n & 1) {
+            y = mat_mul(x, y);
+        }
+        x = mat_mul(x, x);
+        n >>= 1;
+    }
+
+    return y;
+}
+
 int main() {
     long long N;
     std::cin >> N;
     long long K;
     std::cin >> K;
-    std::vector<std::vector<long long>> a(N, std::vector<long long>(N));
+    vector A(N, vector(N, mint{}));
     for(int i = 0 ; i < N ; i++){
         for(int j = 0 ; j < N ; j++){
-            std::cin >> a[i][j];
+            ll a; cin >> a;
+            A[i][j] = a;
         }
     }
-    ll ans = 0;
+    vvm v(1, vm(N,1));
+    A = mat_pow(A, K);
+    v = mat_mul(A, v);
+    mint ans = 0;
+    rep(i, N) {
+        rep(j, N) {
+            ans += A[i][j];
+        }
+    }
     cout << ans << endl;
     return 0;
 }
