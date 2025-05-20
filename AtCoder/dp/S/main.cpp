@@ -131,11 +131,26 @@ ostream &operator<<(ostream &os, const mint &v) {
 
 // clang-format on
 int main() {
-    std::string K;
-    std::cin >> K;
+    std::string s;
+    std::cin >> s;
+    deque<ll> K;
+    repr(c,s){
+        K.push_front(c-'0');
+    }
+    ll N = K.size();
     long long D;
     std::cin >> D;
-    ll ans = 0;
+    vector dp(N+1, vector(2, vector(D, mint{})));
+    dp[N][0][0] = 1;
+    repd(i,N) {
+        rep(j,D) {
+            rep(a,10  )    dp[i][1][(j+a)%D] = dp[i][1][(j+a)%D] + dp[i+1][1][j];
+            rep(a,K[i])    dp[i][1][(j+a)%D] = dp[i][1][(j+a)%D] + dp[i+1][0][j];
+            ll b = K[i];   
+                           dp[i][0][(j+b)%D] = dp[i][0][(j+b)%D] + dp[i+1][0][j];
+        }
+    }
+    mint ans = dp[0][0][0] + dp[0][1][0] - 1;
     cout << ans << endl;
     return 0;
 }
