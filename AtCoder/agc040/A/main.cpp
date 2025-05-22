@@ -123,7 +123,28 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
+    ll N = S.size()+1;
+    vll A(N);
+    ll now = 0;
+    rep(i,N-1) {
+        if(S[i] == '<') {
+            chmax(A[i], now++);
+            chmax(A[i+1], now);
+        } else {
+            now = 0;
+        }
+    }
+    now = 0;
+    repd(i,N-1) {
+        if(S[i] == '>') {
+            chmax(A[i+1], now++);
+            chmax(A[i], now);
+        } else {
+            now = 0;
+        }
+    }
     ll ans = 0;
+    rep(i,N) ans += A[i];
     cout << ans << endl;
     return 0;
 }
