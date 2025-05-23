@@ -118,7 +118,6 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long H;
@@ -126,10 +125,32 @@ int main() {
     long long W;
     std::cin >> W;
     std::vector<std::string> S(H);
-    for(int i = 0 ; i < H ; i++){
+    for (int i = 0; i < H; i++) {
         std::cin >> S[i];
     }
+    ll dx[] = {1, 0, -1, 0, 1, 1, -1, -1};
+    ll dy[] = {0, 1, 0, -1, 1, -1, 1, -1};
+    vector used(H, vector<bool>(W, false));
     ll ans = 0;
+    rep(i, H) {
+        rep(j, W) {
+            auto dfs = [&](auto dfs, ll y, ll x) -> void{
+                used[y][x] = true;
+                rep(k,8){
+                    ll ny = y + dy[k];
+                    ll nx = x + dx[k];
+                    if(ny < 0 || ny >= H || nx < 0 || nx >= W) continue;
+                    if(used[ny][nx]) continue;
+                    if(S[ny][nx] != '#') continue;
+                    dfs(dfs, ny, nx);
+                }
+            };
+            if(used[i][j]) continue;
+            if(S[i][j] != '#') continue;
+            ++ans;
+            dfs(dfs,i,j);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
