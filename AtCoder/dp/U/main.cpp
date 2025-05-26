@@ -129,7 +129,25 @@ int main() {
             std::cin >> a[i][j];
         }
     }
-    ll ans = 0;
-    cout << ans << endl;
+    const ll M = 1LL << N;
+    vll score(M, 0);
+    rep(i,M){
+        rep(j,N){
+            if(i & (1LL << j)) {
+                rep(k,j) {
+                    if(i & (1LL << k)) {
+                        score[i] += a[j][k];
+                    }
+                }
+            }
+        }
+    }
+    vector<ll> dp(1 << N, 0);
+    for (int mask = 1; mask < (1 << N); ++mask) {
+        for (int sub = mask; sub; sub = (sub - 1) & mask) {
+            chmax(dp[mask], dp[mask ^ sub] + score[sub]);
+        }
+    }
+    cout << dp[(1 << N) - 1] << endl;
     return 0;
 }
