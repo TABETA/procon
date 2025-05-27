@@ -128,8 +128,7 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
         std::cin >> B[i];
+        cout << A[i]+B[i] << '\n';
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
