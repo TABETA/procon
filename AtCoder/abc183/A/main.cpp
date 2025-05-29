@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long long x;
     std::cin >> x;
-    ll ans = 0;
+    ll ans = max<ll>(0,x);
     cout << ans << endl;
     return 0;
 }
