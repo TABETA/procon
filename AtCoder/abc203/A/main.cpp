@@ -127,7 +127,14 @@ int main() {
     std::cin >> b;
     long long c;
     std::cin >> c;
-    ll ans = 0;
-    cout << ans << endl;
+    if(a == b) {
+        cout << c << endl;
+    } else if(b == c) {
+        cout << a << endl;
+    } else if(c == a) {
+        cout << b << endl;
+    } else {
+        cout << 0 << endl;
+    }
     return 0;
 }
