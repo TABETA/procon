@@ -125,7 +125,14 @@ int main() {
     std::cin >> N;
     long long K;
     std::cin >> K;
-    ll ans = 0;
+    ll ans = 1;
+    rep(i,N){
+        if(i == 0) {
+            ans *= K;
+        } else {
+            ans *= (K-1);
+        }
+    }
     cout << ans << endl;
     return 0;
 }
