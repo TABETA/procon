@@ -121,11 +121,17 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long S;
+    string S;
     std::cin >> S;
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    ll N = min((ll)S.size(),K);
+    rep(i,N){
+        if(S[i] != '1'){
+            cout << S[i] << endl;
+            return 0;
+        }
+    }
+    cout << 1 << endl;
     return 0;
 }
