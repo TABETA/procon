@@ -125,7 +125,7 @@ int main() {
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    char ans = S.back();
     cout << ans << endl;
     return 0;
 }
