@@ -123,7 +123,10 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    if(S.substr(S.size()-2, 2) == "er"){
+        cout << "er" << endl;
+    } else {
+        cout << "ist" << endl;
+    }
     return 0;
 }
