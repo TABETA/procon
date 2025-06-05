@@ -123,7 +123,9 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    S += S[0];
+    // 1文字目を削除
+    S.erase(S.begin());
+    cout << S << endl;
     return 0;
 }
