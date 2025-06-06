@@ -125,7 +125,7 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
+    double ans = double(A+2*B)/3;
     cout << ans << endl;
     return 0;
 }
