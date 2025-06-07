@@ -125,7 +125,7 @@ const string NO = "No";
 int main() {
     long long X;
     std::cin >> X;
-    ll ans = 0;
+    string ans = X != 0 && X % 100 == 0 ? YES : NO;
     cout << ans << endl;
     return 0;
 }
