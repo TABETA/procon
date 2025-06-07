@@ -125,10 +125,7 @@ void solve() {
     string S;
     cin >> N >> S;
     vector<char> C(N);
-    string ans = string(N, 'z');
-    if(N == 1) {
-        ans = S;
-    }
+    string ans = S;
     rep(i,N-1){
         ll j = i + 1;
         if(S[i] > S[j]) {
