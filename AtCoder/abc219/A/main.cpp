@@ -123,7 +123,12 @@ namespace std{
 int main() {
     long long X;
     std::cin >> X;
-    ll ans = 0;
-    cout << ans << endl;
+    vll b = {40,70,90,linf};
+    auto it = ranges::upper_bound(b, X);
+    if(*it == linf){
+        cout << "expert" << endl;
+    } else {
+        cout << *it - X << endl;
+    }
     return 0;
 }
