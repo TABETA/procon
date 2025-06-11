@@ -123,7 +123,10 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    ll ans = S.size();
+    repr(c,S){
+        if(c == 'w') ans++;
+    }
     cout << ans << endl;
     return 0;
 }
