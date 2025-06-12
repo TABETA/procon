@@ -123,7 +123,6 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << (S == "Hello,World!" ? "AC" : "WA") << endl;
     return 0;
 }
