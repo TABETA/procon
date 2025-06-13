@@ -127,7 +127,6 @@ int main() {
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << (S[N-1] == 'o'?YES:NO) << endl;
     return 0;
 }
