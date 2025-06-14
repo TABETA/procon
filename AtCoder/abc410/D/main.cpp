@@ -120,57 +120,39 @@ namespace std{
 
 
 // clang-format on
-#include <atcoder/all>
-using namespace atcoder;
 int main() {
     ll N, M;
     cin >> N >> M;
-    using P = tuple<ll,ll,ll>;
-    vector<vector<P>> to(N);
-    dsu uf(N);
-    vll U(N);
-    vll V(N);
-    vll W(N);
+    const ll c = 10;
+    const ll n = (N+1)<<c;
+    vvll to(n);
     rep(i,M){
         CIN(ll,u);--u;
         CIN(ll,v);--v;
         CIN(ll,w);
-        U[i] = u;
-        V[i] = v;
-        W[i] = w;
-        if(w == 0) uf.merge(u, v);
-    }
-    rep(i,M){
-        auto [u, v, w] = make_tuple(U[i], V[i], W[i]);
-        u = uf.leader(u);
-        v = uf.leader(v);
-        to[u].emplace_back(v,w,i);
-        cerr << "add edge: " << u << " -> " << v << " with weight " << w << endl;
-        to[v].emplace_back(u,w,i);
-    }
-
-    ll ans = linf;
-    ll now = 0;
-    set<ll> used;
-    ll n = uf.leader(N-1);
-    map<ll,ll> used;
-    auto dfs = [&](auto dfs, ll u) -> void{
-        if(u == n){
-            chmin(ans, now);
+        rep(s,1<<c){
+            ll x = (u<<c)+s;
+            ll y = (v<<c)+(s^w);
+            to[x].emplace_back(y);
         }
-        for(auto&& [v,w,i]: to[u]){
-            if(used.count(i)) continue;
-            used.insert(i);
-            now ^= w;
+    }
+    vector visited(n, false);
+    auto dfs = [&](auto dfs, ll u) -> void{
+        visited[u] = true;
+        for(auto&& v: to[u]){
+            if(visited[v]) continue;
             dfs(dfs, v);
-            now ^= w;
-            used.erase(i);
         }
     };
     dfs(dfs, 0);
-    if(ans == linf) {
-        ans = -1;
+    const ll t = (N-1)<<c;
+    rep(i,1<<c){
+        ll u = t+i;
+        if(visited[u]){
+            cout << i << endl;
+            return 0;
+        }
     }
-    cout << ans << endl;
+    cout << -1 << endl;
     return 0;
 }
