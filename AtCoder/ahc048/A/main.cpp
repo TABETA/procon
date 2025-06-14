@@ -118,7 +118,6 @@ namespace std{
 }
 
 // clang-format on
-
 struct Timer {
     Timer(ll msLimit) : msLimit(msLimit), start(chrono::system_clock::now()) {}
     const ll msLimit;
@@ -150,12 +149,7 @@ auto decrease_key = [](map<ll, ll>& mp, ll key) {
         mp.erase(key);
     }
 };
-using P = pair<ll,ll>;
-
-// ---------------------------
-// input values
-// ---------------------------
-ll N, K, H, T, D;
+using P = pair<ll, ll>;
 struct Color {
     double c, m, y;
     double error(const Color& their) const {
@@ -165,8 +159,230 @@ struct Color {
         return sqrt(dc * dc + dm * dm + dy * dy);
     }
 };
+// 色選択肢の構造体
+struct ColorOption {
+    Color color;   // 選択可能な色
+    int unitCost;  // 採用時のコスト（g単位）
+    vector<int>
+        tubes;  // 使用するチューブリスト（空=不正、1要素=単色、2要素以上=混色）
+    vector<int> grams;  // 各チューブのグラム数（tubesと対応）
+
+    ColorOption(const Color& c, int costVal) : color(c), unitCost(costVal) {}
+
+    ColorOption(const Color& c, int costVal, const vector<int>& tubeList)
+        : color(c), unitCost(costVal), tubes(tubeList) {
+        // デフォルトでは各チューブ1gずつ
+        grams.assign(tubes.size(), 1);
+    }
+
+    ColorOption(const Color& c, const vector<int>& tubeList,
+                const vector<int>& gramList, int costVal)
+        : color(c), unitCost(costVal), tubes(tubeList), grams(gramList) {}
+
+    // 目標色との誤差とスコアを計算
+    double calculateError(const Color& target) const {
+        return target.error(color);
+    }
+
+    // この色選択肢の総グラム数を計算
+    int getTotalGrams() const {
+        // 各チューブから使用するグラム数の合計
+        int totalGrams = 0;
+        for (int g : grams) {
+            totalGrams += g;
+        }
+        return totalGrams;
+    }
+    int getTotalCost() const {
+        return getTotalGrams() * unitCost;
+    }
+
+    // 絶対的なスコア計算（総スコア計算用）
+    double calculateScore(const Color& target) const {
+#ifdef _DEBUG
+        static ll scoreCalculations = 0;
+        scoreCalculations++;
+        if (scoreCalculations % 100000 == 0) {
+            cerr << "Score calculations: " << scoreCalculations << endl;
+        }
+#endif
+        double error = calculateError(target);
+        int totalGrams = getTotalGrams();
+        return unitCost * totalGrams + round(error * 10000);
+    }
+};
+
+// k-d tree for fast nearest neighbor search in 3D color space
+struct KDNode {
+    Color color;
+    int optionIndex;  // allColorOptions内のインデックス
+    int axis;         // 分割軸 (0:C, 1:M, 2:Y)
+    KDNode* left;
+    KDNode* right;
+
+    KDNode(const Color& c, int optIdx)
+        : color(c),
+          optionIndex(optIdx),
+          axis(-1),
+          left(nullptr),
+          right(nullptr) {}
+};
+
+class KDTree {
+   private:
+    KDNode* root;
+
+    struct ColorIndexPair {
+        Color color;
+        int optionIndex;
+
+        ColorIndexPair(const Color& c, int idx)
+            : color(c), optionIndex(idx) {}
+    };
+
+    KDNode* buildTree(vector<ColorIndexPair>& points, int depth = 0) {
+        if (points.empty()) return nullptr;
+
+        int axis = depth % 3;  // 0:C, 1:M, 2:Y
+
+        // 現在の軸でソート
+        sort(points.begin(), points.end(),
+             [axis](const auto& a, const auto& b) {
+                 if (axis == 0)
+                     return a.color.c < b.color.c;
+                 else if (axis == 1)
+                     return a.color.m < b.color.m;
+                 else
+                     return a.color.y < b.color.y;
+             });
+
+        int median = points.size() / 2;
+        KDNode* node =
+            new KDNode(points[median].color, points[median].optionIndex);
+        node->axis = axis;
+
+        vector<ColorIndexPair> leftPoints(points.begin(),
+                                          points.begin() + median);
+        vector<ColorIndexPair> rightPoints(points.begin() + median + 1,
+                                           points.end());
+
+        node->left = buildTree(leftPoints, depth + 1);
+        node->right = buildTree(rightPoints, depth + 1);
+
+        return node;
+    }
+
+    void searchNearest(KDNode* node, const Color& target, double& bestScore,
+                       KDNode*& bestNode,
+                       const vector<ColorOption>& allColorOptions,
+                       int D, int depth = 0) {
+        if (!node) return;
+
+        // このノードのスコアを計算
+        const ColorOption& option = allColorOptions[node->optionIndex];
+        double score = option.calculateScore(target);
+
+        if (score < bestScore) {
+            bestScore = score;
+            bestNode = node;
+        }
+
+        // 非常に良いスコアが見つかった場合の早期終了
+        if (bestScore < D) {  // 閾値を調整
+            return;
+        }
+
+        // 現在のノードの分割軸での距離
+        double axisDist;
+        if (node->axis == 0)
+            axisDist = target.c - node->color.c;
+        else if (node->axis == 1)
+            axisDist = target.m - node->color.m;
+        else
+            axisDist = target.y - node->color.y;
+
+        // まず近い側を探索
+        KDNode* nearSide = (axisDist < 0) ? node->left : node->right;
+        KDNode* farSide = (axisDist < 0) ? node->right : node->left;
+
+        searchNearest(nearSide, target, bestScore, bestNode, allColorOptions, D,
+                      depth + 1);
+
+        // 遠い側のプルーニング判定を大幅に改善
+        double axisDistSq = axisDist * axisDist;
+        // 3次元ユークリッド距離の下界を計算
+        double minPossibleColorError = sqrt(axisDistSq) * 10000;
+        // この部分木の最小コストを推定（世代情報から）
+        double minPossibleCost = D;  // 最低でもD（1世代）
+        double lowerBound = minPossibleColorError + minPossibleCost;
+
+        if (lowerBound < bestScore) {
+            searchNearest(farSide, target, bestScore, bestNode, allColorOptions, D, depth + 1);
+        }
+    }
+
+    void deleteTree(KDNode* node) {
+        if (node) {
+            deleteTree(node->left);
+            deleteTree(node->right);
+            delete node;
+        }
+    }
+
+   public:
+    KDTree() : root(nullptr) {}
+
+    ~KDTree() { deleteTree(root); }
+
+    void build(const vector<ColorOption>& allColorOptions) {
+        // 既存のrootを削除
+        if (root) {
+            deleteTree(root);
+            root = nullptr;
+        }
+
+        vector<ColorIndexPair> points;
+        points.reserve(allColorOptions.size());
+
+        for (size_t opt = 0; opt < allColorOptions.size(); opt++) {
+            points.emplace_back(allColorOptions[opt].color, opt);
+        }
+
+        if (!points.empty()) {
+            root = buildTree(points);
+        }
+    }
+
+    const ColorOption* findBestOption(
+        const Color& target, const vector<ColorOption>& allColorOptions,
+        int D) {
+        if (!root) return nullptr;
+
+        // より良い初期bestScoreを設定するため、複数の候補を事前チェック
+        double bestScore = 1e18;
+        KDNode* bestNode = nullptr;
+
+        // ルートノードから開始
+        const ColorOption& rootOption = allColorOptions[root->optionIndex];
+        double rootScore = rootOption.calculateScore(target);
+        bestScore = rootScore;
+        bestNode = root;
+        searchNearest(root, target, bestScore, bestNode, allColorOptions, D, 0);
+
+        if (bestNode) {
+            return &allColorOptions[bestNode->optionIndex];
+        }
+        return nullptr;
+    }
+};
+
+// ---------------------------
+// input values
+// ---------------------------
+ll N, K, H, T, D;
 vector<Color> Co;
 vector<Color> Ct;
+
 void g_input() {
     cin >> N >> K >> H >> T >> D;
     Co.resize(K);
@@ -188,7 +404,6 @@ class Solver {
     int turn;
     double actualE;  // 実際の色誤差の累計
 
-
     // 階層的ウェル管理システム
     struct Well {
         vector<P> cells;
@@ -199,7 +414,6 @@ class Solver {
 
         // ウェルの容量（グラム数）
         int capacity() const { return cells.size(); }
-
     };
     // ウェル管理用
     vector<Well> wells;
@@ -220,55 +434,14 @@ class Solver {
     };
     vector<PrecomputedPair> precomputedPairs;
 
-    // 色選択肢の構造体
-    struct ColorOption {
-        Color color;  // 選択可能な色
-        int cost;     // 採用時のコスト（g単位）
-        vector<int>
-            tubes;  // 使用するチューブリスト（空=不正、1要素=単色、2要素以上=混色）
-        vector<int> grams;  // 各チューブのグラム数（tubesと対応）
-
-        ColorOption(const Color& c, int costVal) : color(c), cost(costVal) {}
-
-        ColorOption(const Color& c, int costVal, const vector<int>& tubeList)
-            : color(c), cost(costVal), tubes(tubeList) {
-            // デフォルトでは各チューブ1gずつ
-            grams.assign(tubes.size(), 1);
-        }
-
-        ColorOption(const Color& c, const vector<int>& tubeList,
-                    const vector<int>& gramList)
-            : color(c), tubes(tubeList), grams(gramList) {
-            // コストは総グラム数
-            cost = 0;
-            for (int g : grams) cost += g;
-        }
-
-        // 目標色との誤差とスコアを計算
-        double calculateError(const Color& target) const {
-            return target.error(color);
-        }
-
-        // この色選択肢の総グラム数を計算
-        int getTotalGrams() const {
-            // 各チューブから使用するグラム数の合計
-            int totalGrams = 0;
-            for (int g : grams) {
-                totalGrams += g;
-            }
-            return totalGrams;
-        }
-
-        // 絶対的なスコア計算（総スコア計算用）
-        double calculateScore(const Color& target) const {
-            double error = calculateError(target);
-            int totalGrams = getTotalGrams();
-            return D * totalGrams + round(error * 10000);
-        }
-    };
-
-    // 事前計算された全ての色選択肢
+    // 事前計算された全ての色選択肢（フラット構造）
     vector<ColorOption> allColorOptions;
+    
+    // 単色オプション専用コンテナ（高速フォールバック用）
+    vector<ColorOption> singleColorOptions;
+
+    // k-d tree for fast color option search
+    std::unique_ptr<KDTree> colorKDTree;
 
    public:
     Solver(Timer&& timer)
@@ -281,15 +454,19 @@ class Solver {
           wellMap(),
           v(N, vector<int>(N - 1, 1)),  // 縦仕切りあり
           h(N - 1, vector<int>(N, 1)),  // 横仕切りあり
-          stCount(2),
-          totalErrors(2),
+          stCount(21),
+          totalErrors(21),
           precomputedPairs(),
-          allColorOptions() {
+          allColorOptions(),
+          singleColorOptions(),
+          colorKDTree(nullptr) {
         // ウェル割り当て戦略を初期化
         initializeWellAllocation();
     }
 
-    ~Solver() {}
+    ~Solver() { 
+        // スマートポインタが自動的にメモリを解放
+    }
 
     double calcError(const Color& target, const Color& actual) {
         double dc = target.c - actual.c;
@@ -325,133 +502,6 @@ class Solver {
         return result;
     }
 
-    // 2色混色の最適比率計算（三分探索）
-    pair<double, double> findOptimalRatioTwoColors(const Color& target,
-                                                   const Color& c1,
-                                                   const Color& c2) {
-        double left = 0.0, right = 1.0;
-
-        // 三分探索で最適な ratio1 を求める
-        for (int iter = 0; iter < 100; iter++) {
-            double m1 = left + (right - left) / 3.0;
-            double m2 = right - (right - left) / 3.0;
-
-            // Convert ratios to gram amounts (assuming total 100 grams)
-            double grams1_1 = m1 * 100.0;
-            double grams2_1 = (1.0 - m1) * 100.0;
-            double grams1_2 = m2 * 100.0;
-            double grams2_2 = (1.0 - m2) * 100.0;
-
-            Color mixed1 = mixTwoColors(c1, grams1_1, c2, grams2_1);
-            Color mixed2 = mixTwoColors(c1, grams1_2, c2, grams2_2);
-
-            double error1 = calcError(target, mixed1);
-            double error2 = calcError(target, mixed2);
-
-            if (error1 > error2) {
-                left = m1;
-            } else {
-                right = m2;
-            }
-        }
-
-        double optimalRatio1 = (left + right) / 2.0;
-        double optimalRatio2 = 1.0 - optimalRatio1;
-        return {optimalRatio1, optimalRatio2};
-    }
-
-    // 目標色に対する最適な2色組み合わせを探索
-    struct TubePairResult {
-        int tube1, tube2;
-        double ratio1, ratio2;
-        double error;
-        Color resultColor;
-    };
-    // 最適化された2色組み合わせ探索
-    // 1:1混色が純色より良い場合のみ三分探索を実行
-    TubePairResult findBestTubePairOptimized(const Color& target) {
-        TubePairResult best;
-        best.error = 1e18;
-
-        // まず純色での最良結果を取得
-        int bestSingleTube = findBestTube(target);
-        double bestSingleError = calcError(target, Co[bestSingleTube]);
-
-        // 有望な組み合わせのみを収集
-        vector<size_t> candidatePairs;
-        candidatePairs.reserve(precomputedPairs.size());
-
-        for (size_t i = 0; i < precomputedPairs.size(); i++) {
-            const auto& pair = precomputedPairs[i];
-
-            // 1:1混色での誤差
-            double oneToOneError = calcError(target, pair.mixedColor);
-
-            // 1:1混色が最良純色より良い場合のみ候補とする（条件を緩和）
-            if (oneToOneError <
-                bestSingleError * 0.98) {  // 2%以上の改善が見込める場合
-                candidatePairs.push_back(i);
-            }
-        }
-
-        // 候補が少ない場合は1:1混色の結果をそのまま使用
-        if (candidatePairs.empty()) {
-            return best;  // 空の結果（error = 1e18）
-        }
-
-        // 候補数が少ない場合は三分探索、多い場合は1:1のみ評価
-        bool useFullSearch = candidatePairs.size() <= 10;  // 閾値調整可能
-
-        for (size_t idx : candidatePairs) {
-            const auto& pair = precomputedPairs[idx];
-
-            double r1, r2, error;
-            Color mixed;
-
-            if (useFullSearch) {
-                // 三分探索で最適比率を探索
-                auto [opt_r1, opt_r2] = findOptimalRatioTwoColors(
-                    target, Co[pair.tube1], Co[pair.tube2]);
-                r1 = opt_r1;
-                r2 = opt_r2;
-                // Convert ratios to gram amounts (assuming total 100 grams)
-                double grams1 = r1 * 100.0;
-                double grams2 = r2 * 100.0;
-                mixed = mixTwoColors(Co[pair.tube1], grams1, Co[pair.tube2],
-                                     grams2);
-                error = calcError(target, mixed);
-            } else {
-                // 1:1混色のみ評価（高速）
-                r1 = r2 = 0.5;
-                mixed = pair.mixedColor;
-                error = calcError(target, mixed);
-            }
-
-            if (error < best.error) {
-                best.tube1 = pair.tube1;
-                best.tube2 = pair.tube2;
-                best.ratio1 = r1;
-                best.ratio2 = r2;
-                best.error = error;
-                best.resultColor = mixed;
-            }
-        }
-
-        return best;
-    }
-
-    // 重さの整数化（最小2g、比率を保持）
-    pair<int, int> calculateIntegerWeights(double ratio1, double ratio2,
-                                           int minTotal = 2) {
-        // 最小総重量を確保しつつ比率を維持
-        double scale = max(minTotal / (ratio1 + ratio2), 1.0);
-
-        int w1 = max(1, (int)round(ratio1 * scale));
-        int w2 = max(1, (int)round(ratio2 * scale));
-
-        return {w1, w2};
-    }
-
     // スコア計算関数
     ll calculateCurrentScore() {
         return 1.0 + D * (actualV - actualH) + round(10000.0 * actualE);
@@ -459,9 +509,9 @@ class Solver {
 
     // 操作タイプの定義
     enum class OperationType {
-        TUBE_TO_CANVAS = 1,    // 操作1: チューブから絵の具を出す
-        CANVAS_TO_PAINTER = 2, // 操作2: 絵の具を画伯に渡す
-        DISPOSE = 3,           // 操作3: ウェルから 1g 絵具を廃棄
+        TUBE_TO_CANVAS = 1,     // 操作1: チューブから絵の具を出す
+        CANVAS_TO_PAINTER = 2,  // 操作2: 絵の具を画伯に渡す
+        DISPOSE = 3,            // 操作3: ウェルから 1g 絵具を廃棄
     };
 
     // 統一された操作関数
@@ -473,7 +523,7 @@ class Solver {
             case OperationType::TUBE_TO_CANVAS:
                 // 操作1: チューブkから重さwの絵の具を座標(i,j)に出す
                 cout << "1 " << i << " " << j << " " << k << "\n";
-                actualV++;  // 操作1回数を増加
+                actualV++;          // 操作1回数を増加
                 well->remaining++;  // ウェルの残りを増加
                 break;
 
@@ -493,10 +543,9 @@ class Solver {
 
         // 常にスコア計算を実行
 #ifdef _DEBUG
-        cerr << "Op: " << turn << ", " << calculateCurrentScore()
-             << endl;
+        // cerr << "Op: " << turn << ", " << calculateCurrentScore() << endl;
 #endif
-        if(type == OperationType::CANVAS_TO_PAINTER){
+        if (type == OperationType::CANVAS_TO_PAINTER) {
             auto e = calcError(targetColor, actualColor);
             actualE += e;
         }
@@ -506,29 +555,42 @@ class Solver {
         double currentScore = calculateCurrentScore();
         // 進捗ログ（100色ごとに中間結果を表示）
         if ((turn) % 100 == 0) {
-            cerr << "Progress: " << (turn) << "/" << H
-                 << ", V=" << actualV << ", E=" << actualE
-                 << ", Current Score=" << currentScore << endl;
+            cerr << "Progress: " << (turn) << "/" << H << ", V=" << actualV
+                 << ", E=" << actualE << ", Current Score=" << currentScore
+                 << endl;
         }
 #endif
     }
 
-    // 目標色に対する最適な色選択肢を選択（増分スコア比較版）
+    // 目標色に対する最適な色選択肢を選択（k-d tree使用による高速化版 + ターン制限考慮）
     const ColorOption& selectBestColorOption(const Color& target) {
-        const ColorOption* bestOption = &allColorOptions[0];
-        double bestScore = bestOption->calculateScore(target);
-
-        for (size_t i = 1; i < allColorOptions.size(); i++) {
-            double score = allColorOptions[i].calculateScore(target);
-            // cerr << allColorOptions[i].getTotalGrams() << "g, ";
-            // cerr << "score=" << score << ", error=" <<
-            // allColorOptions[i].calculateError(target) << endl;
-            if (score < bestScore) {
-                bestScore = score;
-                bestOption = &allColorOptions[i];
+        // 残りターン数を計算
+        int remainingTurns = T - turn;
+        int remainingColors = H - actualH;
+        
+        // 通常の最適選択肢を取得
+        const ColorOption* bestOption = colorKDTree->findBestOption(target, allColorOptions, D);
+        // 選択した色オプションに必要なターン数を計算
+        int requiredTurns = bestOption->tubes.size();  // チューブからキャンバスへの操作数
+        requiredTurns += 1;  // キャンバスから画伯への操作
+        requiredTurns += bestOption->getTotalGrams() - 1;  // 廃棄操作数（1g使用、残りを廃棄）
+        
+        // 残りの色処理に必要な最小ターン数を見積もり（各色最低2ターン：単色選択+画伯への受け渡し）
+        int minTurnsForRemainingColors = (remainingColors - 1) * 2;
+        
+        // ターン制限チェック：現在の選択肢 + 残りの色の最小コストがターン制限を超える場合
+        if (requiredTurns + minTurnsForRemainingColors > remainingTurns) {
+            // 事前に準備された単色オプションから最適なものを選択
+            double bestScore = 1e18;
+            
+            for (const auto& option : singleColorOptions) {
+                double score = option.calculateScore(target);
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestOption = &option;
+                }
             }
         }
-
         return *bestOption;
     }
 
@@ -558,40 +620,42 @@ class Solver {
             }
             operation(OperationType::CANVAS_TO_PAINTER, well, -1, Ct[colorIdx],
                       bestOption.color);
-            while(well->remaining){
+            while (well->remaining) {
                 operation(OperationType::DISPOSE, well);
             }
 
-            // 統計更新
-            ll st = bestOption.tubes.size();
-            stCount[st]++;
-            totalErrors[st] += bestOption.calculateError(Ct[colorIdx]);
 #ifdef _DEBUG
-            cerr << "Color " << colorIdx << ": " << st << " (tubes=";
-            for (ll i = 0; i < st; i++) {
-                cerr << bestOption.tubes[i];
-                if (i < st - 1) cerr << ",";
+            // 統計更新
+            ll st = bestOption.tubes.size() - 1;  // 0-based indexing
+            if (st < (ll)stCount.size()) {
+                stCount[st]++;
+                totalErrors[st] += bestOption.calculateError(Ct[colorIdx]);
             }
-            cerr << ", cost=" << bestOption.cost
-                 << "g, error=" << bestOption.calculateError(Ct[colorIdx])
+            cerr << "Color " << colorIdx << ": " << (st + 1) << " (tubes=";
+            for (ll i = 0; i < (ll)bestOption.tubes.size(); i++) {
+                cerr << bestOption.tubes[i];
+                if (i < (ll)bestOption.tubes.size() - 1) cerr << ",";
+            }
+            cerr << ", cost="
+                 << bestOption.getTotalGrams() * bestOption.unitCost
+                 << ", error=" << bestOption.calculateError(Ct[colorIdx])
                  << ", score=" << bestOption.calculateScore(Ct[colorIdx]) << ")"
                  << endl;
+                 debugOutput();
 #endif
-            debugOutput();
         }
 
 #ifdef _DEBUG
         // 最終統計の出力
         cerr << "\n=== UNIFIED COLOR STRATEGY STATISTICS ===" << endl;
-        cerr << "Simple strategy used: " << stCount[0] << " times" << endl;
-        cerr << "Mixed strategy used: " << stCount[1] << " times" << endl;
-        if (stCount[0] > 0) {
-            cerr << "Average simple error: " << (totalErrors[0] / stCount[0])
-                 << endl;
-        }
-        if (stCount[1] > 0) {
-            cerr << "Average mixed error: " << (totalErrors[1] / stCount[1])
-                 << endl;
+        for (size_t i = 0; i < stCount.size(); i++) {
+            if (stCount[i] > 0) {
+                cerr << (i + 1) << "-color strategy used: " << stCount[i] << " times";
+                if (totalErrors[i] > 0) {
+                    cerr << ", average error: " << (totalErrors[i] / stCount[i]);
+                }
+                cerr << endl;
+            }
         }
         cerr << "Total operations: " << actualV << endl;
         cerr << "Total color error: " << actualE << endl;
@@ -599,35 +663,127 @@ class Solver {
         cerr << "=============================" << endl;
 #endif
     }
-    // すべての色選択肢の事前計算
+    // すべての色選択肢の事前計算（ビット演算による効率的な組み合わせ生成）
     void precomputeAllColorOptions() {
+        constexpr double worstScore = 17321;
+        constexpr double costThreshold = worstScore/2;  // コストの閾値
+        constexpr int MAX_OPTIONS = 50000;  // 最大選択肢数
         allColorOptions.clear();
-        allColorOptions.reserve(K + K * (K - 1) / 2);
+        singleColorOptions.clear();
 
-        // シンプル戦略の選択肢を追加（各チューブ1gずつ）
-        for (int tube = 0; tube < K; tube++) {
-            ColorOption option(Co[tube], 1, {tube});
-            allColorOptions.push_back(option);
+        // ビットマスクで全ての組み合わせを効率的に生成
+        vector<ColorOption> all;
+        
+        // ビット数（popcount）ごとにマスクを分類
+        vector<vector<int>> masksByPopcount(K + 1);
+        for (int mask = 1; mask < (1 << K); mask++) {
+            int popcount = __builtin_popcount(mask);
+            masksByPopcount[popcount].push_back(mask);
         }
-        // return;
-
-        // 2色混色戦略の選択肢を追加（1:1固定、2g使用）
-        for (int i = 0; i < K; i++) {
-            for (int j = i + 1; j < K; j++) {
-                Color mixedColor =
-                    mixTwoColors(Co[i], 1, Co[j], 1);  // 1g:1g混合
-                vector<int> tubes = {i, j};
-                vector<int> grams = {1, 1};
-                ColorOption option(mixedColor, tubes, grams);
-                allColorOptions.push_back(option);
+        
+        // ビット数が少ない順（1色、2色、3色...）に処理
+        for (int popcnt = 1; popcnt <= K && all.size() < MAX_OPTIONS; popcnt++) {
+            for (int mask : masksByPopcount[popcnt]) {
+                if (all.size() >= MAX_OPTIONS) break;
+                
+                vector<int> tubes;
+                
+                // ビットが立っているチューブを収集
+                for (int tube = 0; tube < K; tube++) {
+                    if (mask & (1 << tube)) {
+                        tubes.push_back(tube);
+                    }
+                }
+                
+                // 混色計算（等量混合）
+                Color mixedColor;
+                mixedColor.c = mixedColor.m = mixedColor.y = 0.0;
+                
+                for (int tube : tubes) {
+                    mixedColor.c += Co[tube].c;
+                    mixedColor.m += Co[tube].m;
+                    mixedColor.y += Co[tube].y;
+                }
+                
+                // 平均を取る
+                int tubeCount = tubes.size();
+                mixedColor.c /= tubeCount;
+                mixedColor.m /= tubeCount;
+                mixedColor.y /= tubeCount;
+                
+                // 各チューブ1gずつ使用
+                vector<int> grams(tubeCount, 1);
+                ColorOption newOption(mixedColor, tubes, grams, D);
+                
+                // コスト閾値チェック
+                if(newOption.getTotalCost() > costThreshold && popcnt > 1) {
+                    continue;
+                }
+                all.push_back(newOption);
+                
+                // 単色の場合は単色オプションにも追加
+                if (tubeCount == 1) {
+                    singleColorOptions.push_back(newOption);
+                }
             }
         }
 
-#ifdef _DEBUG
-        cerr << "Precomputed " << allColorOptions.size() << " color options ("
-             << K << " simple + " << (K * (K - 1) / 2) << " mixed)" << endl;
-#endif
+
+        // 重複する色を除去（同じ色でコストが最も低いもののみを残す）
+        removeDuplicateColors(all);
+
+        // フラットな構造に格納
+        allColorOptions = std::move(all);
+
+        // k-d treeを構築
+        colorKDTree = std::make_unique<KDTree>();
+        colorKDTree->build(allColorOptions);
+
     }
+
+private:
+    // 重複する色を除去する関数
+    void removeDuplicateColors(vector<ColorOption>& options) {
+        map<tuple<int, int, int>, vector<ColorOption*>> colorGroups;
+        
+        // 色を離散化してグループ分け
+        for (auto& option : options) {
+            // 色を整数に離散化（精度を保ちつつグループ化）
+            int discreteC = (int)round(option.color.c * 1000);
+            int discreteM = (int)round(option.color.m * 1000);
+            int discreteY = (int)round(option.color.y * 1000);
+            
+            auto key = make_tuple(discreteC, discreteM, discreteY);
+            colorGroups[key].push_back(&option);
+        }
+        
+        // 各グループで最もコストの低いオプションのみを残す
+        vector<ColorOption> filteredOptions;
+        for (auto& [key, group] : colorGroups) {
+            // グループ内で最もコストの低いオプションを見つける
+            ColorOption* bestOption = group[0];
+            int minCost = bestOption->getTotalCost();
+            
+            for (auto* option : group) {
+                int cost = option->getTotalCost();
+                if (cost < minCost) {
+                    minCost = cost;
+                    bestOption = option;
+                }
+            }
+            
+            filteredOptions.push_back(*bestOption);
+        }
+        
+#ifdef _DEBUG
+        cerr << "Color deduplication: " << options.size() << " -> " << filteredOptions.size() 
+             << " (" << (options.size() - filteredOptions.size()) << " duplicates removed)" << endl;
+#endif
+        
+        options = std::move(filteredOptions);
+    }
+
+public:
 
     // ウェル割り当て戦略: サイズ1,2,3,4...のウェルを(0,0)から順番に割り当て
     void initializeWellAllocation() {
@@ -638,43 +794,43 @@ class Solver {
         while (y < N) {
             path.emplace_back(y, x);
             int nx = x + dx;
-            if(nx < 0 || N <= nx) {
+            if (nx < 0 || N <= nx) {
                 nx = x;
-                dx *= -1; // 方向を反転
-                ++y; // 次の行へ
-                if (y >= N) break; // 範囲外チェック
+                dx *= -1;           // 方向を反転
+                ++y;                // 次の行へ
+                if (y >= N) break;  // 範囲外チェック
             }
-            if(path.size() == wellSize) {
+            if (path.size() == wellSize) {
                 createWell(path);
                 wellSize++;
                 path.clear();
             }
             x = nx;
         }
-        for (auto &&well : wells){
+        for (auto&& well : wells) {
             wellMap[well.capacity()].push_back(&well);
         }
     }
-    
+
     // 指定位置・サイズのウェルを作成（バリアを設定）
     void createWell(const vector<P>& path) {
         ll n = path.size();
-        rep(i,n-1){
+        rep(i, n - 1) {
             auto [r1, c1] = path[i];
             auto [r2, c2] = path[i + 1];
-            if(r1 == r2) {
+            if (r1 == r2) {
                 // 縦の仕切りを除去
                 if (c1 > c2) swap(c1, c2);  // 左右を正規化
-                v[r1][c1] = 0;  // 縦仕切りを除去
+                v[r1][c1] = 0;              // 縦仕切りを除去
             } else {
                 // 横の仕切りを除去
                 if (r1 > r2) swap(r1, r2);  // 上下を正規化
-                h[r1][c1] = 0;  // 縦仕切りを除去
+                h[r1][c1] = 0;              // 縦仕切りを除去
             }
         }
         wells.emplace_back(path);
     }
-    
+
     void solve() {
         // 全色選択肢の事前計算を実行
         precomputeAllColorOptions();
@@ -692,7 +848,7 @@ constexpr ll msLimit = TIMELIMIT;
 int main() {
     Timer timer(msLimit);
     g_input();
-    Solver solver(move(timer));
+    Solver solver(std::move(timer));
     solver.solve();
     return 0;
 }
