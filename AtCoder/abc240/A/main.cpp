@@ -123,11 +123,17 @@ const string NO = "No";
 
 // clang-format on
 int main() {
-    long long a;
-    std::cin >> a;
-    long long b;
-    std::cin >> b;
-    ll ans = 0;
-    cout << ans << endl;
+    vll A(2);
+    rep(i,2){
+        cin >> A[i];
+    }
+    sort(all(A));
+    if(A[1] - A[0]==1){
+        cout << YES << endl;
+    } else if (A[0] == 1 && A[1] == 10) {
+        cout << YES << endl;
+    } else {
+        cout << NO << endl;
+    }
     return 0;
 }
