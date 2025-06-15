@@ -121,8 +121,13 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    ll ans = linf;
+    rep(i,4){
+        ll a;
+        cin >> a;
+        chmin(ans, a);
+    }
+
     cout << ans << endl;
     return 0;
 }
