@@ -125,7 +125,17 @@ int main() {
     std::cin >> x;
     long long y;
     std::cin >> y;
-    ll ans = 0;
+    if(x == y) {
+        cout << x << endl;
+        return 0;
+    }
+    set<long long> s;
+    rep(i,3){
+        s.insert(i);
+    }
+    s.erase(x);
+    s.erase(y);
+    long long ans = *s.begin();
     cout << ans << endl;
     return 0;
 }
