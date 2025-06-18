@@ -125,7 +125,7 @@ const string NO = "No";
 int main() {
     long long X;
     std::cin >> X;
-    ll ans = 0;
+    auto ans = X >= 30 ? "Yes" : "No";
     cout << ans << endl;
     return 0;
 }
