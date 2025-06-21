@@ -127,7 +127,7 @@ int main() {
     std::cin >> a;
     long long b;
     std::cin >> b;
-    ll ans = 0;
-    cout << ans << endl;
+    swap(S[a-1], S[b-1]);
+    cout << S << endl;
     return 0;
 }
