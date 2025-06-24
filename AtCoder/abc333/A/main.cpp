@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
+    string ans(N, '0'+N);
     cout << ans << endl;
     return 0;
 }
