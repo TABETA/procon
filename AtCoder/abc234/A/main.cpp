@@ -123,7 +123,10 @@ namespace std{
 int main() {
     long long t;
     std::cin >> t;
-    ll ans = 0;
+    auto f = [](long long x) -> long long {
+        return x*x+2*x+3;
+    };
+    ll ans = f(f(f(t) + t)+f(f(t)));
     cout << ans << endl;
     return 0;
 }
