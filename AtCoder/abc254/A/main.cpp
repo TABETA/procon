@@ -121,9 +121,9 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long N;
+    string N;
     std::cin >> N;
-    ll ans = 0;
+    auto ans = N.substr(1,2);
     cout << ans << endl;
     return 0;
 }
