@@ -125,7 +125,10 @@ int main() {
     std::cin >> N;
     long long R;
     std::cin >> R;
-    ll ans = 0;
+    ll ans = R;
+    if(N <= 10) {
+        ans += 100 * (10 - N);
+    }
     cout << ans << endl;
     return 0;
 }
