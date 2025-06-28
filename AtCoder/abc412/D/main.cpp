@@ -124,57 +124,42 @@ using P = pair<ll,ll>;
 int main() {
     ll N, M;
     cin >> N >> M;
-    vector<set<ll>> TO(N);
+    using P = pair<ll,ll>;
+    set<P> asis;
     rep(_,M){
         CIN(ll,u);--u;
         CIN(ll,v);--v;
-        TO[u].emplace(v);
-        TO[v].emplace(u);
+        if(u > v) swap(u, v); // u < v
+        asis.emplace(u, v); // u < v
     }
-    queue<vector<set<ll>>> Q;
-    Q.emplace(TO);
-    map<vector<set<ll>>, ll> cost;
-    while(!Q.empty()){
-        auto to = Q.front();Q.pop();
-        vll dim(N);
-        ll cnt = 0;
-        rep(i,N){
-            dim[i] = to[i].size();
-            if(dim[i] == 2) {
-                ++cnt;
-            }
-        }
-        if(cnt == N) {
-            cout << cost[to] << endl;
-            return 0;
-        }
-        rep(u,N){
-            if(dim[u] == 2) continue;
-            if(dim[u] < 1) {
-                rep(v,N){
-                    if(u == v) continue;
-                    if(to[u].count(v)) continue;
-                    auto to2 = to;
-                    to2[u].emplace(v);
-                    to2[v].emplace(u);
-                    if(cost.count(to2) == 0) {
-                        cost[to2] = cost[to] + 1;
-                        Q.emplace(to2);
-                    }
+    vll is(N);
+    iota(is.begin(), is.end(), 0);
+    ll ans = linf;
+    do{
+        for (auto &&n : {N/2-1, N/2, N})
+        {
+            if(n < 3) continue;
+            set<P> tobe;
+            for (auto &&[s,t] : {P{0,n}, P{n,N}}){
+                reps(_,s,t){
+                    ll i = is[_];
+                    ll x = (_+1)%t;
+                    if(x < s) x += s;
+                    ll j = is[x];
+                    if(i > j) swap(i, j);
+                    tobe.emplace(i,j);
                 }
             }
-            if(dim[u] > 2) {
-                for (auto &&v : to[u]) {
-                    auto to2 = to;
-                    to2[u].erase(v);
-                    to2[v].erase(u);
-                    if(cost.count(to2) == 0) {
-                        cost[to2] = cost[to] + 1;
-                        Q.emplace(to2);
-                    }
-                }
-            }
+            set<P> common;
+            set_intersection(
+                asis.begin(), asis.end(),
+                tobe.begin(), tobe.end(),
+                inserter(common, common.begin()));
+            ll now = tobe.size() + asis.size() - 2 * common.size();
+            chmin(ans, now);
         }
-    }
+        
+    } while(next_permutation(is.begin(), is.end()));
+    cout << ans << endl;
     return 0;
 }
