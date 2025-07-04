@@ -125,7 +125,7 @@ int main() {
     std::cin >> L;
     long long R;
     std::cin >> R;
-    ll ans = 0;
+    auto ans = string("atcoder").substr(L-1, R-L+1);
     cout << ans << endl;
     return 0;
 }
