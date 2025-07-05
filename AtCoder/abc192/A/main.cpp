@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long long X;
     std::cin >> X;
-    ll ans = 0;
+    ll ans = ((X/100)+1)*100 - X;
     cout << ans << endl;
     return 0;
 }
