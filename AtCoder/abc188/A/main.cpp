@@ -127,7 +127,8 @@ int main() {
     std::cin >> X;
     long long Y;
     std::cin >> Y;
-    ll ans = 0;
+    if(X> Y) swap(X, Y);
+    string ans = X+3 >Y? YES : NO;
     cout << ans << endl;
     return 0;
 }
