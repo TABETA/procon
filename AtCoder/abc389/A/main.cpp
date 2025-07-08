@@ -123,7 +123,7 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    ll ans = (S[0] - '0') * (S[2] - '0');
     cout << ans << endl;
     return 0;
 }
