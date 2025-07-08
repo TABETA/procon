@@ -121,11 +121,20 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long A;
+    string A;
     std::cin >> A;
-    long long B;
+    ll a=0;
+    for (auto &&c : A){
+        a += c - '0';
+    }
+    
+    string B;
     std::cin >> B;
-    ll ans = 0;
-    cout << ans << endl;
+    ll b=0;
+    for (auto &&c : B){
+        b += c - '0';
+    }
+    if(a < b) swap(a, b);
+    cout << a << endl;
     return 0;
 }
