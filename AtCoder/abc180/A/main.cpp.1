@@ -1,27 +1,26 @@
-#ifdef _MSVC_LANG
-#include <float.h>
+#ifdef _MSVC_LANG 
+#include <tuple>
+#include <sstream>
+#include <queue>
+#include <map>
+#include <numeric>
+#include <list>
 #include <limits.h>
-#include <stdio.h>
-
-#include <algorithm>
+#include <vector>
+#include <utility>
+#include <string>
+#include <iostream>
 #include <array>
-#include <chrono>
+#include <algorithm>
+#include <stdio.h>
+#include <stack>
+#include <float.h>
 #include <cmath>
 #include <cstdio>
 #include <iomanip>
-#include <iostream>
-#include <list>
-#include <map>
-#include <numeric>
-#include <queue>
 #include <set>
-#include <sstream>
-#include <stack>
-#include <string>
-#include <tuple>
 #include <unordered_set>
-#include <utility>
-#include <vector>
+#include <chrono>
 
 #else
 #include <bits/stdc++.h>
@@ -39,10 +38,6 @@ using namespace std;
 struct Fast {Fast() {std::cin.tie(0); ios::sync_with_stdio(false);}} fast;
 #endif
 
-#ifndef ONLINE_JUDGE
-#define _GLIBCXX_DEBUG
-#endif
-
 /* alias */
 using ull = unsigned long long;
 using ll = long long;
@@ -55,15 +50,14 @@ using vvll = vector<vll>;
 using vs = vector<string>;
 using pii = pair<int, int>;
 
-const int inf = 1001001001;
-const ll linf = 1001001001001001001ll;
-
 /* define short */
-#define CIN(type, name) type name; cin >> name;
+#define pb push_back
+#define mp make_pair
 #define all(obj) (obj).begin(), (obj).end()
 #define YESNO(bool) if(bool){cout<<"YES"<<endl;}else{cout<<"NO"<<endl;}
 #define yesno(bool) if(bool){cout<<"yes"<<endl;}else{cout<<"no"<<endl;}
 #define YesNo(bool) if(bool){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
+#define sb(var,l,r) {var[l].pb(r); var[r].pb(l);}
 
 /* REP macro */
 #define reps(i, a, n) for (ll i = (a); i < (ll)(n); ++i)
@@ -77,6 +71,9 @@ const ll linf = 1001001001001001001ll;
 #define debug(x) cerr << "\033[33m(line:" << __LINE__ << ") " << #x << ": " << x << "\033[m" << endl;
 
 /* func */
+inline int in_int() {int x; cin >> x; return x;}
+inline ll in_ll() {ll x; cin >> x; return x;}
+inline string in_str() {string x; cin >> x; return x;}
 // search_length: 走査するベクトル長の上限(先頭から何要素目までを検索対象とするか、1始まりで)
 template <typename T> inline bool vector_finder(std::vector<T> vec, T element, unsigned int search_length) {
     auto itr = std::find(vec.begin(), vec.end(), element);
@@ -90,18 +87,6 @@ template <typename T, typename S> inline void print(const pair<T, S>& p)
 template <typename T> inline void print(const T& x) {cout << x << "\n";}
 template <typename T, typename S> inline void print(const vector<pair<T, S>>& v)
     {for (auto&& p : v) print(p);}
-template <typename T>
-ostream &operator<<(ostream &os, const vector<T> &v) {
-    for (int i = 0; i < (int)v.size(); i++) {
-        os << v[i] << (i + 1 != (int)v.size() ? " " : "");
-    }
-    return os;
-}
-template<typename T>
-pair<T,T> operator+(const pair<T,T>& lhs, const pair<T,T> rhs){
-    return pair<T,T>{lhs.first+rhs.first, lhs.second+rhs.second};
-}
-
 // 第一引数と第二引数を比較し、第一引数(a)をより大きい/小さい値に上書き
 template <typename T> inline bool chmin(T& a, const T& b) {bool compare = a > b; if (a > b) a = b; return compare;}
 template <typename T> inline bool chmax(T& a, const T& b) {bool compare = a < b; if (a < b) a = b; return compare;}
@@ -119,7 +104,11 @@ namespace std{
 }
 
 
+auto func(long long N, long long A, long long B){
+
+}
 // clang-format on
+
 int main() {
     long long N;
     std::cin >> N;
@@ -127,7 +116,6 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
-    cout << ans << endl;
+    func(N, A, B);
     return 0;
 }
