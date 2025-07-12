@@ -123,7 +123,11 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    rep(i, S.size()) {
+        if (isupper(S[i])) {
+            cout << i+1 << endl;
+            return 0;
+        }
+    }
     return 0;
 }
