@@ -129,7 +129,8 @@ int main() {
     std::cin >> c;
     long long d;
     std::cin >> d;
-    ll ans = 0;
+    ll ans = (a+b) * (c-d);
     cout << ans << endl;
+    cout << "Takahashi" << endl;
     return 0;
 }
