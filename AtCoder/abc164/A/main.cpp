@@ -125,7 +125,7 @@ int main() {
     std::cin >> S;
     long long W;
     std::cin >> W;
-    ll ans = 0;
+    string ans = W >= S ? "unsafe" : "safe";
     cout << ans << endl;
     return 0;
 }
