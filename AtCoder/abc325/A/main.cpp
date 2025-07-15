@@ -125,7 +125,6 @@ int main() {
     std::cin >> S;
     std::string T;
     std::cin >> T;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << S << " san" << endl;
     return 0;
 }
