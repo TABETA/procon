@@ -121,8 +121,13 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    set<char> S;
+    rep(i,3){
+        char c;
+        std::cin >> c;
+        S.insert(c);
+    }
+    auto ans = S.size() == 1 ? "Won" : "Lost";
     cout << ans << endl;
     return 0;
 }
