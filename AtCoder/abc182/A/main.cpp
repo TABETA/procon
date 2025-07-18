@@ -125,7 +125,7 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
+    ll ans = 2*A+100 - B;
     cout << ans << endl;
     return 0;
 }
