@@ -135,40 +135,15 @@ int main() {
     rep(i, H+W-1) {
         cin >> B[i];
     }
-    priority_queue<T> q;
-    ll s = A[0][0] - B[0];
-    q.emplace(s,s,0,0);
-    map<P,P> score;
-    score[P{0,0}] = P{s,s};
-    while(!q.empty()){
-        auto [lowest, cur, y, x] = q.top(); q.pop();
-        if(score[P{y,x}] != P{lowest, cur}) continue;
-        auto next_adjacents = [&](P p) {
-            auto [r, c] = p;
-            vector<P> ret;
-            for (auto &&q : {
-                P{r + 1, c},
-                P{r, c + 1},
-            })
-            {
-                auto [y,x] = q;
-                if (y < 0 || y >= H || x < 0 || x >= W) continue;
-                ret.push_back(q);
-            }
-            return ret;
-        };
-
-        for(auto&& v: next_adjacents(P{y,x})){
-            auto [ny, nx] = v;
-            ll next = cur + A[ny][nx] - B[ny + nx];
-            ll nlow = min(lowest, next);
-            if(!score.count(v) || score[v] < P{nlow, next}) {
-                score[v] = P{nlow, next};
-                q.emplace(nlow, next, ny, nx);
-            }
+    vvll dp(H+1, vll(W+1, linf));
+    dp[H][W-1] = 0ll;
+    dp[H-1][W] = 0ll;
+    repd(i, H) {
+        repd(j, W) {
+            ll b = A[i][j] - B[i+j];
+            dp[i][j] = max(0ll,min(dp[i+1][j], dp[i][j+1]) - b);
         }
     }
-    ll ans = max(-score[P{H-1,W-1}].first,0ll);
-    cout << ans << endl;
+    cout << dp[0][0] << endl;
     return 0;
 }
