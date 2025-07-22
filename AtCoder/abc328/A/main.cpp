@@ -125,11 +125,14 @@ int main() {
     std::cin >> N;
     long long X;
     std::cin >> X;
-    std::vector<long long> S(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> S[i];
-    }
     ll ans = 0;
+    for(int i = 0 ; i < N ; i++){
+        ll S;
+        std::cin >> S;
+        if(S <= X){
+            ans += S;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
