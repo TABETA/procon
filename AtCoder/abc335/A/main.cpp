@@ -123,7 +123,8 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    S.pop_back();
+    S.push_back('4');
+    cout << S << endl;
     return 0;
 }
