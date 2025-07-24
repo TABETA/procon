@@ -127,7 +127,11 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
+    ranges::sort(A);
+    auto it = upper_bound(A.begin(), A.end(), 10);
+    ll ans = reduce(it, A.end(), 0LL, [](ll acc, ll x) {
+        return acc + x - 10;
+    });
     cout << ans << endl;
     return 0;
 }
