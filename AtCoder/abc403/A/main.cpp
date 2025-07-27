@@ -123,11 +123,13 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(N);
-    for(int i = 0 ; i < N ; i++){
-        std::cin >> A[i];
-    }
     ll ans = 0;
+    for(int i = 0 ; i < N ; i++){
+        CIN(ll, a);
+        if(i % 2 == 0){
+            ans += a;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
