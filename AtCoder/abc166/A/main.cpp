@@ -123,7 +123,10 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    set<string> T;
+    T.emplace("ARC");
+    T.emplace("ABC");
+    T.erase(S);
+    cout << *T.begin() << endl;
     return 0;
 }
