@@ -123,7 +123,9 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    repr(c, S) {
+        cout << c << " ";
+    }
+    cout << endl;
     return 0;
 }
