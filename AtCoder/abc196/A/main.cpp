@@ -129,7 +129,7 @@ int main() {
     std::cin >> c;
     long long d;
     std::cin >> d;
-    ll ans = 0;
+    ll ans = b - c;
     cout << ans << endl;
     return 0;
 }
