@@ -129,11 +129,12 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
+    ll ans = 0;
     std::vector<long long> B(M);
     for(int i = 0 ; i < M ; i++){
         std::cin >> B[i];
+        ans += A[B[i] - 1];
     }
-    ll ans = 0;
     cout << ans << endl;
     return 0;
 }
