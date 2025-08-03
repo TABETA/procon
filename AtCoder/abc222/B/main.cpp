@@ -126,10 +126,13 @@ int main() {
     long long P;
     std::cin >> P;
     std::vector<long long> a(N);
+    ll ans = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> a[i];
+        if(a[i] < P) {
+            ans++;
+        }
     }
-    ll ans = 0;
     cout << ans << endl;
     return 0;
 }
