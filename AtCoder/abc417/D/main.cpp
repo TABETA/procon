@@ -125,32 +125,40 @@ int main() {
     ll N;
     std::cin >> N;
     vector<T> t;
+    vll B(N+1);
     rep(i, N) {
-        ll a, b, c;
-        cin >> a >> b >> c;
-        t.emplace_back(a, b, c);
+        ll p, a, b;
+        cin >> p >> a >> b;
+        t.emplace_back(p, a, b);
+        B[i+1] = b + B[i];
     }
-    vector dp(N + 1, map<ll,ll>());
+    ll M = 1001;
+    vector dp(N+1, vector(M, 0ll));
+    rep(i,M) dp[N][i] = i;
+    repd(i, N) {
+        auto [p, a, b] = t[i];
+        rep(j,M){
+            ll nj = j > p ? j-b : j+a;
+            chmax(nj, 0ll);
+            dp[i][j] = dp[i+1][nj];
+        }
+    }
     ll Q;
     cin >> Q;
     while (Q--)
     {
-        auto dfs = [&](auto dfs, ll i, ll x) -> ll{
-            if(i == N) {
-                return dp[i][x] = x;
-            }
-            if(dp[i].count(x)) {
-                return dp[i][x];
-            }
-            auto [p, a, b] = t[i];
-            ll nx = (p >= x) ? x + a : x - b;
-            chmax(nx, 0ll);
-            return dp[i][nx] = dfs(dfs, i+1, nx);
-        };
         ll x;
         cin >> x;
-        dfs(dfs, 0, x);
-        cout << x << endl;
+        ll ans = 0;
+        if(x < M) {
+            ans  = dp[0][x];
+        } else {
+            auto i = upper_bound(B.begin(), B.begin()+N, x-M) - B.begin();
+            x -= B[i];
+            if(i < N) ans = dp[i][x];
+            else ans = x;
+        }
+        cout << ans << endl;
     }
     return 0;
 }
