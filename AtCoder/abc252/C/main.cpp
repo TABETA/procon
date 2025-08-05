@@ -133,11 +133,24 @@ ostream &operator<<(ostream &os, const mint &v) {
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<std::string> S(N);
+    vs S(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
     }
-    ll ans = 0;
+    ll ans = linf;
+    rep(i, 10) {
+        map<ll,ll> mp;
+        rep(j, N) {
+            ll pos = S[j].find('0' + i);
+            mp[pos]++;
+        }
+        ll now = 0;
+        for (auto &&[k,cnt] : mp)
+        {
+            chmax(now, 10*(cnt-1)+k);
+        }
+        ans = min(ans, now);
+    }
     cout << ans << endl;
     return 0;
 }
