@@ -127,11 +127,13 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    std::vector<long long> C(N);
+    map<ll,ll> C;
     for(int i = 0 ; i < N ; i++){
-        std::cin >> C[i];
+        ll c;
+        std::cin >> c;
+        C[c] = i+1;
     }
-    ll ans = 0;
-    cout << ans << endl;
+    ll ans = A+B;
+    cout << C[ans] << endl;
     return 0;
 }
