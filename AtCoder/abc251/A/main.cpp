@@ -123,7 +123,10 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    string ans = "";
+    while(ans.size() < 6){
+        ans += S;
+    }
     cout << ans << endl;
     return 0;
 }
