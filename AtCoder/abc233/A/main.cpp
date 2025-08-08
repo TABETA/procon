@@ -126,6 +126,10 @@ int main() {
     long long Y;
     std::cin >> Y;
     ll ans = 0;
+    while(X < Y){
+        X += 10;
+        ans++;
+    }
     cout << ans << endl;
     return 0;
 }
