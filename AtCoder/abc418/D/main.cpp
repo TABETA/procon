@@ -120,50 +120,50 @@ namespace std{
 
 
 // clang-format on
-struct S {
-    char c;
-    ll l;
-    ll r;
-};
-int main() {
+
+void solve() {
     ll N;
     cin >> N;
     string T;
     cin >> T;
+    rep(i, N) {
+        if (T[i] == '0') {
+            T[i] = '1';
+        } else {
+            T[i] = '0';
+        }
+    }
+    vll S(N+1);
+    map<ll,ll> mp;
+    rep(i,N){
+        S[i+1] = (S[i] + (T[i] - '0'))%2;
+    }
+    rep(i,N+1){
+        mp[S[i]]++;
+    }
     ll ans = 0;
-    set<string> used;
-    auto dfs = [&](auto dfs, string s) -> void{
-        rep(i, s.size()) {
-            if(s[i] == '1') {
-                ans++;
-            }
-        }
-        if((ll)s.size() == 1) {
-            return;
-        }
-        used.insert(s);
-        rep(i, s.size()-1){
-            auto ss = s.substr(i, 2);
-            if(ss == "00" || ss == "11") {
-                string ns = s;
-                ns[i] = '1';
-                ns.erase(i+1, 1);
-                if(used.count(ns)) {
-                    continue;
-                }
-                dfs(dfs, ns);
-            } else {
-                string ns = s;
-                ns[i] = '0';
-                ns.erase(i+1, 1);
-                if(used.count(ns)) {
-                    continue;
-                }
-                dfs(dfs, ns);
-            }
-        }
-    };
-    dfs(dfs, T);
+    for (auto &&[k,v] : mp)
+    {
+        if(v < 2) continue;
+        ans += (v * (v-1))/2;
+    }
     cout << ans << endl;
-    return 0;
+}
+void solve2() {
+    ll N;
+    cin >> N;
+    string T;
+    cin >> T;
+    vll mp(2);
+    ll ans = 0;
+    rep(i, N) {
+        if (T[i] == '0') swap(mp[0], mp[1]);
+        mp[T[i]-'0']++;
+        ans += mp[1];
+    }
+    cout << ans << endl;
+}
+
+int main() {
+    solve2();
 }
