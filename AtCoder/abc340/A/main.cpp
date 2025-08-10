@@ -127,7 +127,9 @@ int main() {
     std::cin >> B;
     long long D;
     std::cin >> D;
-    ll ans = 0;
-    cout << ans << endl;
+    for(ll a = A; a <= B; a += D){
+        cout << a << " ";
+    }
+    cout << endl;
     return 0;
 }
