@@ -129,11 +129,15 @@ int main() {
     std::cin >> K;
     std::vector<long long> P(N);
     std::vector<long long> Q(N);
+    ll ans = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> P[i];
         std::cin >> Q[i];
+        ans += P[i] * Q[i];
     }
-    ll ans = 0;
+    if(ans < S){
+        ans += K;
+    }
     cout << ans << endl;
     return 0;
 }
