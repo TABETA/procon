@@ -127,7 +127,7 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    ll ans = 0;
+    string ans = N==M?YES:NO;
     cout << ans << endl;
     return 0;
 }
