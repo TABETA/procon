@@ -123,11 +123,14 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    std::vector<long long> A(7*N);
-    for(int i = 0 ; i < 7*N ; i++){
-        std::cin >> A[i];
+    for(int i = 0 ; i < N ; i++){
+        ll ans = 0;
+        for(int j = 0 ; j < 7 ; j++){
+            ll a;
+            std::cin >> a;
+            ans += a;
+        }
+        cout << ans << " ";
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
