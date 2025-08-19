@@ -127,7 +127,6 @@ int main() {
     std::cin >> Y;
     long long Z;
     std::cin >> Z;
-    ll ans = 0;
-    cout << ans << endl;
+    printf("%lld %lld %lld\n", Z, X, Y);
     return 0;
 }
