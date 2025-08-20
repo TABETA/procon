@@ -123,8 +123,11 @@ const string NO = "No";
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    ll N, M;
+    cin >> N >> M;
+    vll A(N);
+    rep(i, N) cin >> A[i];
+    ll sum = reduce(A.begin(), A.end());
+    cout << (sum <= M ? YES : NO) << endl;
     return 0;
 }
