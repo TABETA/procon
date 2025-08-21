@@ -123,7 +123,10 @@ namespace std{
 int main() {
     long long K;
     std::cin >> K;
-    ll ans = 0;
+    string ans = "";
+    rep(_,K){
+        ans += "ACL";
+    }
     cout << ans << endl;
     return 0;
 }
