@@ -127,7 +127,8 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> S[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    repd(i,N){
+        cout << S[i] << endl;
+    }
     return 0;
 }
