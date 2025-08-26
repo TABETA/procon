@@ -124,6 +124,14 @@ int main() {
     long long X;
     std::cin >> X;
     ll ans = 0;
+    if(400 <= X && X <= 599) ans = 8;
+    if(600 <= X && X <= 799) ans = 7;
+    if(800 <= X && X <= 999) ans = 6;
+    if(1000 <= X && X <= 1199) ans = 5;
+    if(1200 <= X && X <= 1399) ans = 4;
+    if(1400 <= X && X <= 1599) ans = 3;
+    if(1600 <= X && X <= 1799) ans = 2;
+    if(1800 <= X && X <= 1999) ans = 1;
     cout << ans << endl;
     return 0;
 }
