@@ -118,12 +118,31 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     std::string S;
     std::cin >> S;
     ll ans = 0;
+    if( S == "tourist")
+        ans = 3858;
+    if( S == "ksun48")
+        ans = 3679;
+    if( S == "Benq")
+        ans = 3658;
+    if( S == "Um_nik")
+        ans = 3648;
+    if( S == "apiad")
+        ans = 3638;
+    if( S == "Stonefeang")
+        ans = 3630;
+    if( S == "ecnerwala")
+        ans = 3613;
+    if( S == "mnbvmar")
+        ans = 3555;
+    if( S == "newbiedmy")
+        ans = 3516;
+    if( S == "semiexp")
+        ans = 3481;
     cout << ans << endl;
     return 0;
 }
