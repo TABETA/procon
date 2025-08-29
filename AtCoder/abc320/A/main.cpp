@@ -125,7 +125,7 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
+    ll ans = pow(A, B) + pow(B, A);
     cout << ans << endl;
     return 0;
 }
