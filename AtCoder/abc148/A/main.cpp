@@ -121,11 +121,17 @@ namespace std{
 
 // clang-format on
 int main() {
+    set<ll> s;
+    s.insert(1);
+    s.insert(2);
+    s.insert(3);
     long long A;
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
+    s.erase(A);
+    s.erase(B);
+    ll ans = *s.begin();
     cout << ans << endl;
     return 0;
 }
