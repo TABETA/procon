@@ -121,9 +121,11 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long N;
+    string N;
     std::cin >> N;
-    ll ans = 0;
-    cout << ans << endl;
+    rotate(N.begin(), N.begin()+1, N.end());
+    cout << N << " ";
+    rotate(N.begin(), N.begin()+1, N.end());
+    cout << N << endl;
     return 0;
 }
