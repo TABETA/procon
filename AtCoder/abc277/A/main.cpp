@@ -128,8 +128,10 @@ int main() {
     std::vector<long long> P(N);
     for(int i = 0 ; i < N ; i++){
         std::cin >> P[i];
+        if(P[i] == X) {
+            cout << i+1 << endl;
+            return 0;
+        }
     }
-    ll ans = 0;
-    cout << ans << endl;
     return 0;
 }
