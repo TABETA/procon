@@ -121,8 +121,9 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
+    ll a,b,c;
+    cin >> a >> b >> c;
+    ll ans = a*b / 2;
     cout << ans << endl;
     return 0;
 }
