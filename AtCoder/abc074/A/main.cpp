@@ -125,7 +125,7 @@ int main() {
     std::cin >> N;
     long long A;
     std::cin >> A;
-    ll ans = 0;
+    ll ans = N*N-A;
     cout << ans << endl;
     return 0;
 }
