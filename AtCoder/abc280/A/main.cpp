@@ -126,10 +126,15 @@ int main() {
     long long W;
     std::cin >> W;
     std::vector<std::string> S(H);
+    ll ans = 0;
     for(int i = 0 ; i < H ; i++){
         std::cin >> S[i];
+        rep(j,W){
+            if(S[i][j]=='#'){
+                ans++;
+            }
+        }
     }
-    ll ans = 0;
     cout << ans << endl;
     return 0;
 }
