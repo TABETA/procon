@@ -127,7 +127,7 @@ int main() {
     std::cin >> R;
     long long d;
     std::cin >> d;
-    ll ans = 0;
+    ll ans = R/d - (L-1)/d;
     cout << ans << endl;
     return 0;
 }
