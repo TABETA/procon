@@ -123,7 +123,8 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
+    ll ans = N%1000;
+    if(ans != 0) ans = 1000 - ans;
     cout << ans << endl;
     return 0;
 }
