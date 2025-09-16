@@ -124,6 +124,14 @@ int main() {
     std::string S;
     std::cin >> S;
     ll ans = 0;
+    const string tar = "ZONe";
+    string::size_type pos = 0;
+    while (true) {
+        pos = S.find(tar, pos);
+        if (pos == std::string::npos) break;
+        ans++;
+        pos += tar.length();
+    }
     cout << ans << endl;
     return 0;
 }
