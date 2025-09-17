@@ -127,7 +127,8 @@ int main() {
     for(int i = 0 ; i < 3 ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
+    ranges::sort(A);
+    string ans = (A[2] - A[1] == A[1] - A[0]) ? YES : NO;
     cout << ans << endl;
     return 0;
 }
