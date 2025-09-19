@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long long r;
     std::cin >> r;
-    ll ans = 0;
+    ll ans = r*r;
     cout << ans << endl;
     return 0;
 }
