@@ -123,7 +123,14 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    for (auto &c : S) {
+        if (c == 'a') continue;
+        if (c == 'i') continue;
+        if (c == 'u') continue;
+        if (c == 'e') continue;
+        if (c == 'o') continue;
+        cout << c;
+    }
+    cout << endl;
     return 0;
 }
