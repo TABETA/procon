@@ -126,6 +126,12 @@ int main() {
     long long K;
     std::cin >> K;
     ll ans = 0;
+    for(ll i = 1; i <= N; ++i){
+        ll a = i*100;
+        reps(j,1,K+1){
+            ans += a+j;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
