@@ -123,7 +123,20 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
-    ll ans = 0;
+    string ans = "hon";
+    N %= 10;
+    switch (N)
+    {
+    case 0:
+    case 1:
+    case 6:
+    case 8:
+        ans = "pon";
+        break;
+    case 3:
+        ans = "bon";
+        break;
+    }
     cout << ans << endl;
     return 0;
 }
