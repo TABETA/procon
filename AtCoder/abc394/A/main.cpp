@@ -121,9 +121,12 @@ namespace std{
 
 // clang-format on
 int main() {
-    long long S;
+    string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    for (auto &&c : S)
+    {
+        if(c == '2') cout << c;
+    }
+    cout << endl;
     return 0;
 }
