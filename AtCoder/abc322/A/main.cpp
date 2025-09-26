@@ -125,7 +125,11 @@ int main() {
     std::cin >> N;
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    ll ans = -1;
+    auto pos = S.find("ABC");
+    if(pos != string::npos){
+        ans = pos+1;
+    }
     cout << ans << endl;
     return 0;
 }
