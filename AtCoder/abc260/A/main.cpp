@@ -123,7 +123,16 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    map<char,ll> mp;
+    for (auto &c : S) {
+        mp[c]++;
+    }
+    for (auto &[k, v] : mp) {
+        if(v == 1) {
+            cout << k << endl;
+            return 0;
+        }
+    }
+    cout << -1 << endl;
     return 0;
 }
