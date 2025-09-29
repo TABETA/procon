@@ -125,7 +125,6 @@ const string NO = "No";
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << (S[2] == S[3] && S[4] == S[5] ? YES : NO) << endl;
     return 0;
 }
