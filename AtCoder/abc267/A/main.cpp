@@ -120,10 +120,18 @@ namespace std{
 
 
 // clang-format on
+
+int solve(string S) {
+    if(S == "Monday") return 5;
+    if(S == "Tuesday") return 4;
+    if(S == "Wednesday") return 3;
+    if(S == "Thursday") return 2;
+    if(S == "Friday") return 1;
+    return 0;
+}
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << solve(S) << endl;
     return 0;
 }
