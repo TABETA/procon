@@ -129,7 +129,10 @@ int main() {
     std::cin >> C;
     long long D;
     std::cin >> D;
-    ll ans = 0;
+    ll w = A + B - (C + D);
+    string ans = (w > 0) ? "Left" :
+                 (w < 0) ? "Right" :
+                           "Balanced";
     cout << ans << endl;
     return 0;
 }
