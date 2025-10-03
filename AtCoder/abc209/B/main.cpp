@@ -128,10 +128,12 @@ int main() {
     long long X;
     std::cin >> X;
     std::vector<long long> A(N);
+    ll sum = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
+        if(i%2 == 1) A[i]--;
+        sum += A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    cout << (sum <= X ? "Yes" : "No") << endl;
     return 0;
 }
