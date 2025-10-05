@@ -125,7 +125,6 @@ int main() {
     std::cin >> X;
     long long A;
     std::cin >> A;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << (X < A ? 0 : 10) << endl;
     return 0;
 }
