@@ -123,7 +123,8 @@ namespace std{
 int main() {
     long long K;
     std::cin >> K;
-    ll ans = 0;
-    cout << ans << endl;
+    ll hh = 21 + K / 60;
+    ll mm = K % 60;
+    cout << hh << ":" << setw(2) << setfill('0') << mm << endl;
     return 0;
 }
