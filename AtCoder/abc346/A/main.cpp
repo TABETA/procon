@@ -127,7 +127,8 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    rep(i,N-1){
+        cout << A[i]*A[i+1] << " ";
+    }
     return 0;
 }
