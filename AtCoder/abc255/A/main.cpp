@@ -131,7 +131,8 @@ int main() {
             std::cin >> A[i][j];
         }
     }
-    ll ans = 0;
+    --R; --C;
+    ll ans = A[R][C];
     cout << ans << endl;
     return 0;
 }
