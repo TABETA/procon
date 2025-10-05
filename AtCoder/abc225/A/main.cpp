@@ -123,7 +123,11 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    ranges::sort(S);
+    set<string> s;
+    do {
+        s.insert(S);
+    } while (next_permutation(all(S)));
+    cout << s.size() << endl;
     return 0;
 }
