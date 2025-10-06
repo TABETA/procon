@@ -123,7 +123,12 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    ll ans = -1;
+    rep(i,S.size()){
+        if(S[i] == 'a'){
+            ans = i+1;
+        }
+    }
     cout << ans << endl;
     return 0;
 }
