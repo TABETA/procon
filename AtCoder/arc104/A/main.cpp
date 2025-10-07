@@ -118,14 +118,12 @@ namespace std{
     };
 }
 
-
 // clang-format on
 int main() {
     long long A;
     std::cin >> A;
     long long B;
     std::cin >> B;
-    ll ans = 0;
-    cout << ans << endl;
+    cout << (A + B) / 2 << " " << (A - B) / 2 << endl;
     return 0;
 }
