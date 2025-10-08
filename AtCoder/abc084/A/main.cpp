@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long long M;
     std::cin >> M;
-    ll ans = 0;
+    ll ans = 48-M;
     cout << ans << endl;
     return 0;
 }
