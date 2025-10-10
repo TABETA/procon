@@ -125,7 +125,9 @@ int main() {
     for(int i = 0 ; i < 3 ; i++){
         std::cin >> A[i];
     }
-    ll ans = 0;
-    cout << ans << endl;
+    ll s = A[0] + A[1] + A[2];
+    if(s >= 22) cout << "bust";
+    else cout << "win";
+    cout << endl;
     return 0;
 }
