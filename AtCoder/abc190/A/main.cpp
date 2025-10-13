@@ -127,7 +127,12 @@ int main() {
     std::cin >> B;
     long long C;
     std::cin >> C;
-    ll ans = 0;
-    cout << ans << endl;
+    string t = "Takahashi";
+    string a = "Aoki";
+    if(C == 0){
+        cout << (A > B ? t: a) << endl; 
+    } else {
+        cout << (B > A ? a: t) << endl; 
+    }
     return 0;
 }
