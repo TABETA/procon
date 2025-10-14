@@ -123,7 +123,9 @@ namespace std{
 int main() {
     std::string s;
     std::cin >> s;
-    ll ans = 0;
-    cout << ans << endl;
+    for (auto &&c : s){
+        cout << (c == '0'?1:0);
+    }
+    cout << endl;
     return 0;
 }
