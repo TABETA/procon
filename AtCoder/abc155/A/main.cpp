@@ -123,13 +123,12 @@ const string NO = "No";
 
 // clang-format on
 int main() {
-    long long A;
-    std::cin >> A;
-    long long B;
-    std::cin >> B;
-    long long C;
-    std::cin >> C;
-    ll ans = 0;
-    cout << ans << endl;
+    map<ll,ll> mp;
+    rep(i,3){
+        long long A;
+        std::cin >> A;
+        mp[A]++;
+    }
+    cout << (mp.size() == 2 ? YES : NO) << endl;
     return 0;
 }
