@@ -131,7 +131,8 @@ int main() {
     for(int i = 0 ; i < N ; i++){
         std::cin >> P[i];
     }
-    ll ans = 0;
+    ll v = X - H;
+    ll ans = lower_bound(all(P), v) - P.begin()+1;
     cout << ans << endl;
     return 0;
 }
