@@ -123,7 +123,7 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
+    auto ans = S.substr(0,3);
     cout << ans << endl;
     return 0;
 }
