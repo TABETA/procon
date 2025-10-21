@@ -125,7 +125,11 @@ int main() {
     std::cin >> H;
     long long A;
     std::cin >> A;
-    ll ans = 0;
-    cout << ans << endl;
+    ll i = 0;
+    while(H>0){
+        H -= A;
+        ++i;
+    }
+    cout << i << endl;
     return 0;
 }
