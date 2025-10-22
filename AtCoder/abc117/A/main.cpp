@@ -125,7 +125,7 @@ int main() {
     std::cin >> T;
     long long X;
     std::cin >> X;
-    ll ans = 0;
+    auto ans = (double)T/X;
     cout << ans << endl;
     return 0;
 }
