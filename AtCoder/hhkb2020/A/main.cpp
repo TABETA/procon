@@ -125,7 +125,9 @@ int main() {
     std::cin >> S;
     std::string T;
     std::cin >> T;
-    ll ans = 0;
-    cout << ans << endl;
+    if(S == "Y"){
+        T = string(1, toupper(T[0]));
+    }
+    cout << T << endl;
     return 0;
 }
