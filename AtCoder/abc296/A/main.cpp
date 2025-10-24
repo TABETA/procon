@@ -127,7 +127,15 @@ int main() {
     std::cin >> N;
     std::string S;
     std::cin >> S;
+    char pre = ' ';
     ll ans = 0;
-    cout << ans << endl;
+    for (auto &&c : S) {
+        if(pre == c){
+            cout << NO << endl;
+            return 0;
+        }
+        pre = c;
+    }
+    cout << YES << endl;
     return 0;
 }
