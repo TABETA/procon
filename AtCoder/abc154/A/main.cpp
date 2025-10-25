@@ -129,9 +129,12 @@ int main() {
     std::cin >> A;
     long long B;
     std::cin >> B;
+    map<string,ll> mp;
     std::string U;
     std::cin >> U;
-    ll ans = 0;
-    cout << ans << endl;
+    mp[S] = A;
+    mp[T] = B;
+    mp[U]--;
+    cout << mp[S] << " " << mp[T] << endl;
     return 0;
 }
