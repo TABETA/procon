@@ -125,7 +125,9 @@ int main() {
     std::cin >> N;
     long long M;
     std::cin >> M;
-    ll ans = 0;
-    cout << ans << endl;
+    --M;
+    rep(i,N){
+        cout << (i <= M ? "OK" : "Too Many Requests") << endl;
+    }
     return 0;
 }
