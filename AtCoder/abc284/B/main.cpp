@@ -121,8 +121,15 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,T);
+    while(T--){
+        CIN(ll,N);
+        ll ans = 0;
+        rep(i,N){
+            CIN(ll,a);
+            ans += a%2;
+        }
+        cout << ans << '\n';
+    }
     return 0;
 }
