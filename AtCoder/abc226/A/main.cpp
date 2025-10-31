@@ -123,7 +123,7 @@ namespace std{
 int main() {
     long double X;
     std::cin >> X;
-    ll ans = 0;
+    ll ans = round(X);
     cout << ans << endl;
     return 0;
 }
