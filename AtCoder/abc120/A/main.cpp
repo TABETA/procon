@@ -127,7 +127,8 @@ int main() {
     std::cin >> B;
     long long C;
     std::cin >> C;
-    ll ans = 0;
+    ll ans = B/A;
+    chmin(ans, C);
     cout << ans << endl;
     return 0;
 }
