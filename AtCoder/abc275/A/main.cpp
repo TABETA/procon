@@ -123,11 +123,15 @@ namespace std{
 int main() {
     long long N;
     std::cin >> N;
+    ll h = -1;
     std::vector<long long> H(N);
+    ll ans = 0;
     for(int i = 0 ; i < N ; i++){
         std::cin >> H[i];
+        if(chmax(h, H[i])){
+            ans = i+1;
+        }
     }
-    ll ans = 0;
     cout << ans << endl;
     return 0;
 }
