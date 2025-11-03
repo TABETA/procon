@@ -123,7 +123,11 @@ namespace std{
 int main() {
     std::string S;
     std::cin >> S;
-    ll ans = 0;
-    cout << ans << endl;
+    if(S.back() == 's'){
+        S += "es";
+    } else {
+        S += "s";
+    }
+    cout << S << endl;
     return 0;
 }
