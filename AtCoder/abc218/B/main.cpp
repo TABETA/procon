@@ -121,11 +121,11 @@ namespace std{
 
 // clang-format on
 int main() {
-    std::vector<long long> P(26);
+    string ans = "";
     for(int i = 0 ; i < 26 ; i++){
-        std::cin >> P[i];
+        CIN(ll,a);
+        ans += string(1, 'a'+a-1);
     }
-    ll ans = 0;
     cout << ans << endl;
     return 0;
 }
