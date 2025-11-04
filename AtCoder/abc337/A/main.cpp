@@ -121,8 +121,15 @@ namespace std{
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    ll A = 0;
+    ll B = 0;
+    rep(i,N){
+        CIN(ll,a);
+        CIN(ll,b);
+        A += a;
+        B += b;
+    }
+    cout << (A>B?"Takahashi":A==B?"Draw":"Aoki") << endl;
     return 0;
 }
