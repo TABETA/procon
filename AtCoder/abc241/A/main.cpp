@@ -126,6 +126,9 @@ int main() {
         std::cin >> a[i];
     }
     ll ans = 0;
+    rep(i,3){
+        ans = a[ans];
+    }
     cout << ans << endl;
     return 0;
 }
