@@ -123,8 +123,12 @@ const string NO = "No";
 
 // clang-format on
 int main() {
-    // Failed to predict input format
-    ll ans = 0;
-    cout << ans << endl;
+    CIN(ll,N);
+    set<ll> A;
+    rep(i,N){
+        CIN(ll,a);
+        A.emplace(a);
+    }
+    cout << (A.size() == 1 ? YES: NO) << endl;
     return 0;
 }
